@@ -2,6 +2,7 @@ package clases;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import excepciones.ExcepcionDeUsuario;
 
@@ -114,6 +115,20 @@ public class Usuario {
 
 	/**
 	 * @pre No tiene.
+	 * @post Se informo si la sugerencia se encuentra en el itinerario del usuario.
+	 * @param sugerencia Una promoción o atracción.
+	 * @return Retorna un verdadero o falso, para informar si ya se ha visitado esa
+	 *         sugerencia.
+	 */
+	public boolean laVisito(Base sugerencia) {
+
+		// aca va la parte de buscar en mi itinerario si encuentra alguna sugerencia
+		// que ingresa por parametro, retornando si la encuentra o no
+		return true;
+	}
+
+	/**
+	 * @pre No tiene.
 	 * @post Se agrego una sugerencia al itinerario si fue aceptada.
 	 * @param sugerencia Una promoción o atracción.
 	 * @param decision   Un verdadero o falso, según haya sido la desicion ingresada
@@ -126,9 +141,8 @@ public class Usuario {
 			this.tiempo -= sugerencia.getTiempo();
 			this.presupuesto -= sugerencia.getCosto();
 			this.itinerario.add(sugerencia);
-			return decision;
-		} else
-			return decision;
+		}
+		return decision;
 	}
 
 	/**
@@ -174,6 +188,23 @@ public class Usuario {
 		return this.getNombre() + ", con un tiempo disponible de " + this.getTiempo() + ", un presupuesto de "
 				+ this.getPresupuesto() + " monedas de oro y una preferencia para las atracciones de tipo "
 				+ this.getPreferencia().toString();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(nombre);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Usuario)) {
+			return false;
+		}
+		Usuario other = (Usuario) obj;
+		return Objects.equals(nombre, other.nombre);
 	}
 
 }

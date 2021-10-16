@@ -1,4 +1,4 @@
-package archivos;
+package persistencia;
 
 import java.io.File;
 import java.io.FileNotFoundException;

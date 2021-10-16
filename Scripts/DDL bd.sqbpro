@@ -1,52 +1,80 @@
-<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/gahit/Documents/MEGA/Cursos/Argentina Programa/Codigos/TP2TurismoEnLaTierraMediaII/bd.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2334"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,11:mainatracciones"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1">CREATE TABLE &quot;tipoAtraccion&quot; (
-	&quot;idTipo&quot;	INTEGER NOT NULL UNIQUE,
-	&quot;nombre&quot;	TEXT NOT NULL UNIQUE,
-	PRIMARY KEY(&quot;idTipo&quot; AUTOINCREMENT)
-);
-CREATE TABLE &quot;atracciones&quot; (
-	&quot;idAtraccion&quot;	INTEGER NOT NULL UNIQUE,
-	&quot;nombre&quot;	TEXT NOT NULL,
-	&quot;tiempo&quot;	REAL NOT NULL,
-	&quot;costo&quot;	REAL NOT NULL,
-	&quot;cupo&quot;	INTEGER NOT NULL,
-	&quot;idTipo&quot;	INTEGER NOT NULL,
-	PRIMARY KEY(&quot;idAtraccion&quot; AUTOINCREMENT),
-	FOREIGN KEY(&quot;idTipo&quot;) REFERENCES &quot;tipoAtraccion&quot;(idTipo)
-);
-CREATE TABLE &quot;promociones&quot; (
-	&quot;idPromocion&quot;	INTEGER NOT NULL UNIQUE,
-	&quot;nombre&quot;	TEXT NOT NULL,
-	&quot;tipo&quot;	TEXT NOT NULL,
-	&quot;precio&quot; REAL NOT NULL DEFAULT -1,
-	&quot;descuento&quot; REAL NOT NULL DEFAULT -1,
-	&quot;idAtraccion&quot; INTEGER,
-	PRIMARY KEY(&quot;idPromocion&quot; AUTOINCREMENT),
-	FOREIGN KEY(&quot;idAtraccion&quot;) REFERENCES &quot;atracciones&quot;(idAtraccion)
-);
-CREATE TABLE &quot;promocionAtraccion&quot; (
-	&quot;id&quot;	INTEGER NOT NULL UNIQUE,
-	&quot;idPromocion&quot;	INTEGER NOT NULL,
-	&quot;idAtraccion&quot;	INTEGER NOT NULL,
-	PRIMARY KEY(&quot;id&quot; AUTOINCREMENT),
-	FOREIGN KEY(&quot;idPromocion&quot;) REFERENCES &quot;promociones&quot;(idPromocion),
-	FOREIGN KEY(&quot;idAtraccion&quot;) REFERENCES &quot;atracciones&quot;(idAtraccion)
-);
-CREATE TABLE &quot;usuarios&quot; (
-	&quot;idUsuario&quot;	INTEGER NOT NULL UNIQUE,
-	&quot;nombre&quot;	TEXT NOT NULL,
-	&quot;tiempo&quot;	REAL NOT NULL,
-	&quot;presupuesto&quot;	REAL NOT NULL,
-	&quot;idTipo&quot;	INTEGER NOT NULL,
-	PRIMARY KEY(&quot;idUsuario&quot; AUTOINCREMENT),
-	FOREIGN KEY(&quot;idTipo&quot;) REFERENCES &quot;tipoAtraccion&quot;(idTipo)
-);
-CREATE TABLE &quot;itinerarios&quot; (
-	&quot;idItinerario&quot;	INTEGER NOT NULL UNIQUE,
-	&quot;idUsuario&quot;	INTEGER NOT NULL,
-	&quot;idPromocion&quot;	INTEGER,
-	&quot;idAtraccion&quot;	INTEGER,
-	PRIMARY KEY(&quot;idItinerario&quot; AUTOINCREMENT),
-	FOREIGN KEY(&quot;idUsuario&quot;) REFERENCES &quot;usuarios&quot;(idUsuario),
-	FOREIGN KEY(&quot;idPromocion&quot;) REFERENCES &quot;promociones&quot;(idPromocion),
-	FOREIGN KEY(&quot;idAtraccion&quot;) REFERENCES &quot;atracciones&quot;(idAtraccion)
-);</sql><current_tab id="0"/></tab_sql></sqlb_project>
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/home/tioliban/eclipse-workspace/TP2TurismoEnLaTierraMediaII/bd.db" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><current_tab id="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="2651"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="atracciones"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1"></sql><sql name="SQL 1">CREATE TABLE &quot;tipoAtraccion&quot; (
+	&quot;nombreTipo&quot;	TEXT NOT NULL UNIQUE,
+	PRIMARY KEY(&quot;nombreTipo&quot;)
+);
+CREATE TABLE &quot;atracciones&quot; (
+	&quot;nombreAtraccion&quot;	TEXT NOT NULL UNIQUE,
+	&quot;tiempo&quot;	REAL NOT NULL,
+	&quot;costo&quot;	REAL NOT NULL,
+	&quot;cupo&quot;	INTEGER NOT NULL,
+	&quot;nombreTipo&quot;	TEXT NOT NULL,
+	PRIMARY KEY(&quot;nombreAtraccion&quot;),
+	FOREIGN KEY(&quot;nombreTIpo&quot;) REFERENCES &quot;tipoAtraccion&quot;(nombreTipo)
+);
+CREATE TABLE &quot;promociones&quot; (
+	&quot;nombrePromocion&quot; TEXT NOT NULL UNIQUE,
+	&quot;tipo&quot; TEXT NOT NULL,
+	&quot;precioFinal&quot; REAL DEFAULT -1,
+	&quot;descuento&quot; REAL DEFAULT -1,
+	PRIMARY KEY(&quot;nombrePromocion&quot;)
+);
+CREATE TABLE &quot;promocionesAtracciones&quot; (
+	&quot;id&quot;	INTEGER NOT NULL UNIQUE,
+	&quot;nombrePromocion&quot;	TEXT NOT NULL,
+	&quot;nombreAtraccion&quot;	TEXT NOT NULL,
+	PRIMARY KEY(&quot;id&quot; AUTOINCREMENT),
+	UNIQUE (&quot;nombrePromocion&quot;,&quot;nombreAtraccion&quot;),
+	FOREIGN KEY(&quot;nombrePromocion&quot;) REFERENCES &quot;promociones&quot;(nombrePromocion),
+	FOREIGN KEY(&quot;nombreAtraccion&quot;) REFERENCES &quot;atracciones&quot;(nombreAtraccion)
+);
+CREATE TABLE &quot;usuarios&quot; (
+	&quot;nombreUsuario&quot;	TEXT NOT NULL UNIQUE,
+	&quot;tiempo&quot;	REAL NOT NULL,
+	&quot;presupuesto&quot;	REAL NOT NULL,
+	&quot;nombreTipo&quot;	INTEGER NOT NULL,
+	PRIMARY KEY(&quot;nombreUsuario&quot;),
+	FOREIGN KEY(&quot;nombreTipo&quot;) REFERENCES &quot;tipoAtraccion&quot;(nombreTipo)
+);
+CREATE TABLE &quot;itinerarios&quot; (
+	&quot;idItinerario&quot;	INTEGER NOT NULL UNIQUE,
+	&quot;nombreUsuario&quot;	TEXT NOT NULL,
+	&quot;nombrePromocion&quot;	TEXT,
+	&quot;nombreAtraccion&quot;	TEXT,
+	PRIMARY KEY(&quot;idItinerario&quot; AUTOINCREMENT),
+	FOREIGN KEY(&quot;nombreUsuario&quot;) REFERENCES &quot;usuarios&quot;(nombreUsuario),
+	FOREIGN KEY(&quot;nombrePromocion&quot;) REFERENCES &quot;promociones&quot;(nombrePromocion),
+	FOREIGN KEY(&quot;nombreAtraccion&quot;) REFERENCES &quot;atracciones&quot;(nombreAtraccion)
+);
+INSERT into tipoAtraccion values (&quot;Aventura&quot;);
+INSERT into tipoAtraccion values (&quot;Paisaje&quot;);
+INSERT into tipoAtraccion values (&quot;Degustacion&quot;);
+INSERT into usuarios values (&quot;Eowyn&quot;, 8, 10, &quot;Aventura&quot;);
+INSERT into usuarios values (&quot;Gandalf&quot;, 5, 100, &quot;Paisaje&quot;);
+INSERT into usuarios values (&quot;Sam&quot;, 8, 36, &quot;Degustacion&quot;);
+INSERT into usuarios values (&quot;Galadriel&quot;, 6, 120, &quot;Paisaje&quot;);
+INSERT into atracciones values (&quot;Moria&quot;, 2, 10, 6, &quot;Aventura&quot;);
+INSERT into atracciones values (&quot;Minas Tirith&quot;, 2.5, 5, 25, &quot;Paisaje&quot;);
+INSERT into atracciones values (&quot;La Comarca&quot;, 6.5, 3, 150, &quot;Degustacion&quot;);
+INSERT into atracciones values (&quot;Mordor&quot;, 3, 25, 4, &quot;Aventura&quot;);
+INSERT into atracciones values (&quot;Abismo de Helm&quot;, 2, 5, 15, &quot;Paisaje&quot;);
+INSERT into atracciones values (&quot;Lothlorein&quot;, 1, 35, 30, &quot;Degustacion&quot;);
+INSERT into atracciones values (&quot;Erebor&quot;, 3, 12, 32, &quot;Paisaje&quot;);
+INSERT into atracciones values (&quot;Bosque Negro&quot;, 4, 3, 15, &quot;Aventura&quot;);
+INSERT into atracciones values (&quot;Esgaroth&quot;, 3, 20, 50, &quot;Degustacion&quot;);
+INSERT into promociones values (&quot;Primera&quot;, &quot;Porcentual&quot;, -1, 2);
+INSERT into promociones values (&quot;Segunda&quot;, &quot;AxB&quot;, -1, -1);
+INSERT into promociones values (&quot;Tercera&quot;, &quot;Absoluta&quot;, 36, -1);
+INSERT into promociones values (&quot;Cuarta&quot;, &quot;Porcentual&quot;, -1, 25);
+INSERT into promociones values (&quot;Quinta&quot;, &quot;AxB&quot;, -1, -1);
+INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values (&quot;Primera&quot;, &quot;Bosque Negro&quot;);
+INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values (&quot;Primera&quot;, &quot;Mordor&quot;);
+INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values (&quot;Segunda&quot;, &quot;Moria&quot;);
+INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values (&quot;Segunda&quot;, &quot;Mordor&quot;);
+INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values (&quot;Segunda&quot;, &quot;Bosque Negro&quot;);
+INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values (&quot;Tercera&quot;, &quot;Lothlorein&quot;);
+INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values (&quot;Tercera&quot;, &quot;La Comarca&quot;);
+INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values (&quot;Cuarta&quot;, &quot;La Comarca&quot;);
+INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values (&quot;Cuarta&quot;, &quot;Esgaroth&quot;);
+INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values (&quot;Quinta&quot;, &quot;Minas Tirith&quot;);
+INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values (&quot;Quinta&quot;, &quot;Abismo de Helm&quot;);
+INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values (&quot;Quinta&quot;, &quot;Erebor&quot;);</sql><current_tab id="1"/></tab_sql></sqlb_project>

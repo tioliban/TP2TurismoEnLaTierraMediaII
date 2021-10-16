@@ -1,8 +1,8 @@
 package aplicacion;
 
-import archivos.ArchivoAtraccion;
-import archivos.ArchivoPromocion;
-import archivos.ArchivoUsuario;
+import persistencia.ArchivoAtraccion;
+import persistencia.ArchivoPromocion;
+import persistencia.ArchivoUsuario;
 
 public class App {
 	public static void main(String[] args) {

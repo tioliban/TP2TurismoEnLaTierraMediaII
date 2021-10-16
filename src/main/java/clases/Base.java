@@ -1,5 +1,7 @@
 package clases;
 
+import java.util.Objects;
+
 import excepciones.ExcepcionDeBase;
 
 public abstract class Base {
@@ -109,5 +111,24 @@ public abstract class Base {
 	private void setTipo(TipoAtraccion tipo) {
 		this.tipo = tipo;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(nombre);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Base)) {
+			return false;
+		}
+		Base other = (Base) obj;
+		return Objects.equals(nombre, other.nombre);
+	}
+
+
 
 }
