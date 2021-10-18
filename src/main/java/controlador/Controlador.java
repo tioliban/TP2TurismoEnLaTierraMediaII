@@ -14,4 +14,8 @@ public class Controlador {
 		}
 		return connection;
 	}
+	/**
+	 * Acá tengo que poner el controlamiento del sistema y los estados del sistema,
+	 * la interacción con el usuario lo tengo que poner en otro lado
+	 */
 }

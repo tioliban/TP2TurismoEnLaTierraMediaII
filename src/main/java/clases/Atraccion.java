@@ -10,7 +10,7 @@ public class Atraccion extends Base {
 
 	private int cupo;
 
-	public Atraccion(String nombre, double tiempo, double costo, TipoAtraccion tipo, int cupo)
+	public Atraccion(String nombre, double tiempo, double costo, int cupo, TipoAtraccion tipo)
 			throws ExcepcionDeBase, ExcepcionDeAtraccion {
 		super(nombre, tiempo, costo, tipo);
 		this.setCupo(cupo);
@@ -72,7 +72,7 @@ public class Atraccion extends Base {
 	public String toString() {
 		return this.getNombre() + ", con un costo de " + this.getCosto()
 				+ " monedas de oro, un tiempo necesario para recorrerlo de " + super.getTiempo() + " horas, un cupo de "
-				+ this.getCupo() + " usuarios y su tipo de atraccion es " + this.getTipo().toString();
+				+ this.getCupo() + " usuarios y su tipo de atraccion es " + this.getTipoAtraccion().toString();
 	}
 
 }

@@ -8,11 +8,31 @@ import excepciones.ExcepcionDePromocion;
 
 public abstract class Promocion extends Base {
 	private ArrayList<String> nombresDeAtracciones;
+	private String tipo;
 
-	public Promocion(String nombre, double tiempo, double costo, TipoAtraccion tipo, String[] nombresDeAtracciones,
-			List<Atraccion> atracciones) throws ExcepcionDeBase, ExcepcionDePromocion {
-		super(nombre, tiempo, costo, tipo);
+	public Promocion(String nombre, String tipo, double tiempo, double costo, TipoAtraccion tipoAtraccion,
+			String[] nombresDeAtracciones, List<Atraccion> atracciones) throws ExcepcionDeBase, ExcepcionDePromocion {
+		super(nombre, tiempo, costo, tipoAtraccion);
+		this.tipo = tipo;
 		this.setNombresDeAtracciones(nombresDeAtracciones, atracciones);
+	}
+
+	/**
+	 * @pre No tiene.
+	 * @post Retorno el tipo de promocion.
+	 * @return Tipo de promocion.
+	 */
+	public String getTipo() {
+		return tipo;
+	}
+
+	/**
+	 * @pre No Tiene.
+	 * @post Se actualizo el tipo de Promocion.
+	 * @param tipo Nuevo nombre a actualizar.
+	 */
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 	/**
@@ -43,7 +63,7 @@ public abstract class Promocion extends Base {
 		if (nombresDeAtracciones.length > 1) {
 			for (String nombre : nombresDeAtracciones) {
 				validar = validar
-						&& this.getTipo() == Atraccion.buscarAtraccionPorNombre(nombre, atracciones).getTipo();
+						&& this.getTipoAtraccion() == Atraccion.buscarAtraccionPorNombre(nombre, atracciones).getTipoAtraccion();
 			}
 			if (validar)
 				for (String nombre : nombresDeAtracciones) {

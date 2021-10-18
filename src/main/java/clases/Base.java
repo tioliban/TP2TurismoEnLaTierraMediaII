@@ -15,7 +15,7 @@ public abstract class Base {
 		this.setNombre(nombre);
 		this.setTiempo(tiempo);
 		this.setCosto(costo);
-		this.setTipo(tipo);
+		this.setTipoAtraccion(tipo);
 
 	}
 
@@ -99,7 +99,7 @@ public abstract class Base {
 	 *       promocion.
 	 * @return Tipo de Atraccion o Promocion.
 	 */
-	public TipoAtraccion getTipo() {
+	public TipoAtraccion getTipoAtraccion() {
 		return tipo;
 	}
 
@@ -108,7 +108,7 @@ public abstract class Base {
 	 * @post Se actualizo el tipo de la Atraccion o Promocion.
 	 * @param tipo Tipo que requiere la atraccion o promocion a actualizar.
 	 */
-	private void setTipo(TipoAtraccion tipo) {
+	private void setTipoAtraccion(TipoAtraccion tipo) {
 		this.tipo = tipo;
 	}
 

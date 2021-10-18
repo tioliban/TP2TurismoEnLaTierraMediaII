@@ -5,33 +5,34 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.lang.StringBuilder;
 
+import clases.Atraccion;
 import clases.TipoAtraccion;
-import clases.Usuario;
 import controlador.Controlador;
 import excepciones.DeleteDataBaseExcepcion;
-import excepciones.ExcepcionDeUsuario;
+import excepciones.ExcepcionDeAtraccion;
+import excepciones.ExcepcionDeBase;
 import excepciones.InsertDataBaseExcepcion;
 import excepciones.SelectDataBaseExcepcion;
 import excepciones.UpdateDataBaseExcepcion;
 
-public class UsuarioDAOImplementado implements UsuarioDAO {
+public class AtraccionDAOImplementado implements AtraccionDAO {
 
 	@Override
-	public HashMap<String, Usuario> findAll() {
+	public HashMap<String, Atraccion> findAll() {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("SELECT * FROM usuarios");
+			StringBuilder consultaSQL = new StringBuilder("SELECT * FROM atracciones");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
 			ResultSet fila = statement.executeQuery();
-			HashMap<String, Usuario> usuarios = new HashMap<String, Usuario>();
-			while(fila.next()) {
-				usuarios.put(fila.getString(1), this.levantarUsuario(fila));
+			HashMap<String, Atraccion> atracciones = new HashMap<String, Atraccion>();
+			while (fila.next()) {
+				atracciones.put(fila.getString(1), this.levantarAtraccion(fila));
 			}
-			return usuarios;
+			return atracciones;
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la recuperacion de los usuarios\n");
+			StringBuilder mensaje = new StringBuilder(
+					"Ha ocurrido un error durante la recuperacion de las atracciones\n");
 			mensaje.append("La información de error obtenida es: \n");
 			mensaje.append(e.getMessage());
 			throw new SelectDataBaseExcepcion(mensaje.toString());
@@ -41,14 +42,14 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 	@Override
 	public int countAll() {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("SELECT count(1) as TOTAL FROM usuarios");
+			StringBuilder consultaSQL = new StringBuilder("SELECT count(1) as TOTAL FROM atracciones");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
 			ResultSet fila = statement.executeQuery();
 			fila.next();
 			return fila.getInt("TOTAL");
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante el conteo de los usuarios\n");
+			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante el conteo de las atracciones\n");
 			mensaje.append("La información de error obtenida es: \n");
 			mensaje.append(e.getMessage());
 			throw new SelectDataBaseExcepcion(mensaje.toString());
@@ -56,21 +57,22 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 	}
 
 	@Override
-	public int insert(Usuario usuarioAInsertar) {
+	public int insert(Atraccion atraccionAInsertar) {
 		try {
 			StringBuilder consultaSQL = new StringBuilder(
-					"INSERT into usuarios (nombreUsuario, tiempo, presupuesto, nombreTipo) VALUES (?, ?, ?, ?)");
+					"INSERT into atracciones (nombreAtraccion, tiempo, costo, cupo, nombreTipo) VALUES (?, ?, ?, ?, ?)");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setString(1, usuarioAInsertar.getNombre());
-			statement.setDouble(2, usuarioAInsertar.getTiempo());
-			statement.setDouble(3, usuarioAInsertar.getPresupuesto());
-			statement.setString(4, usuarioAInsertar.getPreferencia().name());
+			statement.setString(1, atraccionAInsertar.getNombre());
+			statement.setDouble(2, atraccionAInsertar.getTiempo());
+			statement.setDouble(3, atraccionAInsertar.getCosto());
+			statement.setInt(4, atraccionAInsertar.getCupo());
+			statement.setString(5, atraccionAInsertar.getTipo().name());
 			int filas = statement.executeUpdate();
 			return filas;
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la inserción del usuario: \"");
-			mensaje.append(usuarioAInsertar.getNombre());
+			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la inserción de la atraccion: \"");
+			mensaje.append(atraccionAInsertar.getNombre());
 			mensaje.append("\". \n");
 			mensaje.append("La información de error obtenida es: \n");
 			mensaje.append(e.getMessage());
@@ -79,20 +81,19 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 	}
 
 	@Override
-	public int update(Usuario usuarioAActualizar) {
+	public int update(Atraccion atraccionAActualizar) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder(
-					"UPDATE usuarios SET tiempo = ?, presupuesto = ? WHERE nombreUsuario = ?");
+			StringBuilder consultaSQL = new StringBuilder("UPDATE atraccion SET cupo = ? WHERE nombreAtraccion = ?");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setDouble(1, usuarioAActualizar.getTiempo());
-			statement.setDouble(2, usuarioAActualizar.getPresupuesto());
-			statement.setString(3, usuarioAActualizar.getNombre());
+			statement.setInt(1, atraccionAActualizar.getCupo());
+			statement.setString(2, atraccionAActualizar.getNombre());
 			int filas = statement.executeUpdate();
 			return filas;
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la actualización del usuario: \"");
-			mensaje.append(usuarioAActualizar.getNombre());
+			StringBuilder mensaje = new StringBuilder(
+					"Ha ocurrido un error durante la actualización de la atraccion: \"");
+			mensaje.append(atraccionAActualizar.getNombre());
 			mensaje.append("\". \n");
 			mensaje.append("La información de error obtenida es: \n");
 			mensaje.append(e.getMessage());
@@ -101,17 +102,18 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 	}
 
 	@Override
-	public int delete(Usuario usuarioAEliminar) {
+	public int delete(Atraccion atraccionAEliminar) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("DELETE FROM usuarios WHERE nombreUsuario = ?");
+			StringBuilder consultaSQL = new StringBuilder("DELETE FROM atracciones WHERE nombreAtraccion = ?");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setString(1, usuarioAEliminar.getNombre());
+			statement.setString(1, atraccionAEliminar.getNombre());
 			int filas = statement.executeUpdate();
 			return filas;
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la eliminación del usuario: \"");
-			mensaje.append(usuarioAEliminar.getNombre());
+			StringBuilder mensaje = new StringBuilder(
+					"Ha ocurrido un error durante la eliminación de la atraccion: \"");
+			mensaje.append(atraccionAEliminar.getNombre());
 			mensaje.append("\". \n");
 			mensaje.append("La información de error obtenida es: \n");
 			mensaje.append(e.getMessage());
@@ -120,23 +122,23 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 	}
 
 	@Override
-	public Usuario findByNombre(String nombre) {
+	public Atraccion findByNombre(String nombre) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("SELECT * FROM usuarios WHERE nombreUsuario = ?");
+			StringBuilder consultaSQL = new StringBuilder("SELECT * FROM atracciones WHERE nombreAtraccion = ?");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setString(1, nombre);
 			ResultSet fila = statement.executeQuery();
-			Usuario usuarioARetornar = null;
+			Atraccion atraccionARetornar = null;
 			if (fila.next()) {
-				usuarioARetornar = this.levantarUsuario(fila);
+				atraccionARetornar = this.levantarAtraccion(fila);
 			}
-			return usuarioARetornar;
-		} catch (ExcepcionDeUsuario excepcion) {
+			return atraccionARetornar;
+		} catch (ExcepcionDeAtraccion excepcion) {
 			System.out.println();
 			return null;
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la búsqueda del usuario: \"");
+			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la búsqueda de la atraccion: \"");
 			mensaje.append(nombre);
 			mensaje.append("\". \n");
 			mensaje.append("La información de error obtenida es: \n");
@@ -145,8 +147,8 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 		}
 	}
 
-	private Usuario levantarUsuario(ResultSet fila) throws SQLException, ExcepcionDeUsuario {
-		return new Usuario(fila.getString(1), fila.getDouble(2), fila.getDouble(3),
-				TipoAtraccion.valueOf(fila.getString(4)));
+	private Atraccion levantarAtraccion(ResultSet fila) throws ExcepcionDeBase, ExcepcionDeAtraccion, SQLException {
+		return new Atraccion(fila.getString(1), fila.getDouble(2), fila.getDouble(3),
+				TipoAtraccion.valueOf(fila.getString(5)), fila.getInt(4));
 	}
 }
