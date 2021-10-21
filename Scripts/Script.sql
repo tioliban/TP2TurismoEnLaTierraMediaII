@@ -4,19 +4,21 @@ CREATE TABLE "tipoAtraccion" (
 );
 CREATE TABLE "atracciones" (
 	"nombreAtraccion"	TEXT NOT NULL UNIQUE,
-	"tiempo"	REAL NOT NULL,
-	"costo"	REAL NOT NULL,
-	"cupo"	INTEGER NOT NULL,
+	"tiempo"	REAL CHECK("tiempo">=0) NOT NULL,
+	"costo"	REAL CHECK("costo">=0) NOT NULL,
+	"cupo"	INTEGER CHECK("cupo">=0) NOT NULL,
 	"nombreTipo"	TEXT NOT NULL,
 	PRIMARY KEY("nombreAtraccion"),
-	FOREIGN KEY("nombreTIpo") REFERENCES "tipoAtraccion"(nombreTipo)
+	FOREIGN KEY("nombreTipo") REFERENCES "tipoAtraccion"(nombreTipo)
 );
 CREATE TABLE "promociones" (
 	"nombrePromocion" TEXT NOT NULL UNIQUE,
 	"tipo" TEXT NOT NULL,
 	"precioFinal" REAL DEFAULT -1,
 	"descuento" REAL DEFAULT -1,
-	PRIMARY KEY("nombrePromocion")
+	"nombreTipo"	TEXT NOT NULL,
+	PRIMARY KEY("nombrePromocion"),
+	FOREIGN KEY("nombreTipo") REFERENCES "tipoAtraccion"(nombreTipo)
 );
 CREATE TABLE "promocionesAtracciones" (
 	"id"	INTEGER NOT NULL UNIQUE,
@@ -29,8 +31,8 @@ CREATE TABLE "promocionesAtracciones" (
 );
 CREATE TABLE "usuarios" (
 	"nombreUsuario"	TEXT NOT NULL UNIQUE,
-	"tiempo"	REAL NOT NULL,
-	"presupuesto"	REAL NOT NULL,
+	"tiempo"	REAL CHECK("tiempo">=0) NOT NULL,
+	"presupuesto"	REAL CHECK("presupuesto">=0) NOT NULL,
 	"nombreTipo"	INTEGER NOT NULL,
 	PRIMARY KEY("nombreUsuario"),
 	FOREIGN KEY("nombreTipo") REFERENCES "tipoAtraccion"(nombreTipo)
@@ -61,11 +63,11 @@ INSERT into atracciones values ("Lothlorein", 1, 35, 30, "Degustacion");
 INSERT into atracciones values ("Erebor", 3, 12, 32, "Paisaje");
 INSERT into atracciones values ("Bosque Negro", 4, 3, 15, "Aventura");
 INSERT into atracciones values ("Esgaroth", 3, 20, 50, "Degustacion");
-INSERT into promociones values ("Primera", "Porcentual", -1, 2);
-INSERT into promociones values ("Segunda", "AxB", -1, -1);
-INSERT into promociones values ("Tercera", "Absoluta", 36, -1);
-INSERT into promociones values ("Cuarta", "Porcentual", -1, 25);
-INSERT into promociones values ("Quinta", "AxB", -1, -1);
+INSERT into promociones values ("Primera", "Porcentual", 0, 20, "Aventura");
+INSERT into promociones values ("Segunda", "AxB", 10, 0, "Aventura");
+INSERT into promociones values ("Tercera", "Absoluta", 36, 0, "Degustacion");
+INSERT into promociones values ("Cuarta", "Porcentual", 0, 25, "Degustacion");
+INSERT into promociones values ("Quinta", "AxB", 5, 0, "Paisaje");
 INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values ("Primera", "Bosque Negro");
 INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values ("Primera", "Mordor");
 INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion) values ("Segunda", "Moria");

@@ -1,7 +1,6 @@
 package clases;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import excepciones.ExcepcionDeBase;
 import excepciones.ExcepcionDePromocion;
@@ -9,12 +8,32 @@ import excepciones.ExcepcionDePromocion;
 public abstract class Promocion extends Base {
 	private ArrayList<String> nombresDeAtracciones;
 	private String tipo;
+	private double descuento;
 
 	public Promocion(String nombre, String tipo, double tiempo, double costo, TipoAtraccion tipoAtraccion,
-			String[] nombresDeAtracciones, List<Atraccion> atracciones) throws ExcepcionDeBase, ExcepcionDePromocion {
+			ArrayList<String> nombresDeAtracciones/**, List<Atraccion> atracciones*/) throws ExcepcionDeBase, ExcepcionDePromocion {
 		super(nombre, tiempo, costo, tipoAtraccion);
 		this.tipo = tipo;
-		this.setNombresDeAtracciones(nombresDeAtracciones, atracciones);
+		this.nombresDeAtracciones = nombresDeAtracciones;
+		//this.setNombresDeAtracciones(nombresDeAtracciones, atracciones);
+	}
+
+	/**
+	 * @pre No tiene.
+	 * @post Retorno el porcentaje de descuento de la promocion.
+	 * @return Porcentaje de descuento.
+	 */
+	public double getDescuento() {
+		return descuento;
+	}
+
+	/**
+	 * @pre No Tiene.
+	 * @post Se actualizo el porcentaje de descuento de la Promocion.
+	 * @param descuento Nuevo porcentaje de descuento.
+	 */
+	public void setDescuento(double descuento) {
+		this.descuento = descuento;
 	}
 
 	/**
@@ -55,15 +74,15 @@ public abstract class Promocion extends Base {
 	 *                              tiene un tipo de atraccion que no coincide con
 	 *                              el tipo de atracciones contenida en la
 	 *                              promocion.
-	 */
+	 
 	private void setNombresDeAtracciones(String[] nombresDeAtracciones, List<Atraccion> atracciones)
 			throws ExcepcionDePromocion {
 		boolean validar = true;
 		ArrayList<String> retorno = new ArrayList<String>();
 		if (nombresDeAtracciones.length > 1) {
 			for (String nombre : nombresDeAtracciones) {
-				validar = validar
-						&& this.getTipoAtraccion() == Atraccion.buscarAtraccionPorNombre(nombre, atracciones).getTipoAtraccion();
+				validar = validar && this.getTipoAtraccion() == Atraccion.buscarAtraccionPorNombre(nombre, atracciones)
+						.getTipoAtraccion();
 			}
 			if (validar)
 				for (String nombre : nombresDeAtracciones) {
@@ -78,7 +97,8 @@ public abstract class Promocion extends Base {
 		} else
 			throw new ExcepcionDePromocion("asignar la lista de atracciones ya que la lista de atracciones esta vacía");
 	}
-
+	*/
+	
 	/**
 	 * @pre No tiene.
 	 * @post Se recuperó el nombre de todas las atracciones contenidas en la

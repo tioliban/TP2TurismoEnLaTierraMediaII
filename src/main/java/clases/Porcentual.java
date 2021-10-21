@@ -1,6 +1,6 @@
 package clases;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import excepciones.ExcepcionDeAtraccion;
 import excepciones.ExcepcionDeBase;
@@ -10,12 +10,11 @@ public class Porcentual extends Promocion {
 
 	double porcentajeDescuento;
 
-	public Porcentual(String nombre, TipoAtraccion tipo, String[] nombresDeAtracciones,
-			List<Atraccion> atracciones, double porcentaje)
+	public Porcentual(String nombre, double tiempo, double costo, TipoAtraccion tipoAtraccion,
+			ArrayList<String> nombresDeAtracciones, double porcentaje)
 			throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
-		super(nombre, calcularTiempo(atracciones, nombresDeAtracciones),
-				calcularCosto(atracciones, nombresDeAtracciones, porcentaje), tipo, nombresDeAtracciones, atracciones);
-		this.setPorcentajeDescuento(porcentaje);
+		super(nombre, "Porcentual", tiempo, costo, tipoAtraccion, nombresDeAtracciones);
+		this.porcentajeDescuento = porcentaje;
 	}
 
 	/**
@@ -34,7 +33,7 @@ public class Porcentual extends Promocion {
 	 * @throws ExcepcionDePromocion Informo la existencia de un error al momento de
 	 *                              asignar el costo de la promocion, ya que el
 	 *                              porcentaje ingresado posee un valor invalido.
-	 */
+	 
 	private static double calcularCosto(List<Atraccion> atracciones, String[] nombresDeAtracciones, double porcentaje)
 			throws ExcepcionDePromocion {
 		double costo = 0;
@@ -43,7 +42,8 @@ public class Porcentual extends Promocion {
 		}
 		return costo * validarPorcentaje(porcentaje);
 	}
-
+	 */
+	
 	/**
 	 * @pre No tiene.
 	 * @post Se valido que el porcentaje de descuento.
@@ -52,7 +52,7 @@ public class Porcentual extends Promocion {
 	 * @throws ExcepcionDePromocion Informo la existencia de un error al momento de
 	 *                              calcular el porcentaje de descuento, ya que
 	 *                              posee un valor invalido.
-	 */
+	 
 	private static double validarPorcentaje(double porcentaje) throws ExcepcionDePromocion {
 		if ((porcentaje > 0) && (porcentaje < 100))
 			return (1 - (porcentaje / 100));
@@ -61,6 +61,7 @@ public class Porcentual extends Promocion {
 					"asignar su porcentaje de descuento, ya que este es invalido: " + porcentaje);
 		}
 	}
+	 */
 
 	/**
 	 * @pre No tiene.
@@ -74,7 +75,7 @@ public class Porcentual extends Promocion {
 	 *                              encontrado errores en la lista de atracciones o
 	 *                              los nombres de atracciones que contienen la
 	 *                              promocion.
-	 */
+	 
 	protected static double calcularTiempo(List<Atraccion> atracciones, String[] nombresDeAtracciones)
 			throws ExcepcionDeAtraccion {
 		double tiempo = 0;
@@ -88,6 +89,7 @@ public class Porcentual extends Promocion {
 							+ " o los nombres de las atracciones que incluye la promocion es nula");
 		return tiempo;
 	}
+	 */
 
 	/**
 	 * @pre No tiene.
@@ -106,7 +108,7 @@ public class Porcentual extends Promocion {
 	 * @throws ExcepcionDePromocion Informo la existencia de un error al momento de
 	 *                              asignar el porcentaje de descuento de la
 	 *                              promocion, ya que posee un valor invalido.
-	 */
+	 
 	private void setPorcentajeDescuento(double porcentaje) throws ExcepcionDePromocion {
 		if ((porcentaje > 0) && (porcentaje < 100))
 			this.porcentajeDescuento = porcentaje;
@@ -115,6 +117,7 @@ public class Porcentual extends Promocion {
 					"asignar su porcentaje de descuento, ya que este es invalido: " + porcentaje);
 		}
 	}
+	 */
 
 	@Override
 	public String imprimir() {

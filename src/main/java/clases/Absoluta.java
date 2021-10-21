@@ -1,6 +1,6 @@
 package clases;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import excepciones.ExcepcionDeAtraccion;
 import excepciones.ExcepcionDeBase;
@@ -8,11 +8,9 @@ import excepciones.ExcepcionDePromocion;
 
 public class Absoluta extends Promocion {
 
-	public Absoluta(String nombre, TipoAtraccion tipo, String[] nombresDeAtracciones,
-			List<Atraccion> atracciones, double precioFinal)
-			throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
-		super(nombre, Porcentual.calcularTiempo(atracciones, nombresDeAtracciones), precioFinal, tipo,
-				nombresDeAtracciones, atracciones);
+	public Absoluta(String nombre, double tiempo, double costo, TipoAtraccion tipoAtraccion,
+			ArrayList<String> nombresDeAtracciones) throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
+		super(nombre, "Absoluta", tiempo, costo, tipoAtraccion, nombresDeAtracciones);
 	}
 
 	@Override

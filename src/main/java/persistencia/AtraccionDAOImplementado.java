@@ -67,7 +67,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			statement.setDouble(2, atraccionAInsertar.getTiempo());
 			statement.setDouble(3, atraccionAInsertar.getCosto());
 			statement.setInt(4, atraccionAInsertar.getCupo());
-			statement.setString(5, atraccionAInsertar.getTipo().name());
+			statement.setString(5, atraccionAInsertar.getTipoAtraccion().name());
 			int filas = statement.executeUpdate();
 			return filas;
 		} catch (Exception e) {
@@ -149,6 +149,6 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 
 	private Atraccion levantarAtraccion(ResultSet fila) throws ExcepcionDeBase, ExcepcionDeAtraccion, SQLException {
 		return new Atraccion(fila.getString(1), fila.getDouble(2), fila.getDouble(3),
-				TipoAtraccion.valueOf(fila.getString(5)), fila.getInt(4));
+				fila.getInt(4), TipoAtraccion.valueOf(fila.getString(5)));
 	}
 }

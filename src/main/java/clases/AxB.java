@@ -1,6 +1,7 @@
 package clases;
 
-import java.util.List;
+import java.util.ArrayList;
+
 
 import excepciones.ExcepcionDeAtraccion;
 import excepciones.ExcepcionDeBase;
@@ -9,11 +10,11 @@ import excepciones.ExcepcionDePromocion;
 public class AxB extends Promocion {
 	private String atraccionGratis;
 
-	public AxB(String nombre, TipoAtraccion tipo, String[] nombresDeAtracciones, List<Atraccion> atracciones,
-			String atraccionGratis) throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
-		super(nombre, Porcentual.calcularTiempo(atracciones, nombresDeAtracciones),
-				calcularCosto(atracciones, nombresDeAtracciones), tipo, nombresDeAtracciones, atracciones);
-		this.setAtraccionGratis(atraccionGratis);
+	public AxB(String nombre, double tiempo, double costo, TipoAtraccion tipoAtraccion,
+			ArrayList<String> nombresDeAtracciones, String atraccionGratis)
+			throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
+		super(nombre, "AxB", tiempo, costo, tipoAtraccion, nombresDeAtracciones);
+		this.atraccionGratis = atraccionGratis;
 	}
 
 	/**
@@ -24,7 +25,7 @@ public class AxB extends Promocion {
 	 * @param nombresDeAtracciones Nombres de atracciones a calcular su costo
 	 * @return Costo total de todas las atracciones contenidas en los nombres de las
 	 *         atracciones.
-	 */
+	 
 	protected static double calcularCosto(List<Atraccion> atracciones, String[] nombresDeAtracciones) {
 		double costo = 0;
 		String gratis = "";
@@ -35,6 +36,7 @@ public class AxB extends Promocion {
 		costo -= Atraccion.buscarAtraccionPorNombre(gratis, atracciones).getCosto();
 		return costo;
 	}
+	*/
 
 	/**
 	 * @pre No tiene.
@@ -52,7 +54,7 @@ public class AxB extends Promocion {
 	 * @throws ExcepcionDePromocion Informo la existencia de un error al momento de
 	 *                              asignar el el nombre de la atraccion, ya que
 	 *                              esta no se encuentra en la lista de atracciones.
-	 */
+	 
 	private void setAtraccionGratis(String atraccionGratis) throws ExcepcionDePromocion {
 		if (this.getNombresDeAtracciones().contains(atraccionGratis))
 			this.atraccionGratis = atraccionGratis;
@@ -60,6 +62,7 @@ public class AxB extends Promocion {
 			throw new ExcepcionDePromocion(
 					"asignar su promocion gratis, ya que esta no se encuentra en la lista de atracciones que incluye la promocion");
 	}
+	*/
 
 	@Override
 	public String imprimir() {

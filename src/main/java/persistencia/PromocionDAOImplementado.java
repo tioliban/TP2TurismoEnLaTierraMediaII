@@ -4,12 +4,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import clases.Absoluta;
+import clases.AxB;
+import clases.Porcentual;
 import clases.Promocion;
 import clases.TipoAtraccion;
 import controlador.Controlador;
 import excepciones.DeleteDataBaseExcepcion;
+import excepciones.ExcepcionDeAtraccion;
 import excepciones.ExcepcionDeBase;
 import excepciones.ExcepcionDePromocion;
 import excepciones.InsertDataBaseExcepcion;
@@ -59,19 +64,36 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	@Override
 	public int insert(Promocion promocionAInsertar) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder(
-					"INSERT into promociones (nombreAtraccion, tiempo, costo, cupo, nombreTipo) VALUES (?, ?, ?, ?, ?)");
+			StringBuilder insertSQL = new StringBuilder(
+					"INSERT into promociones (nombrePromocion, tipo, precioFinal, descuento) VALUES (?, ?, ?, ?)");
 			Connection coneccion = Controlador.getConnection();
+			StringBuilder consultaSQL = new StringBuilder("SELECT atracciones.nombreAtraccion, atracciones.costo");
+			consultaSQL.append(" FROM atracciones NATURAL JOIN promocionesAtracciones NATURAL JOIN promociones");
+			consultaSQL.append(" WHERE promocion.nombrePromocion = ?");
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setString(1, promocionAInsertar.getNombre());
-			statement.setDouble(2, promocionAInsertar.getTiempo());
-			statement.setDouble(3, promocionAInsertar.getCosto());
-			statement.setInt(4, promocionAInsertar.getCupo());
-			statement.setString(5, promocionAInsertar.getTipo().name());
+			ResultSet fila = statement.executeQuery();
+			HashMap<String, Double> atracciones = new HashMap<String, Double>();
+			while (fila.next()) {
+				atracciones.put(fila.getString(1), fila.getDouble(2));
+			}
+			statement = coneccion.prepareStatement(insertSQL.toString());
+			statement.setString(1, promocionAInsertar.getNombre());
+			statement.setString(2, promocionAInsertar.getTipo());
+			if (promocionAInsertar.getTipo().equals("AxB")) {
+				statement.setDouble(3, -1);
+				statement.setDouble(4, -1);
+			} else if (promocionAInsertar.getTipo().equals("Absoluta")) {
+				statement.setDouble(3, promocionAInsertar.getCosto());
+				statement.setDouble(4, -1);
+			} else {
+				statement.setDouble(3, -1);
+				statement.setDouble(4, promocionAInsertar.getDescuento());
+			}
 			int filas = statement.executeUpdate();
 			return filas;
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la inserción de la atraccion: \"");
+			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la inserción de la promocion: \"");
 			mensaje.append(promocionAInsertar.getNombre());
 			mensaje.append("\". \n");
 			mensaje.append("La información de error obtenida es: \n");
@@ -83,16 +105,27 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	@Override
 	public int update(Promocion promocionAActualizar) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("UPDATE atraccion SET cupo = ? WHERE nombreAtraccion = ?");
+			StringBuilder consultaSQL = new StringBuilder(
+					"UPDATE promociones SET tipo = ?, precioFinal = ?, descuento = ? WHERE nombrePromocion = ?");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setInt(1, promocionAActualizar.getCupo());
-			statement.setString(2, promocionAActualizar.getNombre());
+			statement.setString(1, promocionAActualizar.getTipo());
+			if (promocionAActualizar.getTipo().equals("AxB")) {
+				statement.setDouble(2, -1);
+				statement.setDouble(3, -1);
+			} else if (promocionAActualizar.getTipo().equals("Absoluta")) {
+				statement.setDouble(2, promocionAActualizar.getCosto());
+				statement.setDouble(3, -1);
+			} else {
+				statement.setDouble(2, -1);
+				statement.setDouble(3, promocionAActualizar.getDescuento());
+			}
+			statement.setString(4, promocionAActualizar.getNombre());
 			int filas = statement.executeUpdate();
 			return filas;
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder(
-					"Ha ocurrido un error durante la actualización de la atraccion: \"");
+					"Ha ocurrido un error durante la actualización de la promocion: \"");
 			mensaje.append(promocionAActualizar.getNombre());
 			mensaje.append("\". \n");
 			mensaje.append("La información de error obtenida es: \n");
@@ -104,7 +137,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	@Override
 	public int delete(Promocion promocionAEliminar) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("DELETE FROM atracciones WHERE nombreAtraccion = ?");
+			StringBuilder consultaSQL = new StringBuilder("DELETE FROM promociones WHERE nombrePromocion = ?");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setString(1, promocionAEliminar.getNombre());
@@ -112,7 +145,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 			return filas;
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder(
-					"Ha ocurrido un error durante la eliminación de la atraccion: \"");
+					"Ha ocurrido un error durante la eliminación de la promocion: \"");
 			mensaje.append(promocionAEliminar.getNombre());
 			mensaje.append("\". \n");
 			mensaje.append("La información de error obtenida es: \n");
@@ -124,7 +157,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	@Override
 	public Promocion findByNombre(String nombre) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("SELECT * FROM atracciones WHERE nombreAtraccion = ?");
+			StringBuilder consultaSQL = new StringBuilder("SELECT * FROM promociones WHERE nombreAtraccion = ?");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setString(1, nombre);
@@ -134,7 +167,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 				promocionARetornar = this.levantarPromocion(fila);
 			}
 			return promocionARetornar;
-		} catch (ExcepcionDeAtraccion excepcion) {
+		} catch (ExcepcionDePromocion excepcion) {
 			System.out.println();
 			return null;
 		} catch (Exception e) {
@@ -147,8 +180,47 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		}
 	}
 
-	private Promocion levantarPromocion(ResultSet fila) throws ExcepcionDeBase, ExcepcionDePromocion, SQLException {
-		return new Promocion(fila.getString(1), fila.getDouble(2), fila.getDouble(3),
-				TipoAtraccion.valueOf(fila.getString(5)), fila.getInt(4));
+	private Promocion levantarPromocion(ResultSet filaDePromociones)
+			throws ExcepcionDeBase, ExcepcionDePromocion, SQLException, ExcepcionDeAtraccion {
+		Promocion promocion = null;
+		ArrayList<String> nombresDeAtracciones = new ArrayList<String>();
+		StringBuilder nombresDeAtraccionesSQL = new StringBuilder(
+				"SELECT nombreAtraccion FROM promocionesAtracciones WHERE nombrePromocion = ?");
+		StringBuilder tiempoYCostoSQL = new StringBuilder("SELECT sum(atracciones.tiempo), sum(atracciones.costo)");
+		tiempoYCostoSQL.append(" FROM atracciones NATURAL JOIN promocionesAtracciones NATURAL JOIN promociones");
+		tiempoYCostoSQL.append(" Where promociones.nombrePromocion = ?");
+		Connection coneccion = Controlador.getConnection();
+		PreparedStatement statement = coneccion.prepareStatement(nombresDeAtraccionesSQL.toString());
+		statement.setString(1, filaDePromociones.getString(1));
+		ResultSet filaDePromocionesAtracciones = statement.executeQuery();
+		statement = coneccion.prepareStatement(tiempoYCostoSQL.toString());
+		statement.setString(1, filaDePromociones.getString(1));
+		ResultSet tiempoYCosto = statement.executeQuery();
+		while (filaDePromocionesAtracciones.next()) {
+			nombresDeAtracciones.add(filaDePromocionesAtracciones.getString(1));
+		}
+		switch (filaDePromociones.getString(2)) {
+		case "Porcentual": {
+			promocion = new Porcentual(filaDePromociones.getString(1), tiempoYCosto.getDouble(1),
+					tiempoYCosto.getDouble(2) * (1 - (filaDePromociones.getDouble(4) / 100)),
+					TipoAtraccion.valueOf(filaDePromociones.getString(4)), nombresDeAtracciones,
+					filaDePromociones.getDouble(4));
+			break;
+		}
+		case "AxB": {
+			promocion = new AxB(filaDePromociones.getString(1), tiempoYCosto.getDouble(1),
+					tiempoYCosto.getDouble(2) - filaDePromociones.getDouble(3),
+					TipoAtraccion.valueOf(filaDePromociones.getString(4)), nombresDeAtracciones,
+					filaDePromociones.getString(4));
+			break;
+		}
+		case "Absoluta": {
+			promocion = new Absoluta(filaDePromociones.getString(1), tiempoYCosto.getDouble(1),
+					filaDePromociones.getDouble(3), TipoAtraccion.valueOf(filaDePromociones.getString(4)),
+					nombresDeAtracciones);
+			break;
+		}
+		}
+		return promocion;
 	}
 }
