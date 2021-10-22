@@ -73,25 +73,34 @@ public class PromocionDAOImplementado implements PromocionDAO {
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setString(1, promocionAInsertar.getNombre());
 			ResultSet fila = statement.executeQuery();
+			consultaSQL = new StringBuilder("INSERT into promocionesAtracciones (nombrePromocion, nombreAtraccion)");
+			consultaSQL.append(" VALUES (?, ?)");
 			HashMap<String, Double> atracciones = new HashMap<String, Double>();
+			ArrayList<String> indice = new ArrayList<String>();
+			statement = coneccion.prepareStatement(consultaSQL.toString());
 			while (fila.next()) {
 				atracciones.put(fila.getString(1), fila.getDouble(2));
+				indice.add(fila.getString(1));
+			}
+			for(String indic:indice) {
+				statement.setString(1, promocionAInsertar.getNombre());
+				statement.setString(2, indic);
+				statement.executeUpdate();
 			}
 			statement = coneccion.prepareStatement(insertSQL.toString());
 			statement.setString(1, promocionAInsertar.getNombre());
-			statement.setString(2, promocionAInsertar.getTipo());
-			if (promocionAInsertar.getTipo().equals("AxB")) {
-				statement.setDouble(3, -1);
-				statement.setDouble(4, -1);
-			} else if (promocionAInsertar.getTipo().equals("Absoluta")) {
+			statement.setString(2, promocionAInsertar.getPromo());
+			if (promocionAInsertar.getPromo().equals("AxB")) {
+				statement.setDouble(3, atracciones.get(indice.get(0)));
+				statement.setDouble(4, 0);
+			} else if (promocionAInsertar.getPromo().equals("Absoluta")) {
 				statement.setDouble(3, promocionAInsertar.getCosto());
-				statement.setDouble(4, -1);
+				statement.setDouble(4, 0);
 			} else {
-				statement.setDouble(3, -1);
+				statement.setDouble(3, 0);
 				statement.setDouble(4, promocionAInsertar.getDescuento());
 			}
-			int filas = statement.executeUpdate();
-			return filas;
+			return statement.executeUpdate();
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la inserción de la promocion: \"");
 			mensaje.append(promocionAInsertar.getNombre());
@@ -109,11 +118,11 @@ public class PromocionDAOImplementado implements PromocionDAO {
 					"UPDATE promociones SET tipo = ?, precioFinal = ?, descuento = ? WHERE nombrePromocion = ?");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setString(1, promocionAActualizar.getTipo());
-			if (promocionAActualizar.getTipo().equals("AxB")) {
+			statement.setString(1, promocionAActualizar.getPromo());
+			if (promocionAActualizar.getPromo().equals("AxB")) {
 				statement.setDouble(2, -1);
 				statement.setDouble(3, -1);
-			} else if (promocionAActualizar.getTipo().equals("Absoluta")) {
+			} else if (promocionAActualizar.getPromo().equals("Absoluta")) {
 				statement.setDouble(2, promocionAActualizar.getCosto());
 				statement.setDouble(3, -1);
 			} else {
@@ -121,8 +130,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 				statement.setDouble(3, promocionAActualizar.getDescuento());
 			}
 			statement.setString(4, promocionAActualizar.getNombre());
-			int filas = statement.executeUpdate();
-			return filas;
+			return statement.executeUpdate();
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder(
 					"Ha ocurrido un error durante la actualización de la promocion: \"");
@@ -141,8 +149,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setString(1, promocionAEliminar.getNombre());
-			int filas = statement.executeUpdate();
-			return filas;
+			return statement.executeUpdate();
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder(
 					"Ha ocurrido un error durante la eliminación de la promocion: \"");
@@ -200,26 +207,26 @@ public class PromocionDAOImplementado implements PromocionDAO {
 			nombresDeAtracciones.add(filaDePromocionesAtracciones.getString(1));
 		}
 		switch (filaDePromociones.getString(2)) {
-		case "Porcentual": {
-			promocion = new Porcentual(filaDePromociones.getString(1), tiempoYCosto.getDouble(1),
-					tiempoYCosto.getDouble(2) * (1 - (filaDePromociones.getDouble(4) / 100)),
-					TipoAtraccion.valueOf(filaDePromociones.getString(4)), nombresDeAtracciones,
-					filaDePromociones.getDouble(4));
-			break;
-		}
-		case "AxB": {
-			promocion = new AxB(filaDePromociones.getString(1), tiempoYCosto.getDouble(1),
-					tiempoYCosto.getDouble(2) - filaDePromociones.getDouble(3),
-					TipoAtraccion.valueOf(filaDePromociones.getString(4)), nombresDeAtracciones,
-					filaDePromociones.getString(4));
-			break;
-		}
-		case "Absoluta": {
-			promocion = new Absoluta(filaDePromociones.getString(1), tiempoYCosto.getDouble(1),
-					filaDePromociones.getDouble(3), TipoAtraccion.valueOf(filaDePromociones.getString(4)),
-					nombresDeAtracciones);
-			break;
-		}
+			case "Porcentual": {
+				promocion = new Porcentual(filaDePromociones.getString(1), tiempoYCosto.getDouble(1),
+						tiempoYCosto.getDouble(2) * (1 - (filaDePromociones.getDouble(4) / 100)),
+						TipoAtraccion.valueOf(filaDePromociones.getString(4)), nombresDeAtracciones,
+						filaDePromociones.getDouble(4));
+				break;
+			}
+			case "AxB": {
+				promocion = new AxB(filaDePromociones.getString(1), tiempoYCosto.getDouble(1),
+						tiempoYCosto.getDouble(2) - filaDePromociones.getDouble(3),
+						TipoAtraccion.valueOf(filaDePromociones.getString(4)), nombresDeAtracciones,
+						filaDePromociones.getString(4));
+				break;
+			}
+			case "Absoluta": {
+				promocion = new Absoluta(filaDePromociones.getString(1), tiempoYCosto.getDouble(1),
+						filaDePromociones.getDouble(3), TipoAtraccion.valueOf(filaDePromociones.getString(4)),
+						nombresDeAtracciones);
+				break;
+			}
 		}
 		return promocion;
 	}

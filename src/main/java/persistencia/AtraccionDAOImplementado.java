@@ -68,8 +68,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			statement.setDouble(3, atraccionAInsertar.getCosto());
 			statement.setInt(4, atraccionAInsertar.getCupo());
 			statement.setString(5, atraccionAInsertar.getTipoAtraccion().name());
-			int filas = statement.executeUpdate();
-			return filas;
+			return statement.executeUpdate();
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la inserción de la atraccion: \"");
 			mensaje.append(atraccionAInsertar.getNombre());
@@ -88,8 +87,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setInt(1, atraccionAActualizar.getCupo());
 			statement.setString(2, atraccionAActualizar.getNombre());
-			int filas = statement.executeUpdate();
-			return filas;
+			return statement.executeUpdate();
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder(
 					"Ha ocurrido un error durante la actualización de la atraccion: \"");
@@ -108,8 +106,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setString(1, atraccionAEliminar.getNombre());
-			int filas = statement.executeUpdate();
-			return filas;
+			return statement.executeUpdate();
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder(
 					"Ha ocurrido un error durante la eliminación de la atraccion: \"");

@@ -66,8 +66,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 			statement.setDouble(2, usuarioAInsertar.getTiempo());
 			statement.setDouble(3, usuarioAInsertar.getPresupuesto());
 			statement.setString(4, usuarioAInsertar.getPreferencia().name());
-			int filas = statement.executeUpdate();
-			return filas;
+			return statement.executeUpdate();
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la inserción del usuario: \"");
 			mensaje.append(usuarioAInsertar.getNombre());
@@ -88,8 +87,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 			statement.setDouble(1, usuarioAActualizar.getTiempo());
 			statement.setDouble(2, usuarioAActualizar.getPresupuesto());
 			statement.setString(3, usuarioAActualizar.getNombre());
-			int filas = statement.executeUpdate();
-			return filas;
+			return statement.executeUpdate();
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la actualización del usuario: \"");
 			mensaje.append(usuarioAActualizar.getNombre());
@@ -107,8 +105,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setString(1, usuarioAEliminar.getNombre());
-			int filas = statement.executeUpdate();
-			return filas;
+			return statement.executeUpdate();
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la eliminación del usuario: \"");
 			mensaje.append(usuarioAEliminar.getNombre());

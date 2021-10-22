@@ -172,7 +172,7 @@ public class SugerirProducto {
 						&& (Atraccion.buscarAtraccionPorNombre(atraccionDeLaPromocion, atracciones).getCupo() >= 1);
 				noLaVisito &= this.laVisito(usuario, atraccionDeLaPromocion);
 			}
-			if ((usuario.getPreferencia() == laPromocion.getTipo()) && tieneCupo
+			if ((usuario.getPreferencia() == laPromocion.getTipoAtraccion()) && tieneCupo
 					&& (laPromocion.getTiempo() <= usuario.getTiempo())
 					&& (laPromocion.getCosto() <= usuario.getPresupuesto()) && noLaVisito)
 				if (usuario.aceptarSugerencia(laPromocion, this.respuesta(laPromocion)))
