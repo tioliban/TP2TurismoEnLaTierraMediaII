@@ -2,8 +2,6 @@ package clases;
 
 import java.util.Objects;
 
-import excepciones.ExcepcionDeBase;
-
 public abstract class Base {
 
 	private int id;
@@ -12,7 +10,7 @@ public abstract class Base {
 	private double costo;
 	private TipoAtraccion tipo;
 
-	public Base(int id, String nombre, double tiempo, double costo, TipoAtraccion tipo) throws ExcepcionDeBase {
+	public Base(int id, String nombre, double tiempo, double costo, TipoAtraccion tipo) {
 		this.setId(id);
 		this.setNombre(nombre);
 		this.setTiempo(tiempo);
@@ -52,15 +50,9 @@ public abstract class Base {
 	 * @pre No Tiene.
 	 * @post Se actualizo el nombre de la Atraccion o Promocion.
 	 * @param nombre Nuevo nombre a actualizar.
-	 * @throws ExcepcionDeBase Informo la existencia de un error al momento de
-	 *                         asignar el nombre de la atraccion o promocion, ya que
-	 *                         posee un valor invalido.
 	 */
-	private void setNombre(String nombre) throws ExcepcionDeBase {
-		if (nombre != "")
-			this.nombre = nombre;
-		else
-			throw new ExcepcionDeBase("asignar el nombre, ya que este se encuentra vacio");
+	private void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	/**
@@ -76,15 +68,9 @@ public abstract class Base {
 	 * @pre No Tiene.
 	 * @post Se actualizo la duracion de la Atraccion o Promocion.
 	 * @param tiempo Nueva duración a actualizar.
-	 * @throws ExcepcionDeBase Informo la existencia de un error al momento de
-	 *                         asignar la duracion de la atraccion o promocion, ya
-	 *                         que posee un valor invalido.
 	 */
-	private void setTiempo(double tiempo) throws ExcepcionDeBase {
-		if (tiempo > 0)
-			this.tiempo = tiempo;
-		else
-			throw new ExcepcionDeBase("asignar el tiempo, ya que este es invalido: " + tiempo);
+	private void setTiempo(double tiempo) {
+		this.tiempo = tiempo;
 	}
 
 	/**
@@ -102,15 +88,9 @@ public abstract class Base {
 	 * @param costo Cantidad de monedas que requiere la atraccion o promocion a
 	 *              actualizar.
 	 * @return No tiene.
-	 * @throws ExcepcionDeBase Informo la existencia de un error al momento de
-	 *                         asignar el costo de la atraccion o promocion, ya que
-	 *                         posee un valor invalido.
 	 */
-	private void setCosto(double costo) throws ExcepcionDeBase {
-		if (costo > 0)
-			this.costo = costo;
-		else
-			throw new ExcepcionDeBase("asignar el costo, ya que este es invalido: " + costo);
+	private void setCosto(double costo) {
+		this.costo = costo;
 	}
 
 	/**

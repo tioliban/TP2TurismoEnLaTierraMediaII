@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import excepciones.ExcepcionDeUsuario;
-
 public class Usuario {
 
 	private int id;
@@ -15,8 +13,7 @@ public class Usuario {
 	private TipoAtraccion preferencia;
 	private List<Base> itinerario;
 
-	public Usuario(int id, String nombre, double tiempo, double presupuesto, TipoAtraccion preferencia)
-			throws ExcepcionDeUsuario {
+	public Usuario(int id, String nombre, double tiempo, double presupuesto, TipoAtraccion preferencia) {
 		this.setId(id);
 		this.setNombre(nombre);
 		this.setTiempo(tiempo);
@@ -55,15 +52,9 @@ public class Usuario {
 	 * @pre No tiene.
 	 * @post Se asigno y valido el nombre del usuario.
 	 * @param nombre Nuevo nombre que tendra el usuario.
-	 * @throws ExcepcionDeUsuario Informo la existencia de un error al momento de
-	 *                            asignar el nombre del usuario, ya que posee un
-	 *                            valor invalido.
 	 */
-	private void setNombre(String nombre) throws ExcepcionDeUsuario {
-		if (nombre != "")
-			this.nombre = nombre;
-		else
-			throw new ExcepcionDeUsuario("asignar el nombre, ya que este se encuentra vacio");
+	private void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	/**
@@ -79,15 +70,9 @@ public class Usuario {
 	 * @pre No tiene.
 	 * @post Se asigno y valido el tiempo disponible del usuario.
 	 * @param tiempo Nueva cantidad de tiempo que tendra el usuario.
-	 * @throws ExcepcionDeUsuario Informo la existencia de un error al momento de
-	 *                            asignar el tiempo del usuario, ya que posee un
-	 *                            valor invalido.
 	 */
-	private void setTiempo(double tiempo) throws ExcepcionDeUsuario {
-		if (tiempo > 0)
-			this.tiempo = tiempo;
-		else
-			throw new ExcepcionDeUsuario("asignar el tiempo disponible, ya que este es invalido: " + tiempo);
+	private void setTiempo(double tiempo) {
+		this.tiempo = tiempo;
 	}
 
 	/**
@@ -103,16 +88,10 @@ public class Usuario {
 	 * @pre No tiene.
 	 * @post Se valido y asigno el presupuesto que dispone el usuario.
 	 * @param presupuesto Nueva cantidad de dinero que tendra el usuario.
-	 * @throws ExcepcionDeUsuario Informo la existencia de un error al momento de
-	 *                            asignar el presupuesto del usuario, ya que posee
-	 *                            un valor invalido.
 	 */
-	private void setPresupuesto(double presupuesto) throws ExcepcionDeUsuario {
-		if (presupuesto > 0)
-			this.presupuesto = presupuesto;
-		else
-			throw new ExcepcionDeUsuario("asignar el presupuesto disponible, ya que este es invalido: " + presupuesto);
-	}
+	private void setPresupuesto(double presupuesto) {
+		this.presupuesto = presupuesto;
+		}
 
 	/**
 	 * @pre No tiene.
@@ -211,7 +190,7 @@ public class Usuario {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(nombre);
+		return Objects.hash(id, nombre, preferencia);
 	}
 
 	@Override
@@ -223,7 +202,7 @@ public class Usuario {
 			return false;
 		}
 		Usuario other = (Usuario) obj;
-		return Objects.equals(nombre, other.nombre);
+		return id == other.id && Objects.equals(nombre, other.nombre) && preferencia == other.preferencia;
 	}
 
 }

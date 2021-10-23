@@ -4,35 +4,34 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import clases.Atraccion;
 import clases.TipoAtraccion;
 import controlador.Controlador;
 import excepciones.DeleteDataBaseExcepcion;
-import excepciones.ExcepcionDeAtraccion;
-import excepciones.ExcepcionDeBase;
 import excepciones.InsertDataBaseExcepcion;
 import excepciones.SelectDataBaseExcepcion;
 import excepciones.UpdateDataBaseExcepcion;
 
 public class AtraccionDAOImplementado implements AtraccionDAO {
 
+	private final String CONSULTA_SELECT = "SELECT atracciones.idAtraccion, atracciones.nombreAtraccion, atracciones.tiempo, atracciones.costo, atracciones.cupo, tipoAtraccion.nombreTipoAtraccion FROM atracciones NATURAL JOIN tipoAtraccion";
+
 	@Override
-	public HashMap<String, Atraccion> findAll() {
+	public ArrayList<Atraccion> findAll() {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("SELECT * FROM atracciones");
 			Connection coneccion = Controlador.getConnection();
-			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
+			PreparedStatement statement = coneccion.prepareStatement(CONSULTA_SELECT);
 			ResultSet fila = statement.executeQuery();
-			HashMap<String, Atraccion> atracciones = new HashMap<String, Atraccion>();
+			ArrayList<Atraccion> atracciones = new ArrayList<Atraccion>();
 			while (fila.next()) {
-				atracciones.put(fila.getString(1), this.levantarAtraccion(fila));
+				atracciones.add(this.levantarAtraccion(fila));
 			}
 			return atracciones;
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder(
-					"Ha ocurrido un error durante la recuperacion de las atracciones\n");
+					"Ha ocurrido un error durante la recuperacion de las atracciones:\n");
 			mensaje.append("La información de error obtenida es: \n");
 			mensaje.append(e.getMessage());
 			throw new SelectDataBaseExcepcion(mensaje.toString());
@@ -49,7 +48,8 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			fila.next();
 			return fila.getInt("TOTAL");
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante el conteo de las atracciones\n");
+			StringBuilder mensaje = new StringBuilder(
+					"Ha ocurrido un error durante el conteo de las atracciones:\n");
 			mensaje.append("La información de error obtenida es: \n");
 			mensaje.append(e.getMessage());
 			throw new SelectDataBaseExcepcion(mensaje.toString());
@@ -59,20 +59,20 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 	@Override
 	public int insert(Atraccion atraccionAInsertar) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder(
-					"INSERT into atracciones (nombreAtraccion, tiempo, costo, cupo, nombreTipo) VALUES (?, ?, ?, ?, ?)");
+			StringBuilder consultaSQL = new StringBuilder("INSERT INTO atracciones");
+			consultaSQL.append(" (nombreAtraccion, tiempo, costo, cupo, idTipoAtraccion)");
+			consultaSQL.append(" VALUES (?, ?, ?, ?, ?)");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setString(1, atraccionAInsertar.getNombre());
 			statement.setDouble(2, atraccionAInsertar.getTiempo());
 			statement.setDouble(3, atraccionAInsertar.getCosto());
 			statement.setInt(4, atraccionAInsertar.getCupo());
-			statement.setString(5, atraccionAInsertar.getTipoAtraccion().name());
+			statement.setInt(5, atraccionAInsertar.getTipoAtraccion().ordinal() + 1);
 			return statement.executeUpdate();
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la inserción de la atraccion: \"");
-			mensaje.append(atraccionAInsertar.getNombre());
-			mensaje.append("\". \n");
+			StringBuilder mensaje = new StringBuilder(
+					"Ha ocurrido un error durante la inserción de una atraccion:\n");
 			mensaje.append("La información de error obtenida es: \n");
 			mensaje.append(e.getMessage());
 			throw new InsertDataBaseExcepcion(mensaje.toString());
@@ -82,17 +82,16 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 	@Override
 	public int update(Atraccion atraccionAActualizar) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("UPDATE atraccion SET cupo = ? WHERE nombreAtraccion = ?");
+			StringBuilder consultaSQL = new StringBuilder("UPDATE atraccion SET");
+			consultaSQL.append(" cupo = ? WHERE idAtraccion = ?");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setInt(1, atraccionAActualizar.getCupo());
-			statement.setString(2, atraccionAActualizar.getNombre());
+			statement.setInt(2, atraccionAActualizar.getId());
 			return statement.executeUpdate();
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder(
-					"Ha ocurrido un error durante la actualización de la atraccion: \"");
-			mensaje.append(atraccionAActualizar.getNombre());
-			mensaje.append("\". \n");
+					"Ha ocurrido un error durante la actualización de una atraccion:\n");
 			mensaje.append("La información de error obtenida es: \n");
 			mensaje.append(e.getMessage());
 			throw new UpdateDataBaseExcepcion(mensaje.toString());
@@ -102,16 +101,15 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 	@Override
 	public int delete(Atraccion atraccionAEliminar) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("DELETE FROM atracciones WHERE nombreAtraccion = ?");
+			StringBuilder consultaSQL = new StringBuilder("DELETE FROM atracciones");
+			consultaSQL.append(" WHERE idAtraccion = ?");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setString(1, atraccionAEliminar.getNombre());
+			statement.setInt(1, atraccionAEliminar.getId());
 			return statement.executeUpdate();
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder(
-					"Ha ocurrido un error durante la eliminación de la atraccion: \"");
-			mensaje.append(atraccionAEliminar.getNombre());
-			mensaje.append("\". \n");
+					"Ha ocurrido un error durante la eliminación de una atraccion:\n");
 			mensaje.append("La información de error obtenida es: \n");
 			mensaje.append(e.getMessage());
 			throw new DeleteDataBaseExcepcion(mensaje.toString());
@@ -119,33 +117,30 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 	}
 
 	@Override
-	public Atraccion findByNombre(String nombre) {
+	public Atraccion findById(int id) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("SELECT * FROM atracciones WHERE nombreAtraccion = ?");
+			StringBuilder consultaSQL = new StringBuilder(CONSULTA_SELECT);
+			consultaSQL.append(" WHERE atracciones.idAtraccion = ?");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setString(1, nombre);
+			statement.setInt(1, id);
 			ResultSet fila = statement.executeQuery();
 			Atraccion atraccionARetornar = null;
 			if (fila.next()) {
 				atraccionARetornar = this.levantarAtraccion(fila);
 			}
 			return atraccionARetornar;
-		} catch (ExcepcionDeAtraccion excepcion) {
-			System.out.println();
-			return null;
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la búsqueda de la atraccion: \"");
-			mensaje.append(nombre);
-			mensaje.append("\". \n");
-			mensaje.append("La información de error obtenida es: \n");
+			StringBuilder mensaje = new StringBuilder(
+					"Ha ocurrido un error durante la búsqueda de una atraccion:\n");
+			mensaje.append("La información de error obtenida es:\n");
 			mensaje.append(e.getMessage());
 			throw new SelectDataBaseExcepcion(mensaje.toString());
 		}
 	}
 
-	private Atraccion levantarAtraccion(ResultSet fila) throws ExcepcionDeBase, ExcepcionDeAtraccion, SQLException {
-		return new Atraccion(fila.getString(1), fila.getDouble(2), fila.getDouble(3),
-				fila.getInt(4), TipoAtraccion.valueOf(fila.getString(5)));
+	private Atraccion levantarAtraccion(ResultSet fila) throws SQLException {
+		return new Atraccion(fila.getInt(1), fila.getString(2), fila.getDouble(3), fila.getDouble(4),
+				fila.getInt(5),	TipoAtraccion.valueOf(fila.getString(6)));
 	}
 }

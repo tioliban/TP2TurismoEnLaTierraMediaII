@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import clases.Absoluta;
 import clases.AxB;
@@ -23,16 +22,20 @@ import excepciones.UpdateDataBaseExcepcion;
 
 public class PromocionDAOImplementado implements PromocionDAO {
 
+	private final String SELECT_TODOS = "SELECT usuarios.idUsuario, usuarios.nombreUsuario, usuarios.tiempo, usuarios.presupuesto, tipoAtraccion.nombreTipoAtraccion FROM usuarios NATURAL JOIN tipoAtraccion";
+	private final String SELECT_ITINERARIOS_PROMOCIONES = "SELECT itinerarioPromociones.idPromocion FROM usuarios NATURAL JOIN itinerarioPromociones";
+	private final String SELECT_ITINERARIOS_ATRACCIONES = "SELECT itinerarioAtracciones.idAtraccion FROM usuarios NATURAL JOIN itinerarioAtracciones";
+
 	@Override
-	public HashMap<String, Promocion> findAll() {
+	public ArrayList<Promocion> findAll() {
 		try {
 			StringBuilder consultaSQL = new StringBuilder("SELECT * FROM promociones");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
 			ResultSet fila = statement.executeQuery();
-			HashMap<String, Promocion> promociones = new HashMap<String, Promocion>();
+			ArrayList<Promocion> promociones = new ArrayList<Promocion>();
 			while (fila.next()) {
-				promociones.put(fila.getString(1), this.levantarPromocion(fila));
+				promociones.add(this.levantarPromocion(fila));
 			}
 			return promociones;
 		} catch (Exception e) {
@@ -162,12 +165,12 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	}
 
 	@Override
-	public Promocion findByNombre(String nombre) {
+	public Promocion findById(int id) {
 		try {
 			StringBuilder consultaSQL = new StringBuilder("SELECT * FROM promociones WHERE nombreAtraccion = ?");
 			Connection coneccion = Controlador.getConnection();
 			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setString(1, nombre);
+			statement.setInt(1, id);
 			ResultSet fila = statement.executeQuery();
 			Promocion promocionARetornar = null;
 			if (fila.next()) {
@@ -179,8 +182,6 @@ public class PromocionDAOImplementado implements PromocionDAO {
 			return null;
 		} catch (Exception e) {
 			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la búsqueda de la atraccion: \"");
-			mensaje.append(nombre);
-			mensaje.append("\". \n");
 			mensaje.append("La información de error obtenida es: \n");
 			mensaje.append(e.getMessage());
 			throw new SelectDataBaseExcepcion(mensaje.toString());

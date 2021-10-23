@@ -3,15 +3,11 @@ package clases;
 import java.util.Iterator;
 import java.util.List;
 
-import excepciones.ExcepcionDeAtraccion;
-import excepciones.ExcepcionDeBase;
-
 public class Atraccion extends Base {
 
 	private int cupo;
 
-	public Atraccion(int id, String nombre, double tiempo, double costo, int cupo, TipoAtraccion tipo)
-			throws ExcepcionDeBase, ExcepcionDeAtraccion {
+	public Atraccion(int id, String nombre, double tiempo, double costo, int cupo, TipoAtraccion tipo) {
 		super(id, nombre, tiempo, costo, tipo);
 		this.setCupo(cupo);
 	}
@@ -30,15 +26,9 @@ public class Atraccion extends Base {
 	 * @post Se actualizo el cupo de la Atraccion.
 	 * @param cupo Cantidad de cupo de la atraccion a actualizar.
 	 * @return No tiene.
-	 * @throws ExcepcionDeAtraccion Informo la existencia de un error al momento de
-	 *                              asignar el cupo de la atraccion, ya que posee un
-	 *                              valor invalido.
 	 */
-	private void setCupo(int cupo) throws ExcepcionDeAtraccion {
-		if (cupo > 0)
-			this.cupo = cupo;
-		else
-			throw new ExcepcionDeAtraccion("asignar el cupo, ya que este es invalido: " + cupo);
+	private void setCupo(int cupo) {
+		this.cupo = cupo;
 	}
 
 	/**

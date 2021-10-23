@@ -1,10 +1,10 @@
 package persistencia;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public interface GenericDAO<T> {
 
-	public HashMap<String,T> findAll();
+	public ArrayList<T> findAll();
 
 	public int countAll();
 
@@ -14,5 +14,5 @@ public interface GenericDAO<T> {
 
 	public int delete(T objeto);
 	
-	public T findByNombre(String nombre);
+	public T findById(int id);
 }
