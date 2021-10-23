@@ -8,7 +8,7 @@ public class TipoDeAtraccionDeLaPromocionComparador implements Comparator<Promoc
 
 	@Override
 	public int compare(Promocion promocionFija, Promocion promocionIndice) {
-		return promocionFija.getTipo().name().compareTo(promocionIndice.getTipo().name());
+		return promocionFija.getTipoAtraccion().name().compareTo(promocionIndice.getTipoAtraccion().name());
 	}
 
 }
