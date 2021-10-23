@@ -10,10 +10,10 @@ import excepciones.ExcepcionDePromocion;
 public class AxB extends Promocion {
 	private String atraccionGratis;
 
-	public AxB(String nombre, double tiempo, double costo, TipoAtraccion tipoAtraccion,
+	public AxB(int id, String nombre, double tiempo, double costo, TipoAtraccion tipoAtraccion,
 			ArrayList<String> nombresDeAtracciones, String atraccionGratis)
 			throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
-		super(nombre, "AxB", tiempo, costo, tipoAtraccion, nombresDeAtracciones);
+		super(id, nombre, "AxB", tiempo, costo, tipoAtraccion, nombresDeAtracciones);
 		this.atraccionGratis = atraccionGratis;
 	}
 

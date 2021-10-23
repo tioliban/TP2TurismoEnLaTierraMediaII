@@ -6,17 +6,37 @@ import excepciones.ExcepcionDeBase;
 
 public abstract class Base {
 
+	private int id;
 	private String nombre;
 	private double tiempo;
 	private double costo;
 	private TipoAtraccion tipo;
 
-	public Base(String nombre, double tiempo, double costo, TipoAtraccion tipo) throws ExcepcionDeBase {
+	public Base(int id, String nombre, double tiempo, double costo, TipoAtraccion tipo) throws ExcepcionDeBase {
+		this.setId(id);
 		this.setNombre(nombre);
 		this.setTiempo(tiempo);
 		this.setCosto(costo);
 		this.setTipoAtraccion(tipo);
 
+	}
+
+	/**
+	 * @pre No tiene.
+	 * @post Retorno el id de la atraccion o promocion.
+	 * @return Id de la Atraccion o Promocion.
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @pre No Tiene.
+	 * @post Se actualizo el id de la Atraccion o Promocion.
+	 * @param id Nuevo id a actualizar.
+	 */
+	private void setId(int id) {
+		this.id = id;
 	}
 
 	/**
@@ -114,7 +134,7 @@ public abstract class Base {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(nombre);
+		return Objects.hash(id, nombre, tipo);
 	}
 
 	@Override
@@ -126,9 +146,7 @@ public abstract class Base {
 			return false;
 		}
 		Base other = (Base) obj;
-		return Objects.equals(nombre, other.nombre);
+		return id == other.id && Objects.equals(nombre, other.nombre) && tipo == other.tipo;
 	}
-
-
 
 }

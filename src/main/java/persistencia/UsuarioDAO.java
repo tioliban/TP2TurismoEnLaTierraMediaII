@@ -4,6 +4,9 @@ import clases.Usuario;
 
 public interface UsuarioDAO extends GenericDAO<Usuario> {
 
-	// public abstract Usuario findByNombre(String nombre);
+	/**
+	 * Dejamos interfaces de cada DAO, preparadas por si necesitamos futuras
+	 * modificaciones
+	 */
 
 }

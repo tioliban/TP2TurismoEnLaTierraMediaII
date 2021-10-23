@@ -10,9 +10,9 @@ public abstract class Promocion extends Base {
 	private String promo;
 	private double descuento;
 
-	public Promocion(String nombre, String promo, double tiempo, double costo, TipoAtraccion tipoAtraccion,
+	public Promocion(int id, String nombre, String promo, double tiempo, double costo, TipoAtraccion tipoAtraccion,
 			ArrayList<String> nombresDeAtracciones) throws ExcepcionDeBase, ExcepcionDePromocion {
-		super(nombre, tiempo, costo, tipoAtraccion);
+		super(id, nombre, tiempo, costo, tipoAtraccion);
 		this.promo = promo;
 		this.nombresDeAtracciones = nombresDeAtracciones;
 	}

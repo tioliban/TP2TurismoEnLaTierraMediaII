@@ -10,9 +10,9 @@ public class Atraccion extends Base {
 
 	private int cupo;
 
-	public Atraccion(String nombre, double tiempo, double costo, int cupo, TipoAtraccion tipo)
+	public Atraccion(int id, String nombre, double tiempo, double costo, int cupo, TipoAtraccion tipo)
 			throws ExcepcionDeBase, ExcepcionDeAtraccion {
-		super(nombre, tiempo, costo, tipo);
+		super(id, nombre, tiempo, costo, tipo);
 		this.setCupo(cupo);
 	}
 

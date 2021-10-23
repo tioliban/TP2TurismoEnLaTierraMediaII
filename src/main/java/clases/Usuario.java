@@ -8,14 +8,16 @@ import excepciones.ExcepcionDeUsuario;
 
 public class Usuario {
 
+	private int id;
 	private String nombre;
 	private double tiempo;
 	private double presupuesto;
 	private TipoAtraccion preferencia;
 	private List<Base> itinerario;
 
-	public Usuario(String nombre, double tiempo, double presupuesto, TipoAtraccion preferencia)
+	public Usuario(int id, String nombre, double tiempo, double presupuesto, TipoAtraccion preferencia)
 			throws ExcepcionDeUsuario {
+		this.setId(id);
 		this.setNombre(nombre);
 		this.setTiempo(tiempo);
 		this.setPresupuesto(presupuesto);
@@ -23,6 +25,23 @@ public class Usuario {
 		this.itinerario = new ArrayList<Base>();
 	}
 
+	/**
+	 * @pre No tiene.
+	 * @post Retorno el id del usuario.
+	 * @return Id del Usuario.
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @pre No Tiene.
+	 * @post Se actualizo el id del usuario.
+	 * @param id Nuevo id a actualizar.
+	 */
+	private void setId(int id) {
+		this.id = id;
+	}
 	/**
 	 * @pre No tiene.
 	 * @post Retorno el nombre del usuario.

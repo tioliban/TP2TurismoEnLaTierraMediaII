@@ -8,9 +8,9 @@ import excepciones.ExcepcionDePromocion;
 
 public class Absoluta extends Promocion {
 
-	public Absoluta(String nombre, double tiempo, double costo, TipoAtraccion tipoAtraccion,
+	public Absoluta(int id, String nombre, double tiempo, double costo, TipoAtraccion tipoAtraccion,
 			ArrayList<String> nombresDeAtracciones) throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
-		super(nombre, "Absoluta", tiempo, costo, tipoAtraccion, nombresDeAtracciones);
+		super(id, nombre, "Absoluta", tiempo, costo, tipoAtraccion, nombresDeAtracciones);
 	}
 
 	@Override

@@ -10,10 +10,10 @@ public class Porcentual extends Promocion {
 
 	double porcentajeDescuento;
 
-	public Porcentual(String nombre, double tiempo, double costo, TipoAtraccion tipoAtraccion,
+	public Porcentual(int id, String nombre, double tiempo, double costo, TipoAtraccion tipoAtraccion,
 			ArrayList<String> nombresDeAtracciones, double porcentaje)
 			throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
-		super(nombre, "Porcentual", tiempo, costo, tipoAtraccion, nombresDeAtracciones);
+		super(id, nombre, "Porcentual", tiempo, costo, tipoAtraccion, nombresDeAtracciones);
 		this.porcentajeDescuento = porcentaje;
 	}
 
