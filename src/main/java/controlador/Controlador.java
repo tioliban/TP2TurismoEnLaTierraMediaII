@@ -5,12 +5,12 @@ import java.sql.SQLException;
 import java.sql.DriverManager;
 
 public class Controlador {
-	private static String direccionDeBaseDeDatos = "jdbc:sqlite:bd.db";
+	private static final String DIRECCION_DE_LA_BASE_DE_DATOS = "jdbc:sqlite:bd.db";
 	private static Connection connection;
 
 	public static Connection getConnection() throws SQLException {
 		if (connection == null) {
-			connection = DriverManager.getConnection(direccionDeBaseDeDatos);
+			connection = DriverManager.getConnection(DIRECCION_DE_LA_BASE_DE_DATOS);
 		}
 		return connection;
 	}

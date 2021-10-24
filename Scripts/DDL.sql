@@ -24,6 +24,16 @@ CREATE TABLE "promociones" (
 	PRIMARY KEY("idPromocion" AUTOINCREMENT),
 	FOREIGN KEY("idTipoAtraccion") REFERENCES "tipoAtraccion"(idTipoAtraccion)
 );
+DROP TABLE IF EXISTS "promocionesAtracciones";
+CREATE TABLE "promocionesAtracciones" (
+	"idPromocionesAtracciones"	INTEGER NOT NULL,
+	"idPromocion"	INTEGER NOT NULL,
+	"idAtraccion"	INTEGER NOT NULL,
+	PRIMARY KEY("idPromocionesAtracciones" AUTOINCREMENT),
+	UNIQUE ("idPromocion", "idAtraccion"),
+	FOREIGN KEY("idPromocion") REFERENCES "promociones"(idPromocion),
+	FOREIGN KEY("idAtraccion") REFERENCES "atracciones"(idAtraccion)
+);
 DROP TABLE IF EXISTS "promocionesAxB";
 CREATE TABLE "promocionesAxB" (
 	"idPromocionAxB"	INTEGER NOT NULL,
@@ -49,16 +59,6 @@ CREATE TABLE "promocionesPorcentuales" (
 	PRIMARY KEY("idPromocionPorcentuales" AUTOINCREMENT),
 	FOREIGN KEY("idPromocion") REFERENCES "promociones"(idPromocion)
 );
-DROP TABLE IF EXISTS "promocionesAtracciones";
-CREATE TABLE "promocionesAtracciones" (
-	"idPromocionesAtracciones"	INTEGER NOT NULL UNIQUE,
-	"idPromocion"	INTEGER NOT NULL,
-	"idAtraccion"	INTEGER NOT NULL,
-	PRIMARY KEY("idPromocionesAtracciones" AUTOINCREMENT),
-	UNIQUE ("idPromocion", "idAtraccion"),
-	FOREIGN KEY("idPromocion") REFERENCES "promociones"(idPromocion),
-	FOREIGN KEY("idAtraccion") REFERENCES "atracciones"(idAtraccion)
-);
 DROP TABLE IF EXISTS "usuarios";
 CREATE TABLE "usuarios" (
 	"idUsuario"	INTEGER NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE "usuarios" (
 );
 DROP TABLE IF EXISTS "itinerarioPromociones";
 CREATE TABLE "itinerarioPromociones" (
-	"idItinerario"	INTEGER NOT NULL UNIQUE,
+	"idItinerario"	INTEGER NOT NULL,
 	"idUsuario"	INTEGER NOT NULL,
 	"idPromocion"	INTEGER NOT NULL,
 	PRIMARY KEY("idItinerario" AUTOINCREMENT),
@@ -81,7 +81,7 @@ CREATE TABLE "itinerarioPromociones" (
 );
 DROP TABLE IF EXISTS "itinerarioAtracciones";
 CREATE TABLE "itinerarioAtracciones" (
-	"idItinerario"	INTEGER NOT NULL UNIQUE,
+	"idItinerario"	INTEGER NOT NULL,
 	"idUsuario"	INTEGER NOT NULL,
 	"idAtraccion"	INTEGER NOT NULL,
 	PRIMARY KEY("idItinerario" AUTOINCREMENT),
