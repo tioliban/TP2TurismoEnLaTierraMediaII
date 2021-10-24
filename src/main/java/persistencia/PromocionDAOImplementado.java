@@ -22,7 +22,7 @@ import excepciones.UpdateDataBaseExcepcion;
 
 public class PromocionDAOImplementado implements PromocionDAO {
 
-	private final String SELECT_TODOS = "SELECT usuarios.idUsuario, usuarios.nombreUsuario, usuarios.tiempo, usuarios.presupuesto, tipoAtraccion.nombreTipoAtraccion FROM usuarios NATURAL JOIN tipoAtraccion";
+	private final String SELECT_TODOS = "SELECT promociones.idPromocion, promociones.nombrePromocion, promociones.tiempo, usuarios.presupuesto, tipoAtraccion.nombreTipoAtraccion FROM usuarios NATURAL JOIN tipoAtraccion";
 	private final String SELECT_ITINERARIOS_PROMOCIONES = "SELECT itinerarioPromociones.idPromocion FROM usuarios NATURAL JOIN itinerarioPromociones";
 	private final String SELECT_ITINERARIOS_ATRACCIONES = "SELECT itinerarioAtracciones.idAtraccion FROM usuarios NATURAL JOIN itinerarioAtracciones";
 
@@ -50,15 +50,16 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	@Override
 	public int countAll() {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("SELECT count(1) as TOTAL FROM promociones");
+			String consultaSQL = "SELECT count(1) as TOTAL FROM promociones";
 			Connection coneccion = Controlador.getConnection();
-			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
+			PreparedStatement statement = coneccion.prepareStatement(consultaSQL);
 			ResultSet fila = statement.executeQuery();
 			fila.next();
 			return fila.getInt("TOTAL");
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante el conteo de las promociones\n");
-			mensaje.append("La información de error obtenida es: \n");
+			StringBuilder mensaje = new StringBuilder(
+					"Ha ocurrido un error durante el conteo de las promociones:\n");
+			mensaje.append("La información de error obtenida es:\n");
 			mensaje.append(e.getMessage());
 			throw new SelectDataBaseExcepcion(mensaje.toString());
 		}
@@ -188,8 +189,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		}
 	}
 
-	private Promocion levantarPromocion(ResultSet filaDePromociones)
-			throws ExcepcionDeBase, ExcepcionDePromocion, SQLException, ExcepcionDeAtraccion {
+	private Promocion levantarPromocion(ResultSet filaPromociones) throws SQLException{
 		Promocion promocion = null;
 		ArrayList<String> nombresDeAtracciones = new ArrayList<String>();
 		StringBuilder nombresDeAtraccionesSQL = new StringBuilder(
@@ -199,17 +199,17 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		tiempoYCostoSQL.append(" Where promociones.nombrePromocion = ?");
 		Connection coneccion = Controlador.getConnection();
 		PreparedStatement statement = coneccion.prepareStatement(nombresDeAtraccionesSQL.toString());
-		statement.setString(1, filaDePromociones.getString(1));
+		statement.setString(1, filaPromociones.getString(1));
 		ResultSet filaDePromocionesAtracciones = statement.executeQuery();
 		statement = coneccion.prepareStatement(tiempoYCostoSQL.toString());
-		statement.setString(1, filaDePromociones.getString(1));
+		statement.setString(1, filaPromociones.getString(1));
 		ResultSet tiempoYCosto = statement.executeQuery();
 		while (filaDePromocionesAtracciones.next()) {
 			nombresDeAtracciones.add(filaDePromocionesAtracciones.getString(1));
 		}
-		switch (filaDePromociones.getString(2)) {
+		switch (filaPromociones.getString(2)) {
 			case "Porcentual": {
-				promocion = new Porcentual(filaDePromociones.getString(1), tiempoYCosto.getDouble(1),
+				promocion = new Porcentual(filaPromociones.getInt(1),filaPromociones.getString(2), tiempoYCosto.getDouble(1),
 						tiempoYCosto.getDouble(2) * (1 - (filaDePromociones.getDouble(4) / 100)),
 						TipoAtraccion.valueOf(filaDePromociones.getString(4)), nombresDeAtracciones,
 						filaDePromociones.getDouble(4));
