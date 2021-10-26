@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.lang.StringBuilder;
 
+import clases.Base;
 import clases.TipoAtraccion;
 import clases.Usuario;
 import controlador.Controlador;
@@ -18,156 +19,179 @@ import excepciones.UpdateDataBaseExcepcion;
 public class UsuarioDAOImplementado implements UsuarioDAO {
 
 	private final String SELECT_TODOS = "SELECT usuarios.idUsuario, usuarios.nombreUsuario, usuarios.tiempo, usuarios.presupuesto, tipoAtraccion.nombreTipoAtraccion FROM usuarios NATURAL JOIN tipoAtraccion";
-	private final String SELECT_ITINERARIOS_PROMOCIONES = "SELECT itinerarioPromociones.idPromocion FROM usuarios NATURAL JOIN itinerarioPromociones";
-	private final String SELECT_ITINERARIOS_ATRACCIONES = "SELECT itinerarioAtracciones.idAtraccion FROM usuarios NATURAL JOIN itinerarioAtracciones";
+	private final String MENSAJE = " usuario";
+	private Connection coneccion;
+	private PreparedStatement statement;
+	private ResultSet filaUsuario;
+	private ArrayList<Usuario> usuarios;
+	private ArrayList<String> ids;
+	private StringBuilder sqlPro = new StringBuilder();
+	private Usuario usuario;
 
 	@Override
 	public ArrayList<Usuario> findAll() {
 		try {
-			Connection coneccion = Controlador.getConnection();
-			PreparedStatement statement = coneccion.prepareStatement(SELECT_TODOS);
-			ResultSet filaUsuario = statement.executeQuery();
-			StringBuilder sqlPro = new StringBuilder(SELECT_ITINERARIOS_PROMOCIONES);
-			ResultSet filaItinerarioPromociones;
-			StringBuilder sqlAtr = new StringBuilder(SELECT_ITINERARIOS_ATRACCIONES);
-			ResultSet filaItinerarioAtracciones;
-			ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
-			StringBuilder key = new StringBuilder();
+			this.prepararConsulta(SELECT_TODOS, sqlPro);
+			statement = coneccion.prepareStatement(sqlPro.toString());
+			filaUsuario = statement.executeQuery();
+			usuarios = new ArrayList<Usuario>();
 			while (filaUsuario.next()) {
-				key.append("usu.");
-				key.append(filaUsuario.getString(2));
-				sqlPro.append(" WHERE usuarios.idUsuario = ?");
-				statement = coneccion.prepareStatement(sqlPro.toString());
-				statement.setInt(1, filaUsuario.getInt(1));
-				filaItinerarioPromociones = statement.executeQuery();
-				sqlAtr.append(" WHERE usuarios.idUsuario = ?");
-				statement = coneccion.prepareStatement(sqlAtr.toString());
-				statement.setInt(1, filaUsuario.getInt(1));
-				filaItinerarioAtracciones = statement.executeQuery();
-				usuarios.add(this.levantarUsuario(filaUsuario, filaItinerarioPromociones, filaItinerarioAtracciones));
+				usuarios.add(this.levantarUsuario(filaUsuario));
 			}
 			return usuarios;
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder(
-					"Ha ocurrido un error durante la recuperacion de los usuarios:\n");
-			mensaje.append("La información de error obtenida es:\n");
-			mensaje.append(e.getMessage());
-			throw new SelectDataBaseExcepcion(mensaje.toString());
+			throw new SelectDataBaseExcepcion(MENSAJE);
 		}
 	}
 
 	@Override
 	public int countAll() {
 		try {
-			String consultaSQL = "SELECT count(1) as TOTAL FROM usuarios";
-			Connection coneccion = Controlador.getConnection();
-			PreparedStatement statement = coneccion.prepareStatement(consultaSQL);
-			ResultSet fila = statement.executeQuery();
-			fila.next();
-			return fila.getInt("TOTAL");
+			this.prepararConsulta("SELECT count(1) as TOTAL FROM usuarios", sqlPro);
+			statement = coneccion.prepareStatement(sqlPro.toString());
+			filaUsuario = statement.executeQuery();
+			filaUsuario.next();
+			return filaUsuario.getInt("TOTAL");
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante el conteo de los usuarios:\n");
-			mensaje.append("La información de error obtenida es:\n");
-			mensaje.append(e.getMessage());
-			throw new SelectDataBaseExcepcion(mensaje.toString());
+			throw new SelectDataBaseExcepcion(MENSAJE);
 		}
 	}
 
 	@Override
 	public int insert(Usuario usuarioAInsertar) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("INSERT into usuarios (nombreUsuario, tiempo,");
-			consultaSQL.append(" presupuesto, nombreTipo) VALUES (?, ?, ?, ?)");
-			Connection coneccion = Controlador.getConnection();
-			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
+			this.prepararConsulta("INSERT INTO usuarios (nombreUsuario, tiempo,", sqlPro);
+			sqlPro.append(" presupuesto, nombreTipo) VALUES (?, ?, ?, ?)");
+			statement = coneccion.prepareStatement(sqlPro.toString());
 			statement.setString(1, usuarioAInsertar.getNombre());
 			statement.setDouble(2, usuarioAInsertar.getTiempo());
 			statement.setDouble(3, usuarioAInsertar.getPresupuesto());
 			statement.setString(4, usuarioAInsertar.getPreferencia().name());
-			return statement.executeUpdate();
+			statement.executeUpdate();
+			return this.insertarItinerario(usuarioAInsertar);
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la inserción de un usuario:\n");
-			mensaje.append("La información de error obtenida es:\n");
-			mensaje.append(e.getMessage());
-			throw new InsertDataBaseExcepcion(mensaje.toString());
+			throw new InsertDataBaseExcepcion(MENSAJE);
 		}
 	}
 
 	@Override
 	public int update(Usuario usuarioAActualizar) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder(
-					"UPDATE usuarios SET tiempo = ?, presupuesto = ? WHERE idUsuario = ?");
-			Connection coneccion = Controlador.getConnection();
-			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setDouble(1, usuarioAActualizar.getTiempo());
-			statement.setDouble(2, usuarioAActualizar.getPresupuesto());
-			statement.setInt(3, usuarioAActualizar.getId());
-			return statement.executeUpdate();
+			this.prepararConsulta("UPDATE usuarios SET nombreUsuario = ?, tiempo = ?,", sqlPro);
+			sqlPro.append(" presupuesto = ?, idTipoAtraccion = ? WHERE idUsuario = ?");
+			statement = coneccion.prepareStatement(sqlPro.toString());
+			statement.setString(1, usuarioAActualizar.getNombre());
+			statement.setDouble(2, usuarioAActualizar.getTiempo());
+			statement.setDouble(3, usuarioAActualizar.getPresupuesto());
+			statement.setInt(3, usuarioAActualizar.getPreferencia().ordinal() + 1);
+			statement.setInt(4, usuarioAActualizar.getId());
+			statement.executeUpdate();
+			return this.actualizarItinerario(usuarioAActualizar);
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la actualización de un usuario:\n");
-			mensaje.append("La información de error obtenida es:\n");
-			mensaje.append(e.getMessage());
-			throw new UpdateDataBaseExcepcion(mensaje.toString());
+			throw new UpdateDataBaseExcepcion(MENSAJE);
 		}
 	}
 
 	@Override
 	public int delete(Usuario usuarioAEliminar) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("DELETE FROM usuarios WHERE nombreUsuario = ?");
-			Connection coneccion = Controlador.getConnection();
-			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setString(1, usuarioAEliminar.getNombre());
+			this.prepararConsulta("DELETE FROM usuarios WHERE idUsuario = ?", sqlPro);
+			statement = coneccion.prepareStatement(sqlPro.toString());
+			statement.setInt(1, usuarioAEliminar.getId());
 			return statement.executeUpdate();
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la eliminación del usuario: \"");
-			mensaje.append(usuarioAEliminar.getNombre());
-			mensaje.append("\". \n");
-			mensaje.append("La información de error obtenida es: \n");
-			mensaje.append(e.getMessage());
-			throw new DeleteDataBaseExcepcion(mensaje.toString());
+			throw new DeleteDataBaseExcepcion(MENSAJE);
 		}
 	}
 
 	@Override
 	public Usuario findById(int id) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder(SELECT_TODOS);
-			consultaSQL.append("WHERE idUsuario = ?");
-			Connection coneccion = Controlador.getConnection();
-			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setInt(1, id);
-			ResultSet filaUsuario = statement.executeQuery();
-			StringBuilder sqlPro = new StringBuilder(SELECT_ITINERARIOS_PROMOCIONES);
-			ResultSet filaItinerarioPromociones;
-			StringBuilder sqlAtr = new StringBuilder(SELECT_ITINERARIOS_ATRACCIONES);
-			ResultSet filaItinerarioAtracciones;
-			sqlPro.append(" WHERE usuarios.idUsuario = ?");
+			this.prepararConsulta(SELECT_TODOS, sqlPro);
+			sqlPro.append("WHERE idUsuario = ?");
 			statement = coneccion.prepareStatement(sqlPro.toString());
 			statement.setInt(1, id);
-			filaItinerarioPromociones = statement.executeQuery();
-			sqlAtr.append(" WHERE usuarios.idUsuario = ?");
-			statement = coneccion.prepareStatement(sqlAtr.toString());
-			statement.setInt(1, id);
-			filaItinerarioAtracciones = statement.executeQuery();
-			Usuario usuarioARetornar = null;
+			filaUsuario = statement.executeQuery();
 			if (filaUsuario.next()) {
-				usuarioARetornar = this.levantarUsuario(filaUsuario, filaItinerarioPromociones,
-						filaItinerarioAtracciones);
+				usuario = this.levantarUsuario(filaUsuario);
 			}
-			return usuarioARetornar;
+			return usuario;
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder("Ha ocurrido un error durante la búsqueda del usuario:\n");
-			mensaje.append("La información de error obtenida es:\n");
-			mensaje.append(e.getMessage());
-			throw new SelectDataBaseExcepcion(mensaje.toString());
+			throw new SelectDataBaseExcepcion(MENSAJE);
 		}
 	}
 
-	private Usuario levantarUsuario(ResultSet filaUsuario, ResultSet filaItinerarioPromociones,
-			ResultSet filaItinerarioAtracciones) throws SQLException {
-		return new Usuario(filaUsuario.getInt(1), filaUsuario.getString(2), filaUsuario.getDouble(3),
+	private StringBuilder prepararConsulta(String inicio, StringBuilder consulta) throws SQLException {
+		coneccion = Controlador.getConnection();
+		consulta.setLength(0);
+		return consulta.append(inicio);
+	}
+
+	private int insertarItinerario(Usuario usuario) throws SQLException {
+		int cantidad = 0;
+		if (!usuario.getItinerario().isEmpty()) {
+			for (Base indice : usuario.getItinerario()) {
+				this.prepararConsulta("INSERT INTO itinerario", sqlPro);
+				if (indice.getId().startsWith("1.")) {
+					sqlPro.append("Promociones (idUsuario, idPromocion) VALUES (?, ?)");
+				} else {
+					sqlPro.append("Atracciones (idUsuario, idAtraccion) VALUES (?, ?)");
+				}
+				statement = coneccion.prepareStatement(sqlPro.toString());
+				statement.setInt(1, usuario.getId());
+				statement.setInt(2, Integer.parseInt(indice.getId().substring(2)));
+				cantidad =+ statement.executeUpdate();
+			}
+		}
+		return cantidad;
+	}
+
+	private int actualizarItinerario(Usuario usuario) throws SQLException {
+		if (!usuario.getItinerario().isEmpty()) {
+			this.prepararConsulta("DELETE FROM itinerarioPromociones WHERE idUsuario = ?", sqlPro);
+			statement = coneccion.prepareStatement(sqlPro.toString());
+			statement.setInt(1, usuario.getId());
+			statement.executeUpdate();
+			this.prepararConsulta("DELETE FROM itinerarioAtracciones WHERE idUsuario = ?", sqlPro);
+			statement = coneccion.prepareStatement(sqlPro.toString());
+			statement.setInt(1, usuario.getId());
+			statement.executeUpdate();
+		}
+		return this.insertarItinerario(usuario);
+	}
+
+	private ArrayList<String> seleccionarItinerario(Usuario usuario) throws SQLException {
+		ids = new ArrayList<String>();
+		this.prepararConsulta("SELECT idItinerario FROM itinerarioPromociones", sqlPro);
+		sqlPro.append(" NATURAL JOIN usuarios WHERE usuarios.idUsuario = ?");
+		statement = coneccion.prepareStatement(sqlPro.toString());
+		statement.setInt(1, usuario.getId());
+		filaUsuario = statement.executeQuery();
+		while (filaUsuario.next()) {
+			ids.add("1." + filaUsuario.getInt("pro"));
+		}
+		this.prepararConsulta("SELECT idItinerario FROM itinerarioAtracciones", sqlPro);
+		sqlPro.append(" NATURAL JOIN usuarios WHERE usuarios.idUsuario = ?");
+		statement = coneccion.prepareStatement(sqlPro.toString());
+		statement.setInt(1, usuario.getId());
+		filaUsuario = statement.executeQuery();
+		while (filaUsuario.next()) {
+			ids.add("2." + filaUsuario.getInt("atr"));
+		}
+		return ids;
+	}
+
+	private Usuario levantarUsuario(ResultSet filaUsuario) throws SQLException {
+		usuario = new Usuario(filaUsuario.getInt(1), filaUsuario.getString(2), filaUsuario.getDouble(3),
 				filaUsuario.getDouble(4), TipoAtraccion.valueOf(filaUsuario.getString(5)));
+		this.seleccionarItinerario(usuario);
+		for (String id : ids) {
+			if (id.startsWith("1.")) {
+				usuario.addItinerario(DAOFactory.getPromocionDAO().findById(Integer.parseInt(id.substring(2))));
+			} else {
+				usuario.addItinerario(DAOFactory.getAtraccionDAO().findById(Integer.parseInt(id.substring(2))));
+			}
+		}
+		return usuario;
 	}
 }

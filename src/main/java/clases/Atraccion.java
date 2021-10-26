@@ -8,7 +8,7 @@ public class Atraccion extends Base {
 	private int cupo;
 
 	public Atraccion(int id, String nombre, double tiempo, double costo, int cupo, TipoAtraccion tipo) {
-		super(id, nombre, tiempo, costo, tipo);
+		super("2." + id, nombre, tiempo, costo, tipo);
 		this.setCupo(cupo);
 	}
 

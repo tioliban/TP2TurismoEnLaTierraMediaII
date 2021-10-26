@@ -39,6 +39,7 @@ public class Usuario {
 	private void setId(int id) {
 		this.id = id;
 	}
+
 	/**
 	 * @pre No tiene.
 	 * @post Retorno el nombre del usuario.
@@ -91,7 +92,7 @@ public class Usuario {
 	 */
 	private void setPresupuesto(double presupuesto) {
 		this.presupuesto = presupuesto;
-		}
+	}
 
 	/**
 	 * @pre No tiene.
@@ -119,10 +120,7 @@ public class Usuario {
 	 *         sugerencia.
 	 */
 	public boolean laVisito(Base sugerencia) {
-
-		// aca va la parte de buscar en mi itinerario si encuentra alguna sugerencia
-		// que ingresa por parametro, retornando si la encuentra o no
-		return true;
+		return this.itinerario.contains(sugerencia);
 	}
 
 	/**
@@ -154,31 +152,11 @@ public class Usuario {
 
 	/**
 	 * @pre No tiene.
-	 * @post Se genero un resumen del itinerario del usuario.
-	 * @return El itinerario del usuario resumido en un string.
+	 * @post Se agrego un producto al itinerario del usuario.
+	 * @param agregar Producto a agregar.
 	 */
-	public String mostrarItinerario() {
-		String salida = "El itinerario programado para " + this.getNombre()
-				+ " esta compuesto por los siguientes productos :\n";
-		double tiempoTotal = 0, costoTotal = 0;
-		for (Base baseATratar : this.getItinerario()) {
-			if (baseATratar instanceof Promocion) {
-				Promocion tratarComoPromocion = (Promocion) baseATratar;
-				tiempoTotal += tratarComoPromocion.getTiempo();
-				costoTotal += tratarComoPromocion.getCosto();
-				salida += "Promocion llamada " + tratarComoPromocion.getNombre() + " compuesta por las atracciones "
-						+ tratarComoPromocion.imprimir() + "\n";
-			}
-			if (baseATratar instanceof Atraccion) {
-				Atraccion tratarComoAtraccion = (Atraccion) baseATratar;
-				tiempoTotal += tratarComoAtraccion.getTiempo();
-				costoTotal += tratarComoAtraccion.getCosto();
-				salida += "Atraccion llamada " + tratarComoAtraccion.getNombre() + "\n";
-			}
-		}
-		salida = salida + "El itinerario programado tiene una duracion total de " + tiempoTotal
-				+ " horas y un costo total de " + costoTotal + " monedas de oro";
-		return salida;
+	public void addItinerario(Base agregar) {
+		itinerario.add(agregar);
 	}
 
 	@Override

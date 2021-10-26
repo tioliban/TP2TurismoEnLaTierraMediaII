@@ -2,19 +2,16 @@ package clases;
 
 import java.util.ArrayList;
 
-import excepciones.ExcepcionDeBase;
-import excepciones.ExcepcionDePromocion;
-
 public abstract class Promocion extends Base {
-	private ArrayList<String> nombresDeAtracciones;
+	private ArrayList<String> atracciones;
 	private String promo;
 	private double descuento;
 
 	public Promocion(int id, String nombre, String promo, double tiempo, double costo, TipoAtraccion tipoAtraccion,
-			ArrayList<String> nombresDeAtracciones) throws ExcepcionDeBase, ExcepcionDePromocion {
-		super(id, nombre, tiempo, costo, tipoAtraccion);
+			ArrayList<String> atracciones) {
+		super("1." + id, nombre, tiempo, costo, tipoAtraccion);
 		this.promo = promo;
-		this.nombresDeAtracciones = nombresDeAtracciones;
+		this.atracciones = atracciones;
 	}
 
 	/**
@@ -59,16 +56,8 @@ public abstract class Promocion extends Base {
 	 *       promocion.
 	 * @return the nombresDeAtracciones
 	 */
-	public ArrayList<String> getNombresDeAtracciones() {
-		return nombresDeAtracciones;
+	public ArrayList<String> getAtracciones() {
+		return atracciones;
 	}
-
-	/**
-	 * @pre No tiene.
-	 * @post Se recuperó el nombre de todas las atracciones contenidas en la
-	 *       promocion.
-	 * @return String con los nombres de las atracciones que la componen.
-	 */
-	public abstract String imprimir();
 
 }

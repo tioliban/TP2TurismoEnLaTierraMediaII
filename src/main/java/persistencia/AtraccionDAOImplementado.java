@@ -17,53 +17,50 @@ import excepciones.UpdateDataBaseExcepcion;
 public class AtraccionDAOImplementado implements AtraccionDAO {
 
 	private final String CONSULTA_SELECT = "SELECT atracciones.idAtraccion, atracciones.nombreAtraccion, atracciones.tiempo, atracciones.costo, atracciones.cupo, tipoAtraccion.nombreTipoAtraccion FROM atracciones NATURAL JOIN tipoAtraccion";
+	private final String MENSAJE = "a atraccion";
+	private Connection coneccion;
+	private PreparedStatement statement;
+	private ResultSet fila;
+	private ArrayList<Atraccion> atracciones;
+	private StringBuilder consultaSQL = new StringBuilder();
+	private Atraccion atraccion;
 
 	@Override
 	public ArrayList<Atraccion> findAll() {
 		try {
-			Connection coneccion = Controlador.getConnection();
-			PreparedStatement statement = coneccion.prepareStatement(CONSULTA_SELECT);
-			ResultSet fila = statement.executeQuery();
-			ArrayList<Atraccion> atracciones = new ArrayList<Atraccion>();
+			this.prepararConsulta(CONSULTA_SELECT, consultaSQL);
+			statement = coneccion.prepareStatement(consultaSQL.toString());
+			fila = statement.executeQuery();
+			atracciones = new ArrayList<Atraccion>();
 			while (fila.next()) {
 				atracciones.add(this.levantarAtraccion(fila));
 			}
 			return atracciones;
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder(
-					"Ha ocurrido un error durante la recuperacion de las atracciones:\n");
-			mensaje.append("La información de error obtenida es: \n");
-			mensaje.append(e.getMessage());
-			throw new SelectDataBaseExcepcion(mensaje.toString());
+			throw new SelectDataBaseExcepcion(MENSAJE);
 		}
 	}
 
 	@Override
 	public int countAll() {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("SELECT count(1) as TOTAL FROM atracciones");
-			Connection coneccion = Controlador.getConnection();
-			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
-			ResultSet fila = statement.executeQuery();
+			this.prepararConsulta("SELECT count(1) as TOTAL FROM atracciones", consultaSQL);
+			statement = coneccion.prepareStatement(consultaSQL.toString());
+			fila = statement.executeQuery();
 			fila.next();
 			return fila.getInt("TOTAL");
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder(
-					"Ha ocurrido un error durante el conteo de las atracciones:\n");
-			mensaje.append("La información de error obtenida es: \n");
-			mensaje.append(e.getMessage());
-			throw new SelectDataBaseExcepcion(mensaje.toString());
+			throw new SelectDataBaseExcepcion(MENSAJE);
 		}
 	}
 
 	@Override
 	public int insert(Atraccion atraccionAInsertar) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("INSERT INTO atracciones");
+			this.prepararConsulta("INSERT INTO atracciones", consultaSQL);
 			consultaSQL.append(" (nombreAtraccion, tiempo, costo, cupo, idTipoAtraccion)");
 			consultaSQL.append(" VALUES (?, ?, ?, ?, ?)");
-			Connection coneccion = Controlador.getConnection();
-			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
+			statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setString(1, atraccionAInsertar.getNombre());
 			statement.setDouble(2, atraccionAInsertar.getTiempo());
 			statement.setDouble(3, atraccionAInsertar.getCosto());
@@ -71,76 +68,60 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			statement.setInt(5, atraccionAInsertar.getTipoAtraccion().ordinal() + 1);
 			return statement.executeUpdate();
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder(
-					"Ha ocurrido un error durante la inserción de una atraccion:\n");
-			mensaje.append("La información de error obtenida es: \n");
-			mensaje.append(e.getMessage());
-			throw new InsertDataBaseExcepcion(mensaje.toString());
+			throw new InsertDataBaseExcepcion(MENSAJE);
 		}
 	}
 
 	@Override
 	public int update(Atraccion atraccionAActualizar) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("UPDATE atraccion SET");
-			consultaSQL.append(" cupo = ? WHERE idAtraccion = ?");
-			Connection coneccion = Controlador.getConnection();
-			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
+			this.prepararConsulta("UPDATE atraccion SET cupo = ? WHERE idAtraccion = ?", consultaSQL);
+			statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setInt(1, atraccionAActualizar.getCupo());
-			statement.setInt(2, atraccionAActualizar.getId());
+			statement.setInt(2, Integer.parseInt(atraccionAActualizar.getId().substring(2)));
 			return statement.executeUpdate();
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder(
-					"Ha ocurrido un error durante la actualización de una atraccion:\n");
-			mensaje.append("La información de error obtenida es: \n");
-			mensaje.append(e.getMessage());
-			throw new UpdateDataBaseExcepcion(mensaje.toString());
+			throw new UpdateDataBaseExcepcion(MENSAJE);
 		}
 	}
 
 	@Override
 	public int delete(Atraccion atraccionAEliminar) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder("DELETE FROM atracciones");
-			consultaSQL.append(" WHERE idAtraccion = ?");
-			Connection coneccion = Controlador.getConnection();
-			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setInt(1, atraccionAEliminar.getId());
+			this.prepararConsulta("DELETE FROM atracciones WHERE idAtraccion = ?", consultaSQL);
+			statement = coneccion.prepareStatement(consultaSQL.toString());
+			statement.setInt(1, Integer.parseInt(atraccionAEliminar.getId().substring(2)));
 			return statement.executeUpdate();
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder(
-					"Ha ocurrido un error durante la eliminación de una atraccion:\n");
-			mensaje.append("La información de error obtenida es: \n");
-			mensaje.append(e.getMessage());
-			throw new DeleteDataBaseExcepcion(mensaje.toString());
+			throw new DeleteDataBaseExcepcion(MENSAJE);
 		}
 	}
 
 	@Override
 	public Atraccion findById(int id) {
 		try {
-			StringBuilder consultaSQL = new StringBuilder(CONSULTA_SELECT);
+			this.prepararConsulta(CONSULTA_SELECT, consultaSQL);
 			consultaSQL.append(" WHERE atracciones.idAtraccion = ?");
-			Connection coneccion = Controlador.getConnection();
-			PreparedStatement statement = coneccion.prepareStatement(consultaSQL.toString());
+			statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setInt(1, id);
-			ResultSet fila = statement.executeQuery();
-			Atraccion atraccionARetornar = null;
+			fila = statement.executeQuery();
 			if (fila.next()) {
-				atraccionARetornar = this.levantarAtraccion(fila);
+				atraccion = this.levantarAtraccion(fila);
 			}
-			return atraccionARetornar;
+			return atraccion;
 		} catch (Exception e) {
-			StringBuilder mensaje = new StringBuilder(
-					"Ha ocurrido un error durante la búsqueda de una atraccion:\n");
-			mensaje.append("La información de error obtenida es:\n");
-			mensaje.append(e.getMessage());
-			throw new SelectDataBaseExcepcion(mensaje.toString());
+			throw new SelectDataBaseExcepcion(MENSAJE);
 		}
 	}
 
+	private StringBuilder prepararConsulta(String inicio, StringBuilder consulta) throws SQLException {
+		coneccion = Controlador.getConnection();
+		consulta.setLength(0);
+		return consulta.append(inicio);
+	}
+
 	private Atraccion levantarAtraccion(ResultSet fila) throws SQLException {
-		return new Atraccion(fila.getInt(1), fila.getString(2), fila.getDouble(3), fila.getDouble(4),
-				fila.getInt(5),	TipoAtraccion.valueOf(fila.getString(6)));
+		return new Atraccion(fila.getInt(1), fila.getString(2), fila.getDouble(3), fila.getDouble(4), fila.getInt(5),
+				TipoAtraccion.valueOf(fila.getString(6)));
 	}
 }

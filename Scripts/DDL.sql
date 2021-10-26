@@ -34,6 +34,11 @@ CREATE TABLE "promocionesAtracciones" (
 	FOREIGN KEY("idPromocion") REFERENCES "promociones"(idPromocion),
 	FOREIGN KEY("idAtraccion") REFERENCES "atracciones"(idAtraccion)
 );
+CREATE TRIGGER borrar_promocionesAtracciones
+BEFORE DELETE ON promociones
+	BEGIN 
+		DELETE FROM promocionesAtracciones WHERE idPromocion = OLD.idPromocion;
+	END;
 DROP TABLE IF EXISTS "promocionesAxB";
 CREATE TABLE "promocionesAxB" (
 	"idPromocionAxB"	INTEGER NOT NULL,
@@ -43,6 +48,16 @@ CREATE TABLE "promocionesAxB" (
 	FOREIGN KEY("idAtraccion") REFERENCES "atracciones"(idAtraccion),
 	FOREIGN KEY("idPromocion") REFERENCES "promociones"(idPromocion)
 );
+CREATE TRIGGER borrar_promocionesAxB
+BEFORE DELETE ON promociones
+	BEGIN 
+		DELETE FROM promocionesAxB WHERE idPromocion = OLD.idPromocion;
+	END;
+CREATE TRIGGER borrar_promocionAxB
+BEFORE UPDATE ON promociones
+	BEGIN 
+		DELETE FROM promocionesAxB WHERE idPromocion = OLD.idPromocion;
+	END;
 DROP TABLE IF EXISTS "promocionesAbsolutas";
 CREATE TABLE "promocionesAbsolutas" (
 	"idPromocionAbsolutas"	INTEGER NOT NULL,
@@ -51,6 +66,16 @@ CREATE TABLE "promocionesAbsolutas" (
 	PRIMARY KEY("idPromocionAbsolutas" AUTOINCREMENT),
 	FOREIGN KEY("idPromocion") REFERENCES "promociones"(idPromocion)
 );
+CREATE TRIGGER borrar_promocionesAbsolutas
+BEFORE DELETE ON promociones
+	BEGIN 
+		DELETE FROM promocionesAbsolutas WHERE idPromocion = OLD.idPromocion;
+	END;
+CREATE TRIGGER borrar_promocionAbsoluta
+BEFORE UPDATE ON promociones
+	BEGIN 
+		DELETE FROM promocionesAbsolutas WHERE idPromocion = OLD.idPromocion;
+	END;
 DROP TABLE IF EXISTS "promocionesPorcentuales";
 CREATE TABLE "promocionesPorcentuales" (
 	"idPromocionPorcentuales"	INTEGER NOT NULL,
@@ -59,6 +84,16 @@ CREATE TABLE "promocionesPorcentuales" (
 	PRIMARY KEY("idPromocionPorcentuales" AUTOINCREMENT),
 	FOREIGN KEY("idPromocion") REFERENCES "promociones"(idPromocion)
 );
+CREATE TRIGGER borrar_promocionesPorcentuales
+BEFORE DELETE ON promociones
+	BEGIN 
+		DELETE FROM promocionesPorcentuales WHERE idPromocion = OLD.idPromocion;
+	END;
+CREATE TRIGGER borrar_promocionPorcentual
+BEFORE UPDATE ON promociones
+	BEGIN 
+		DELETE FROM promocionesPorcentuales WHERE idPromocion = OLD.idPromocion;
+	END;
 DROP TABLE IF EXISTS "usuarios";
 CREATE TABLE "usuarios" (
 	"idUsuario"	INTEGER NOT NULL,
@@ -79,6 +114,11 @@ CREATE TABLE "itinerarioPromociones" (
 	FOREIGN KEY("idUsuario") REFERENCES "usuarios"(idUsuario),
 	FOREIGN KEY("idPromocion") REFERENCES "promociones"(idPromocion)
 );
+CREATE TRIGGER borrar_itinerario_promociones
+BEFORE DELETE ON usuarios
+	BEGIN 
+		DELETE FROM itinerarioPromociones WHERE idUsuario = OLD.idUsuario;
+	END;
 DROP TABLE IF EXISTS "itinerarioAtracciones";
 CREATE TABLE "itinerarioAtracciones" (
 	"idItinerario"	INTEGER NOT NULL,
@@ -89,6 +129,11 @@ CREATE TABLE "itinerarioAtracciones" (
 	FOREIGN KEY("idUsuario") REFERENCES "usuarios"(idUsuario),
 	FOREIGN KEY("idAtraccion") REFERENCES "atracciones"(idAtraccion)
 );
+CREATE TRIGGER borrar_itinerario_atracciones
+BEFORE DELETE ON usuarios
+	BEGIN 
+		DELETE FROM itinerarioAtracciones WHERE idUsuario = OLD.idUsuario;
+	END;
 INSERT INTO tipoAtraccion (nombreTipoAtraccion) VALUES
 ("Aventura"),
 ("Paisaje"),

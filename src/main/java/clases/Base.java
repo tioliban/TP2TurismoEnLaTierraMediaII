@@ -4,13 +4,13 @@ import java.util.Objects;
 
 public abstract class Base {
 
-	private int id;
+	private String id;
 	private String nombre;
 	private double tiempo;
 	private double costo;
 	private TipoAtraccion tipo;
 
-	public Base(int id, String nombre, double tiempo, double costo, TipoAtraccion tipo) {
+	public Base(String id, String nombre, double tiempo, double costo, TipoAtraccion tipo) {
 		this.setId(id);
 		this.setNombre(nombre);
 		this.setTiempo(tiempo);
@@ -24,7 +24,7 @@ public abstract class Base {
 	 * @post Retorno el id de la atraccion o promocion.
 	 * @return Id de la Atraccion o Promocion.
 	 */
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -33,7 +33,7 @@ public abstract class Base {
 	 * @post Se actualizo el id de la Atraccion o Promocion.
 	 * @param id Nuevo id a actualizar.
 	 */
-	private void setId(int id) {
+	private void setId(String id) {
 		this.id = id;
 	}
 
@@ -114,7 +114,7 @@ public abstract class Base {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, nombre, tipo);
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public abstract class Base {
 			return false;
 		}
 		Base other = (Base) obj;
-		return id == other.id && Objects.equals(nombre, other.nombre) && tipo == other.tipo;
+		return Objects.equals(id, other.id);
 	}
 
 }
