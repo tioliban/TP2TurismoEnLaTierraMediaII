@@ -16,19 +16,18 @@ import excepciones.ExcepcionDeBase;
 public class TestAtraccion {
 	ArrayList<Atraccion>atracciones;
 	Atraccion moria, minasTirith, laComarca, mordor, abismoDeHelm, lothlorein, erebor, bosqueNegro, esgaroth;
-	Atraccion nombreInvalido, tiempoInvalido, costoInvalido, cupoInvalido;
 
 	@Before
 	public void setUp() throws ExcepcionDeBase, ExcepcionDeAtraccion {
-		moria = new Atraccion("Moria", 2, 10, TipoAtraccion.AVENTURA, 6);
-		minasTirith = new Atraccion("Minas Tirith", 2.5, 5, TipoAtraccion.PAISAJE, 25);
-		laComarca = new Atraccion("La Comarca", 6.5, 3, TipoAtraccion.DEGUSTACION, 150);
-		mordor = new Atraccion("Mordor", 3, 25, TipoAtraccion.AVENTURA, 4);
-		abismoDeHelm = new Atraccion("Abismo de Heml", 2, 5, TipoAtraccion.PAISAJE, 15);
-		lothlorein = new Atraccion("Lothlórein", 1, 35, TipoAtraccion.DEGUSTACION, 30);
-		erebor = new Atraccion("Erebor", 3, 12, TipoAtraccion.PAISAJE, 32);
-		bosqueNegro = new Atraccion("Bosque Negro", 4, 3, TipoAtraccion.AVENTURA, 12);
-		esgaroth = new Atraccion("Esgaroth", 3, 50, TipoAtraccion.DEGUSTACION, 20);
+		moria = new Atraccion(1, "Moria", 2, 10, 6, TipoAtraccion.AVENTURA);
+		minasTirith = new Atraccion(2, "Minas Tirith", 2.5, 5, 25, TipoAtraccion.PAISAJE);
+		laComarca = new Atraccion(3, "La Comarca", 6.5, 3, 150, TipoAtraccion.DEGUSTACION);
+		mordor = new Atraccion(4, "Mordor", 3, 25, 4, TipoAtraccion.AVENTURA);
+		abismoDeHelm = new Atraccion(5, "Abismo de Heml", 2, 5, 15, TipoAtraccion.PAISAJE);
+		lothlorein = new Atraccion(6, "Lothlórein", 1, 35, 30, TipoAtraccion.DEGUSTACION);
+		erebor = new Atraccion(7, "Erebor", 3, 12, 32, TipoAtraccion.PAISAJE);
+		bosqueNegro = new Atraccion(8, "Bosque Negro", 4, 3, 12, TipoAtraccion.AVENTURA);
+		esgaroth = new Atraccion(9, "Esgaroth", 3, 50, 20, TipoAtraccion.DEGUSTACION);
 		atracciones = new ArrayList<Atraccion>();
 		atracciones.add(abismoDeHelm);
 		atracciones.add(bosqueNegro);
@@ -52,28 +51,19 @@ public class TestAtraccion {
 		erebor = null;
 		bosqueNegro = null;
 		esgaroth = null;
-		nombreInvalido = null;
-		tiempoInvalido = null;
-		costoInvalido = null;
-		cupoInvalido = null;
 	}
 
 	@Test
 	public void testGetNombre() {
-		assertEquals("Moria", moria.getNombre());
-		assertEquals("Minas Tirith", minasTirith.getNombre());
-		assertEquals("La Comarca", laComarca.getNombre());
-		assertEquals("Mordor", mordor.getNombre());
-		assertEquals("Abismo de Heml", abismoDeHelm.getNombre());
-		assertEquals("Lothlórein", lothlorein.getNombre());
-		assertEquals("Erebor", erebor.getNombre());
-		assertEquals("Bosque Negro", bosqueNegro.getNombre());
-		assertEquals("Esgaroth", esgaroth.getNombre());
-	}
-
-	@Test(expected = ExcepcionDeBase.class)
-	public void testDeValidacionDeNombre() throws ExcepcionDeBase, ExcepcionDeAtraccion {
-		nombreInvalido = new Atraccion("", 6, 120, TipoAtraccion.PAISAJE, 6);
+		assertEquals("Moria", moria.getId());
+		assertEquals("Minas Tirith", minasTirith.getId());
+		assertEquals("La Comarca", laComarca.getId());
+		assertEquals("Mordor", mordor.getId());
+		assertEquals("Abismo de Heml", abismoDeHelm.getId());
+		assertEquals("Lothlórein", lothlorein.getId());
+		assertEquals("Erebor", erebor.getId());
+		assertEquals("Bosque Negro", bosqueNegro.getId());
+		assertEquals("Esgaroth", esgaroth.getId());
 	}
 
 	@Test
@@ -89,17 +79,6 @@ public class TestAtraccion {
 		assertEquals(3, esgaroth.getTiempo(), 0);
 	}
 
-	@Test(expected = ExcepcionDeBase.class)
-	public void testDeValidacionDeTiempoNegativo() throws ExcepcionDeBase, ExcepcionDeAtraccion {
-		tiempoInvalido = new Atraccion("Invalido", -6, 120, TipoAtraccion.PAISAJE, 6);
-
-	}
-
-	@Test(expected = ExcepcionDeBase.class)
-	public void testDeValidacionDeTiempoCero() throws ExcepcionDeBase, ExcepcionDeAtraccion {
-		tiempoInvalido = new Atraccion("Invalido", 0, 120, TipoAtraccion.PAISAJE, 6);
-	}
-
 	@Test
 	public void testGetCosto() {
 		assertEquals(10, moria.getCosto(), 0);
@@ -113,27 +92,17 @@ public class TestAtraccion {
 		assertEquals(50, esgaroth.getCosto(), 0);
 	}
 
-	@Test(expected = ExcepcionDeBase.class)
-	public void testDeValidacionDeCostoNegativo() throws ExcepcionDeBase, ExcepcionDeAtraccion {
-		costoInvalido = new Atraccion("Invalido", 6, -120, TipoAtraccion.PAISAJE, 6);
-	}
-
-	@Test(expected = ExcepcionDeBase.class)
-	public void testDeValidacionDeCostoCero() throws ExcepcionDeBase, ExcepcionDeAtraccion {
-		costoInvalido = new Atraccion("Invalido", 6, 0, TipoAtraccion.PAISAJE, 6);
-	}
-
 	@Test
 	public void testGetPreferencia() {
-		assertEquals(TipoAtraccion.AVENTURA, moria.getTipo());
-		assertEquals(TipoAtraccion.PAISAJE, minasTirith.getTipo());
-		assertEquals(TipoAtraccion.DEGUSTACION, laComarca.getTipo());
-		assertEquals(TipoAtraccion.AVENTURA, mordor.getTipo());
-		assertEquals(TipoAtraccion.PAISAJE, abismoDeHelm.getTipo());
-		assertEquals(TipoAtraccion.DEGUSTACION, lothlorein.getTipo());
-		assertEquals(TipoAtraccion.PAISAJE, erebor.getTipo());
-		assertEquals(TipoAtraccion.AVENTURA, bosqueNegro.getTipo());
-		assertEquals(TipoAtraccion.DEGUSTACION, esgaroth.getTipo());
+		assertEquals(TipoAtraccion.AVENTURA, moria.getTipoAtraccion());
+		assertEquals(TipoAtraccion.PAISAJE, minasTirith.getTipoAtraccion());
+		assertEquals(TipoAtraccion.DEGUSTACION, laComarca.getTipoAtraccion());
+		assertEquals(TipoAtraccion.AVENTURA, mordor.getTipoAtraccion());
+		assertEquals(TipoAtraccion.PAISAJE, abismoDeHelm.getTipoAtraccion());
+		assertEquals(TipoAtraccion.DEGUSTACION, lothlorein.getTipoAtraccion());
+		assertEquals(TipoAtraccion.PAISAJE, erebor.getTipoAtraccion());
+		assertEquals(TipoAtraccion.AVENTURA, bosqueNegro.getTipoAtraccion());
+		assertEquals(TipoAtraccion.DEGUSTACION, esgaroth.getTipoAtraccion());
 	}
 
 	@Test
@@ -147,16 +116,6 @@ public class TestAtraccion {
 		assertEquals(32, erebor.getCupo(), 0);
 		assertEquals(12, bosqueNegro.getCupo(), 0);
 		assertEquals(20, esgaroth.getCupo(), 0);
-	}
-
-	@Test(expected = ExcepcionDeAtraccion.class)
-	public void testDeValidacionDeCupoNegativo() throws ExcepcionDeBase, ExcepcionDeAtraccion {
-		cupoInvalido = new Atraccion("Invalido", 6, 120, TipoAtraccion.PAISAJE, -6);
-	}
-
-	@Test(expected = ExcepcionDeAtraccion.class)
-	public void testDeValidacionDeCupoCero() throws ExcepcionDeBase, ExcepcionDeAtraccion {
-		cupoInvalido = new Atraccion("Invalido", 6, 120, TipoAtraccion.PAISAJE, 0);
 	}
 
 	@Test
@@ -184,15 +143,15 @@ public class TestAtraccion {
 
 	@Test
 	public void testDeBuscarAtraccionPorNombre() {
-		assertEquals(moria,Atraccion.buscarAtraccionPorNombre(moria.getNombre(), atracciones));
-		assertEquals(minasTirith,Atraccion.buscarAtraccionPorNombre(minasTirith.getNombre(), atracciones));
-		assertEquals(laComarca,Atraccion.buscarAtraccionPorNombre(laComarca.getNombre(), atracciones));
-		assertEquals(mordor,Atraccion.buscarAtraccionPorNombre(mordor.getNombre(), atracciones));
-		assertEquals(abismoDeHelm,Atraccion.buscarAtraccionPorNombre(abismoDeHelm.getNombre(), atracciones));
-		assertEquals(lothlorein,Atraccion.buscarAtraccionPorNombre(lothlorein.getNombre(), atracciones));
-		assertEquals(erebor,Atraccion.buscarAtraccionPorNombre(erebor.getNombre(), atracciones));
-		assertEquals(bosqueNegro,Atraccion.buscarAtraccionPorNombre(bosqueNegro.getNombre(), atracciones));
-		assertEquals(esgaroth,Atraccion.buscarAtraccionPorNombre(esgaroth.getNombre(), atracciones));
+		assertEquals(moria,Atraccion.buscarAtraccionPorNombre(moria.getId(), atracciones));
+		assertEquals(minasTirith,Atraccion.buscarAtraccionPorNombre(minasTirith.getId(), atracciones));
+		assertEquals(laComarca,Atraccion.buscarAtraccionPorNombre(laComarca.getId(), atracciones));
+		assertEquals(mordor,Atraccion.buscarAtraccionPorNombre(mordor.getId(), atracciones));
+		assertEquals(abismoDeHelm,Atraccion.buscarAtraccionPorNombre(abismoDeHelm.getId(), atracciones));
+		assertEquals(lothlorein,Atraccion.buscarAtraccionPorNombre(lothlorein.getId(), atracciones));
+		assertEquals(erebor,Atraccion.buscarAtraccionPorNombre(erebor.getId(), atracciones));
+		assertEquals(bosqueNegro,Atraccion.buscarAtraccionPorNombre(bosqueNegro.getId(), atracciones));
+		assertEquals(esgaroth,Atraccion.buscarAtraccionPorNombre(esgaroth.getId(), atracciones));
 	}
 
 	@Test

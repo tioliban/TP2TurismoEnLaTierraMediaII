@@ -123,7 +123,10 @@ public abstract class Base {
 			return true;
 		}
 		if (!(obj instanceof Base)) {
-			return false;
+			if (obj instanceof String)
+				return this.id.equals(obj);
+			else
+				return false;
 		}
 		Base other = (Base) obj;
 		return Objects.equals(id, other.id);

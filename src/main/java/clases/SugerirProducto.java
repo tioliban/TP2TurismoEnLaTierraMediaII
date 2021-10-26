@@ -1,17 +1,9 @@
-package aplicacion;
+package clases;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-import clases.Atraccion;
-import clases.Base;
-import clases.Promocion;
-import clases.Absoluta;
-import clases.AxB;
-import clases.Porcentual;
-import clases.Usuario;
 import comparadores.NombreDeAtraccionComparador;
 import comparadores.PrecioYTiempoDeAtraccionComparador;
 import comparadores.TiempoDeAtraccionComparador;
@@ -29,22 +21,6 @@ public class SugerirProducto {
 		this.setPromociones(lasPromociones);
 		this.setAtracciones(lasAtracciones);
 		teclado = new Scanner(System.in);
-	}
-
-	/**
-	 * @pre No tiene.
-	 * @post Mostro por pantalla información de la ejecución del programa y lanzó la
-	 *       ejecución del método sugerir promociones con preferencia.
-	 */
-	public void mostrarPorPantalla() {
-		System.out.println();
-		System.out.println("Comenzamos a sugerir productos a los usuarios");
-		for (Usuario usuario : this.getUsuarios()) {
-			System.out.println();
-			System.out.println("Usuario: " + usuario.getNombre());
-			this.sugerirPromocionConPreferencia(usuario);
-			System.out.println();
-		}
 	}
 
 	/**
@@ -105,55 +81,25 @@ public class SugerirProducto {
 
 	/**
 	 * @pre No tiene.
-	 * @post No tiene.
-	 * @return Retorna una lista con los nombres de todas las atracciones incluidas
-	 *         en el itinerario de un usuario determinado.
-	 * @param usuario Usuario del cual se recuperan los nombres de las atracciones
-	 *                que recorrio.
-	 * @return Lista de nombres con las atracciones que ya visitó el usuario.
-	 */
-	public ArrayList<String> getAtraccionesDeSuItinerario(Usuario usuario) {
-		ArrayList<String> retorno = new ArrayList<String>();
-		for (Base baseATratar : usuario.getItinerario()) {
-			if (baseATratar instanceof AxB) {
-				AxB tratarComoPromocionAxB = (AxB) baseATratar;
-				for (String nombre : tratarComoPromocionAxB.getNombresDeAtracciones()) {
-					retorno.add(nombre);
-				}
-			}
-			if (baseATratar instanceof Absoluta) {
-				Absoluta tratarComoPromocionAbsoluta = (Absoluta) baseATratar;
-				for (String nombre : tratarComoPromocionAbsoluta.getNombresDeAtracciones()) {
-					retorno.add(nombre);
-				}
-			}
-			if (baseATratar instanceof Porcentual) {
-				Porcentual tratarComoPromocionPorcentual = (Porcentual) baseATratar;
-				for (String nombre : tratarComoPromocionPorcentual.getNombresDeAtracciones()) {
-					retorno.add(nombre);
-				}
-			}
-			if (baseATratar instanceof Atraccion) {
-				Atraccion tratarComoAtraccion = (Atraccion) baseATratar;
-				retorno.add(tratarComoAtraccion.getNombre());
-			}
-		}
-		return retorno;
-	}
-
-	/**
-	 * @pre No tiene.
 	 * @post Retorno un valor de verdad informando si un usuario determinado ya
 	 *       visito una atraccion determinada.
-	 * @param usuario                Usuario a consultar si ya visitó una atraccion
-	 *                               determinada.
-	 * @param atraccionDeLaPromocion Atraccion determinada a verificar.
+	 * @param usuario  Usuario a consultar si ya visitó un producto determinada.
+	 * @param producto Producto a buscar determinada a verificar.
 	 * @return Retorna un valor logico si el usuario visito o no la atraccion.
 	 */
-	private boolean laVisito(Usuario usuario, String atraccionDeLaPromocion) {
+	@SuppressWarnings("unlikely-arg-type")
+	public boolean laVisito(Usuario usuario, String producto) {
 		boolean retorno = true;
-		for (String atraccionDeUsuario : this.getAtraccionesDeSuItinerario(usuario)) {
-			retorno &= !atraccionDeUsuario.equals(atraccionDeLaPromocion);
+		if (usuario.getItinerario().contains(producto)) {
+			return false;
+		} else if (producto.startsWith("2.")) {
+			for (Base itinerario : usuario.getItinerario()) {
+				if (itinerario.getId().startsWith("1.")) {
+					Promocion promo = (Promocion) itinerario;
+					return retorno &= !promo.getAtracciones().contains(producto);
+				}
+
+			}
 		}
 		return retorno;
 	}
@@ -167,7 +113,7 @@ public class SugerirProducto {
 	public void sugerirPromocionConPreferencia(Usuario usuario) {
 		for (Promocion laPromocion : this.getPromociones()) {
 			boolean tieneCupo = true, noLaVisito = true;
-			for (String atraccionDeLaPromocion : laPromocion.getNombresDeAtracciones()) {
+			for (String atraccionDeLaPromocion : laPromocion.getAtracciones()) {
 				tieneCupo = tieneCupo
 						&& (Atraccion.buscarAtraccionPorNombre(atraccionDeLaPromocion, atracciones).getCupo() >= 1);
 				noLaVisito &= this.laVisito(usuario, atraccionDeLaPromocion);
@@ -204,7 +150,7 @@ public class SugerirProducto {
 	 *                    cupo.
 	 */
 	private void subirPromocion(Promocion laPromocion) {
-		for (String atraccion : laPromocion.getNombresDeAtracciones()) {
+		for (String atraccion : laPromocion.getAtracciones()) {
 			Atraccion.buscarAtraccionPorNombre(atraccion, this.getAtracciones()).subirAtraccion();
 		}
 	}
@@ -217,7 +163,7 @@ public class SugerirProducto {
 	public void sugerirPromocionSinPreferencia(Usuario usuario) {
 		for (Promocion laPromocion : this.getPromociones()) {
 			boolean tieneCupo = true, noLaVisito = true;
-			for (String atraccionDeLaPromocion : laPromocion.getNombresDeAtracciones()) {
+			for (String atraccionDeLaPromocion : laPromocion.getAtracciones()) {
 				tieneCupo = tieneCupo
 						&& (Atraccion.buscarAtraccionPorNombre(atraccionDeLaPromocion, atracciones).getCupo() >= 1);
 				noLaVisito = noLaVisito && this.laVisito(usuario, atraccionDeLaPromocion);
@@ -240,7 +186,7 @@ public class SugerirProducto {
 		for (Atraccion laAtraccion : this.getAtracciones()) {
 			if (laAtraccion.getCupo() >= 1 && laAtraccion.getTiempo() <= usuario.getTiempo()
 					&& laAtraccion.getCosto() <= usuario.getPresupuesto()
-					&& this.laVisito(usuario, laAtraccion.getNombre()))
+					&& this.laVisito(usuario, laAtraccion.getId()))
 				if (usuario.aceptarSugerencia(laAtraccion, this.respuesta(laAtraccion)))
 					laAtraccion.subirAtraccion();
 		}

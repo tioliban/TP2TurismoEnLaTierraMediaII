@@ -51,7 +51,7 @@ public class Atraccion extends Base {
 		Iterator<Atraccion> indice = atracciones.iterator();
 		while (indice.hasNext()) {
 			Atraccion atraccion = indice.next();
-			if (atraccion.getNombre().equals(nombre)) {
+			if (atraccion.getId().equals(nombre)) {
 				return atraccion;
 			}
 		}
@@ -60,7 +60,7 @@ public class Atraccion extends Base {
 
 	@Override
 	public String toString() {
-		return this.getNombre() + ", con un costo de " + this.getCosto()
+		return this.getId() + ", con un costo de " + this.getCosto()
 				+ " monedas de oro, un tiempo necesario para recorrerlo de " + super.getTiempo() + " horas, un cupo de "
 				+ this.getCupo() + " usuarios y su tipo de atraccion es " + this.getTipoAtraccion().toString();
 	}

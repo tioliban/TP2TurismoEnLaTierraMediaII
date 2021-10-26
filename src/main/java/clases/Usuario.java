@@ -114,17 +114,6 @@ public class Usuario {
 
 	/**
 	 * @pre No tiene.
-	 * @post Se informo si la sugerencia se encuentra en el itinerario del usuario.
-	 * @param sugerencia Una promoción o atracción.
-	 * @return Retorna un verdadero o falso, para informar si ya se ha visitado esa
-	 *         sugerencia.
-	 */
-	public boolean laVisito(Base sugerencia) {
-		return this.itinerario.contains(sugerencia);
-	}
-
-	/**
-	 * @pre No tiene.
 	 * @post Se agrego una sugerencia al itinerario si fue aceptada.
 	 * @param sugerencia Una promoción o atracción.
 	 * @param decision   Un verdadero o falso, según haya sido la desicion ingresada

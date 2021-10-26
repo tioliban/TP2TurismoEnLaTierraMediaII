@@ -1,8 +1,13 @@
 package controlador;
 
 import java.sql.Connection;
+
 import java.sql.SQLException;
 import java.sql.DriverManager;
+
+import clases.SugerirProducto;
+import clases.Usuario;
+import persistencia.DAOFactory;
 
 public class Controlador {
 	private static final String DIRECCION_DE_LA_BASE_DE_DATOS = "jdbc:sqlite:bd.db";
@@ -14,8 +19,32 @@ public class Controlador {
 		}
 		return connection;
 	}
+
 	/**
 	 * Acá tengo que poner el controlamiento del sistema y los estados del sistema,
 	 * la interacción con el usuario lo tengo que poner en otro lado
 	 */
+	public static void iniciarSistema() {
+		// Aca deben ir las salidas por pantalla que son la interaccion con el usuario
+		SugerirProducto ofertas = new SugerirProducto(DAOFactory.getUsuarioDAO().findAll(),
+				DAOFactory.getPromocionDAO().findAll(), DAOFactory.getAtraccionDAO().findAll());
+		for (Usuario usuario : ofertas.getUsuarios()) {
+			ofertas.sugerirPromocionConPreferencia(usuario);
+		}
+		Controlador.guardarSistema();
+
+		while (true) {
+			Controlador.reanudarSistema();
+		}
+	}
+
+	public static void reanudarSistema() {
+
+		if (true)
+			Controlador.guardarSistema();
+
+	}
+
+	private static void guardarSistema() {
+	}
 }

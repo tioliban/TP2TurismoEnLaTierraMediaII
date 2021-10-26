@@ -17,22 +17,22 @@ import excepciones.ExcepcionDePromocion;
 
 public class TestPromocionPorcentual {
 
-	Porcentual promo, invalida;
-	String[] nombresDeAtracciones;
+	Porcentual promo;
+	ArrayList<String> nombres = new ArrayList<>();
 	List<Atraccion> atracciones = new ArrayList<>();
 	Atraccion moria, minasTirith, laComarca, mordor, abismoDeHelm, lothlorein, erebor, bosqueNegro, esgaroth;
 
 	@Before
 	public void setUp() throws ExcepcionDeBase, ExcepcionDeAtraccion, ExcepcionDePromocion {
-		moria = new Atraccion("Moria", 2, 10, TipoAtraccion.AVENTURA, 6);
-		minasTirith = new Atraccion("Minas Tirith", 2.5, 5, TipoAtraccion.PAISAJE, 25);
-		laComarca = new Atraccion("La Comarca", 6.5, 3, TipoAtraccion.DEGUSTACION, 150);
-		mordor = new Atraccion("Mordor", 3, 25, TipoAtraccion.AVENTURA, 4);
-		abismoDeHelm = new Atraccion("Abismo de Heml", 2, 5, TipoAtraccion.PAISAJE, 15);
-		lothlorein = new Atraccion("Lothlórein", 1, 35, TipoAtraccion.DEGUSTACION, 30);
-		erebor = new Atraccion("Erebor", 3, 12, TipoAtraccion.PAISAJE, 32);
-		bosqueNegro = new Atraccion("Bosque Negro", 4, 3, TipoAtraccion.AVENTURA, 12);
-		esgaroth = new Atraccion("Esgaroth", 3, 50, TipoAtraccion.DEGUSTACION, 20);
+		moria = new Atraccion(1, "Moria", 2, 10, 6, TipoAtraccion.AVENTURA);
+		minasTirith = new Atraccion(2, "Minas Tirith", 2.5, 5, 25, TipoAtraccion.PAISAJE);
+		laComarca = new Atraccion(3, "La Comarca", 6.5, 3, 150, TipoAtraccion.DEGUSTACION);
+		mordor = new Atraccion(4, "Mordor", 3, 25, 4, TipoAtraccion.AVENTURA);
+		abismoDeHelm = new Atraccion(5, "Abismo de Heml", 2, 5, 15, TipoAtraccion.PAISAJE);
+		lothlorein = new Atraccion(6, "Lothlórein", 1, 35, 30, TipoAtraccion.DEGUSTACION);
+		erebor = new Atraccion(7, "Erebor", 3, 12, 32, TipoAtraccion.PAISAJE);
+		bosqueNegro = new Atraccion(8, "Bosque Negro", 4, 3, 12, TipoAtraccion.AVENTURA);
+		esgaroth = new Atraccion(9, "Esgaroth", 3, 50, 20, TipoAtraccion.DEGUSTACION);
 		atracciones = new ArrayList<Atraccion>();
 		atracciones.add(abismoDeHelm);
 		atracciones.add(bosqueNegro);
@@ -43,10 +43,9 @@ public class TestPromocionPorcentual {
 		atracciones.add(minasTirith);
 		atracciones.add(mordor);
 		atracciones.add(moria);
-		nombresDeAtracciones = new String[2];
-		nombresDeAtracciones[0] = moria.getNombre();
-		nombresDeAtracciones[1] = mordor.getNombre();
-		promo = new Porcentual("Segunda", TipoAtraccion.AVENTURA, nombresDeAtracciones, atracciones, 35);
+		nombres.add(moria.getId());
+		nombres.add(mordor.getId());
+		promo = new Porcentual(1, "Segunda", 5, 22.75, TipoAtraccion.AVENTURA, nombres, 35);
 	}
 
 
@@ -55,26 +54,6 @@ public class TestPromocionPorcentual {
 		assertEquals(35, promo.getPorcentajeDescuento(), 0);
 	}
 
-	@Test(expected = ExcepcionDePromocion.class)
-	public void testDePorcentajeInvalidoCero() throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
-		invalida = new Porcentual("Segunda", TipoAtraccion.AVENTURA, nombresDeAtracciones, atracciones, 0);
-	}
-
-	@Test(expected = ExcepcionDePromocion.class)
-	public void testDePorcentajeInvalidoNegativo() throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
-		invalida = new Porcentual("Segunda", TipoAtraccion.AVENTURA, nombresDeAtracciones, atracciones, -10);
-	}
-
-	@Test(expected = ExcepcionDePromocion.class)
-	public void testDePorcentajeInvalidoMayorACien()
-			throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
-		invalida = new Porcentual("Segunda", TipoAtraccion.AVENTURA, nombresDeAtracciones, atracciones, 110);
-	}
-
-	@Test(expected = ExcepcionDePromocion.class)
-	public void testDePorcentajeInvaCien() throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
-		invalida = new Porcentual("Segunda", TipoAtraccion.AVENTURA, nombresDeAtracciones, atracciones, 100);
-	}
 
 	@Test
 	public void testDeToString() {

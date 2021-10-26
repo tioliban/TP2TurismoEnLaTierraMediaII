@@ -61,7 +61,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			consultaSQL.append(" (nombreAtraccion, tiempo, costo, cupo, idTipoAtraccion)");
 			consultaSQL.append(" VALUES (?, ?, ?, ?, ?)");
 			statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setString(1, atraccionAInsertar.getNombre());
+			statement.setString(1, atraccionAInsertar.getId());
 			statement.setDouble(2, atraccionAInsertar.getTiempo());
 			statement.setDouble(3, atraccionAInsertar.getCosto());
 			statement.setInt(4, atraccionAInsertar.getCupo());

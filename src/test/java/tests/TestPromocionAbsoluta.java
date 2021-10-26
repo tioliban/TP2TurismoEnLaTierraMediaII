@@ -17,22 +17,22 @@ import excepciones.ExcepcionDePromocion;
 
 public class TestPromocionAbsoluta {
 
-	Absoluta absoluta, invalida;
-	String[] nombresDeAtracciones;
+	Absoluta absoluta;
+	ArrayList<String> nombres = new ArrayList<>();
 	List<Atraccion> atracciones = new ArrayList<>();
 	Atraccion moria, minasTirith, laComarca, mordor, abismoDeHelm, lothlorein, erebor, bosqueNegro, esgaroth;
 
 	@Before
 	public void setUp() throws ExcepcionDeBase, ExcepcionDeAtraccion, ExcepcionDePromocion {
-		moria = new Atraccion("Moria", 2, 10, TipoAtraccion.AVENTURA, 6);
-		minasTirith = new Atraccion("Minas Tirith", 2.5, 5, TipoAtraccion.PAISAJE, 25);
-		laComarca = new Atraccion("La Comarca", 6.5, 3, TipoAtraccion.DEGUSTACION, 150);
-		mordor = new Atraccion("Mordor", 3, 25, TipoAtraccion.AVENTURA, 4);
-		abismoDeHelm = new Atraccion("Abismo de Heml", 2, 5, TipoAtraccion.PAISAJE, 15);
-		lothlorein = new Atraccion("Lothlórein", 1, 35, TipoAtraccion.DEGUSTACION, 30);
-		erebor = new Atraccion("Erebor", 3, 12, TipoAtraccion.PAISAJE, 32);
-		bosqueNegro = new Atraccion("Bosque Negro", 4, 3, TipoAtraccion.AVENTURA, 12);
-		esgaroth = new Atraccion("Esgaroth", 3, 50, TipoAtraccion.DEGUSTACION, 20);
+		moria = new Atraccion(1, "Moria", 2, 10, 6, TipoAtraccion.AVENTURA);
+		minasTirith = new Atraccion(2, "Minas Tirith", 2.5, 5, 25, TipoAtraccion.PAISAJE);
+		laComarca = new Atraccion(3, "La Comarca", 6.5, 3, 150, TipoAtraccion.DEGUSTACION);
+		mordor = new Atraccion(4, "Mordor", 3, 25, 4, TipoAtraccion.AVENTURA);
+		abismoDeHelm = new Atraccion(5, "Abismo de Heml", 2, 5, 15, TipoAtraccion.PAISAJE);
+		lothlorein = new Atraccion(6, "Lothlórein", 1, 35, 30, TipoAtraccion.DEGUSTACION);
+		erebor = new Atraccion(7, "Erebor", 3, 12, 32, TipoAtraccion.PAISAJE);
+		bosqueNegro = new Atraccion(8, "Bosque Negro", 4, 3, 12, TipoAtraccion.AVENTURA);
+		esgaroth = new Atraccion(9, "Esgaroth", 3, 50, 20, TipoAtraccion.DEGUSTACION);
 		atracciones = new ArrayList<Atraccion>();
 		atracciones.add(abismoDeHelm);
 		atracciones.add(bosqueNegro);
@@ -43,22 +43,10 @@ public class TestPromocionAbsoluta {
 		atracciones.add(minasTirith);
 		atracciones.add(mordor);
 		atracciones.add(moria);
-		nombresDeAtracciones = new String[2];
-		nombresDeAtracciones[0] = lothlorein.getNombre();
-		nombresDeAtracciones[1] = laComarca.getNombre();
-		absoluta = new Absoluta("Tercera", TipoAtraccion.DEGUSTACION, nombresDeAtracciones, atracciones, 36);
-	}
-
-	@Test(expected = ExcepcionDePromocion.class)
-	public void testDeTipoDeAtracciones() throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
-		nombresDeAtracciones[1] = erebor.getNombre();
-		invalida = new Absoluta("Tercera", TipoAtraccion.DEGUSTACION, nombresDeAtracciones, atracciones, 36);
-	}
-
-	@Test(expected = ExcepcionDeAtraccion.class)
-	public void testDeNombresDeAtraccionesVacia() throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
-		nombresDeAtracciones = null;
-		invalida = new Absoluta("Tercera", TipoAtraccion.DEGUSTACION, nombresDeAtracciones, atracciones, 36);
+		
+		nombres.add(lothlorein.getId());
+		nombres.add(laComarca.getId());
+		absoluta = new Absoluta(1,"Tercera", 7.5, 36, TipoAtraccion.DEGUSTACION, nombres);
 	}
 
 	@Test

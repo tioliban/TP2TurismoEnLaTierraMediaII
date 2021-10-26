@@ -19,25 +19,21 @@ import excepciones.ExcepcionDePromocion;
 public class TestPromocionAxB {
 
 	AxB promo;
-	String[] nombresDeAtracciones;
-	List<String> nombres;
+	ArrayList<String> nombres = new ArrayList<>();
 	List<Atraccion> atracciones;
 	Atraccion moria, minasTirith, laComarca, mordor, abismoDeHelm, lothlorein, erebor, bosqueNegro, esgaroth;
-	AxB atraccionInvalida, tiempoInvalido, costoInvalido, cupoInvalido;
-	Atraccion invalida;
 
 	@Before
 	public void setUp() throws ExcepcionDeBase, ExcepcionDeAtraccion, ExcepcionDePromocion {
-		moria = new Atraccion("Moria", 2, 10, TipoAtraccion.AVENTURA, 6);
-		minasTirith = new Atraccion("Minas Tirith", 2.5, 5, TipoAtraccion.PAISAJE, 25);
-		laComarca = new Atraccion("La Comarca", 6.5, 3, TipoAtraccion.DEGUSTACION, 150);
-		mordor = new Atraccion("Mordor", 3, 25, TipoAtraccion.AVENTURA, 4);
-		abismoDeHelm = new Atraccion("Abismo de Heml", 2, 5, TipoAtraccion.PAISAJE, 15);
-		lothlorein = new Atraccion("Lothlórein", 1, 35, TipoAtraccion.DEGUSTACION, 30);
-		erebor = new Atraccion("Erebor", 3, 12, TipoAtraccion.PAISAJE, 32);
-		bosqueNegro = new Atraccion("Bosque Negro", 4, 3, TipoAtraccion.AVENTURA, 12);
-		esgaroth = new Atraccion("Esgaroth", 3, 50, TipoAtraccion.DEGUSTACION, 20);
-		invalida = null;
+		moria = new Atraccion(1, "Moria", 2, 10, 6, TipoAtraccion.AVENTURA);
+		minasTirith = new Atraccion(2, "Minas Tirith", 2.5, 5, 25, TipoAtraccion.PAISAJE);
+		laComarca = new Atraccion(3, "La Comarca", 6.5, 3, 150, TipoAtraccion.DEGUSTACION);
+		mordor = new Atraccion(4, "Mordor", 3, 25, 4, TipoAtraccion.AVENTURA);
+		abismoDeHelm = new Atraccion(5, "Abismo de Heml", 2, 5, 15, TipoAtraccion.PAISAJE);
+		lothlorein = new Atraccion(6, "Lothlórein", 1, 35, 30, TipoAtraccion.DEGUSTACION);
+		erebor = new Atraccion(7, "Erebor", 3, 12, 32, TipoAtraccion.PAISAJE);
+		bosqueNegro = new Atraccion(8, "Bosque Negro", 4, 3, 12, TipoAtraccion.AVENTURA);
+		esgaroth = new Atraccion(9, "Esgaroth", 3, 50, 20, TipoAtraccion.DEGUSTACION);
 		atracciones = new ArrayList<Atraccion>();
 		atracciones.add(abismoDeHelm);
 		atracciones.add(bosqueNegro);
@@ -48,16 +44,10 @@ public class TestPromocionAxB {
 		atracciones.add(minasTirith);
 		atracciones.add(mordor);
 		atracciones.add(moria);
-		nombresDeAtracciones = new String[3];
-		nombresDeAtracciones[0] = moria.getNombre();
-		nombresDeAtracciones[1] = mordor.getNombre();
-		nombresDeAtracciones[2] = bosqueNegro.getNombre();
-		nombres = new ArrayList<String>();
-		nombres.add(moria.getNombre());
-		nombres.add(mordor.getNombre());
-		nombres.add(bosqueNegro.getNombre());
-		promo = new AxB("Segunda", TipoAtraccion.AVENTURA, nombresDeAtracciones, atracciones,
-				bosqueNegro.getNombre());
+		nombres.add(moria.getId());
+		nombres.add(mordor.getId());
+		nombres.add(bosqueNegro.getId());
+		promo = new AxB(1, "Segunda", 9, 28, TipoAtraccion.AVENTURA, nombres, bosqueNegro.getId());
 	}
 
 	@After
@@ -71,35 +61,18 @@ public class TestPromocionAxB {
 		erebor = null;
 		bosqueNegro = null;
 		esgaroth = null;
-		atraccionInvalida = null;
-		tiempoInvalido = null;
-		costoInvalido = null;
-		cupoInvalido = null;
 		atracciones = null;
 		promo = null;
 	}
 
 	@Test
 	public void testDeGetAtraccionGratis() {
-		assertEquals(bosqueNegro.getNombre(), promo.getAtraccionGratis());
-	}
-
-	@Test(expected = ExcepcionDePromocion.class)
-	public void testDeAtraccionGratisNulaConExcepcionDePromocion()
-			throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
-		atraccionInvalida = new AxB("Segunda", TipoAtraccion.AVENTURA, nombresDeAtracciones, atracciones,
-				"invalida");
-	}
-
-	@Test(expected = ExcepcionDeAtraccion.class)
-	public void testDeAtraccionesNulasYAtraccionGratisNulaConExcepcionDeAtraccion()
-			throws ExcepcionDeBase, ExcepcionDePromocion, ExcepcionDeAtraccion {
-		atraccionInvalida = new AxB("Segunda", TipoAtraccion.AVENTURA, nombresDeAtracciones, null, null);
+		assertEquals(bosqueNegro.getId(), promo.getAtraccionGratis());
 	}
 
 	@Test
 	public void testDeGetAtracciones() {
-		assertEquals(nombres, promo.getNombresDeAtracciones());
+		assertEquals(nombres, promo.getAtracciones());
 	}
 
 	@Test

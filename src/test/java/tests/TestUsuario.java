@@ -21,7 +21,7 @@ import excepciones.ExcepcionDeUsuario;
 
 public class TestUsuario {
 	List<Atraccion> atracciones;
-	String[] nombresDeAtracciones;
+	ArrayList<String> nombres;
 	Atraccion moria, mordor, bosqueNegro, minasTirith, laComarca, abismoDeHelm, lothlorein, erebor, esgaroth;
 	AxB promo;
 	Usuario eowyn, gandalf, sam, galadriel;
@@ -29,20 +29,20 @@ public class TestUsuario {
 
 	@Before
 	public void setUp() throws ExcepcionDeUsuario, ExcepcionDeBase, ExcepcionDeAtraccion, ExcepcionDePromocion {
-		eowyn = new Usuario("Eowyn", 8, 10, TipoAtraccion.AVENTURA);
-		gandalf = new Usuario("Gandalf", 5, 100, TipoAtraccion.PAISAJE);
-		sam = new Usuario("Sam", 8, 36, TipoAtraccion.DEGUSTACION);
-		galadriel = new Usuario("Galadriel", 6, 120, TipoAtraccion.PAISAJE);
-		moria = new Atraccion("Moria", 2, 10, TipoAtraccion.AVENTURA, 6);
-		minasTirith = new Atraccion("Minas Tirith", 2.5, 5, TipoAtraccion.PAISAJE, 25);
-		laComarca = new Atraccion("La Comarca", 6.5, 3, TipoAtraccion.DEGUSTACION, 150);
-		mordor = new Atraccion("Mordor", 3, 25, TipoAtraccion.AVENTURA, 4);
-		abismoDeHelm = new Atraccion("Abismo de Heml", 2, 5, TipoAtraccion.PAISAJE, 15);
-		lothlorein = new Atraccion("Lothlórein", 1, 35, TipoAtraccion.DEGUSTACION, 30);
-		erebor = new Atraccion("Erebor", 3, 12, TipoAtraccion.PAISAJE, 32);
-		bosqueNegro = new Atraccion("Bosque Negro", 4, 3, TipoAtraccion.AVENTURA, 12);
-		esgaroth = new Atraccion("Esgaroth", 3, 50, TipoAtraccion.DEGUSTACION, 20);
+		eowyn = new Usuario(1, "Eowyn", 80, 100, TipoAtraccion.AVENTURA);
+		gandalf = new Usuario(2, "Gandalf", 5, 100, TipoAtraccion.PAISAJE);
+		sam = new Usuario(3, "Sam", 8, 36, TipoAtraccion.DEGUSTACION);
+		galadriel = new Usuario(4, "Galadriel", 6, 120, TipoAtraccion.PAISAJE);
 		atracciones = new ArrayList<Atraccion>();
+		moria = new Atraccion(1, "Moria", 2, 10, 6, TipoAtraccion.AVENTURA);
+		minasTirith = new Atraccion(2, "Minas Tirith", 2.5, 5, 25, TipoAtraccion.PAISAJE);
+		laComarca = new Atraccion(3, "La Comarca", 6.5, 3, 150, TipoAtraccion.DEGUSTACION);
+		mordor = new Atraccion(4, "Mordor", 3, 25, 4, TipoAtraccion.AVENTURA);
+		abismoDeHelm = new Atraccion(5, "Abismo de Heml", 2, 5, 15, TipoAtraccion.PAISAJE);
+		lothlorein = new Atraccion(6, "Lothlórein", 1, 35, 30, TipoAtraccion.DEGUSTACION);
+		erebor = new Atraccion(7, "Erebor", 3, 12, 32, TipoAtraccion.PAISAJE);
+		bosqueNegro = new Atraccion(8, "Bosque Negro", 4, 3, 12, TipoAtraccion.AVENTURA);
+		esgaroth = new Atraccion(9, "Esgaroth", 3, 50, 20, TipoAtraccion.DEGUSTACION);
 		atracciones.add(abismoDeHelm);
 		atracciones.add(bosqueNegro);
 		atracciones.add(erebor);
@@ -55,12 +55,11 @@ public class TestUsuario {
 		atracciones.add(moria);
 		atracciones.add(mordor);
 		atracciones.add(bosqueNegro);
-		nombresDeAtracciones = new String[3];
-		nombresDeAtracciones[0] = moria.getNombre();
-		nombresDeAtracciones[1] = mordor.getNombre();
-		nombresDeAtracciones[2] = bosqueNegro.getNombre();
-		promo = new AxB("Segunda", TipoAtraccion.AVENTURA, nombresDeAtracciones, atracciones,
-				nombresDeAtracciones[2]);
+		nombres = new ArrayList<String>();
+		nombres.add(moria.getId());
+		nombres.add(mordor.getId());
+		nombres.add(bosqueNegro.getId());
+		promo = new AxB(1, "Segunda", 9, 28, TipoAtraccion.AVENTURA, nombres, bosqueNegro.getId());
 	}
 
 	@After
@@ -85,11 +84,6 @@ public class TestUsuario {
 		assertEquals("Galadriel", galadriel.getNombre());
 	}
 
-	@Test(expected = ExcepcionDeUsuario.class)
-	public void testDeValidacionDeNombre() throws ExcepcionDeUsuario {
-		nombreInvalido = new Usuario("", 6, 120, TipoAtraccion.PAISAJE);
-	}
-
 	@Test
 	public void testGetTiempo() {
 		assertEquals(8, eowyn.getTiempo(), 0);
@@ -98,32 +92,12 @@ public class TestUsuario {
 		assertEquals(6, galadriel.getTiempo(), 0);
 	}
 
-	@Test(expected = ExcepcionDeUsuario.class)
-	public void testDeValidacionDeTiempoNegativo() throws ExcepcionDeUsuario {
-		tiempoInvalido = new Usuario("Galadriel", -6, 120, TipoAtraccion.PAISAJE);
-	}
-
-	@Test(expected = ExcepcionDeUsuario.class)
-	public void testDeValidacionDeTiempoCero() throws ExcepcionDeUsuario {
-		tiempoInvalido = new Usuario("Galadriel", 0, 120, TipoAtraccion.PAISAJE);
-	}
-
 	@Test
 	public void testGetPresupuesto() {
 		assertEquals(10, eowyn.getPresupuesto(), 0);
 		assertEquals(100, gandalf.getPresupuesto(), 0);
 		assertEquals(36, sam.getPresupuesto(), 0);
 		assertEquals(120, galadriel.getPresupuesto(), 0);
-	}
-
-	@Test(expected = ExcepcionDeUsuario.class)
-	public void testDeValidacionDePresupuestoNegativo() throws ExcepcionDeUsuario {
-		presupuestoInvalido = new Usuario("Galadriel", 6, -120, TipoAtraccion.PAISAJE);
-	}
-
-	@Test(expected = ExcepcionDeUsuario.class)
-	public void testDeValidacionDePresupuestoCero() throws ExcepcionDeUsuario {
-		presupuestoInvalido = new Usuario("Galadriel", 6, 0, TipoAtraccion.PAISAJE);
 	}
 
 	@Test
@@ -149,35 +123,6 @@ public class TestUsuario {
 		assertEquals(8, eowyn.getTiempo(), 0);
 		assertEquals(10, eowyn.getPresupuesto(), 0);
 		assertTrue(eowyn.getItinerario().isEmpty());
-	}
-
-	@Test
-	public void testDeMostrarItinerarioConUnaAtraccion() {
-		eowyn.aceptarSugerencia(moria, true);
-		String textoEsperado = "El itinerario programado para Eowyn esta compuesto por los siguientes productos :\n"
-				+ "Atraccion llamada Moria\nEl itinerario programado tiene una duracion total de 2.0 horas y un "
-				+ "costo total de 10.0 monedas de oro";
-		assertEquals(textoEsperado, eowyn.mostrarItinerario());
-	}
-
-	@Test
-	public void testDeMostrarItinerarioConDosAtracciones() {
-		eowyn.aceptarSugerencia(moria, true);
-		eowyn.aceptarSugerencia(mordor, true);
-		String textoEsperado = "El itinerario programado para Eowyn esta compuesto por los siguientes productos :\n"
-				+ "Atraccion llamada Moria\nAtraccion llamada Mordor\n"
-				+ "El itinerario programado tiene una duracion total de 5.0 horas y un "
-				+ "costo total de 35.0 monedas de oro";
-		assertEquals(textoEsperado, eowyn.mostrarItinerario());
-	}
-
-	@Test
-	public void testDeMostrarItinerarioConUnaPromocion() {
-		eowyn.aceptarSugerencia(promo, true);
-		String textoEsperado = "El itinerario programado para Eowyn esta compuesto por los siguientes productos :\n"
-				+ "Promocion llamada Segunda compuesta por las atracciones Moria, Mordor y Bosque Negro\n"
-				+ "El itinerario programado tiene una duracion total de 9.0 horas y un costo total de 35.0 monedas de oro";
-		assertEquals(textoEsperado, eowyn.mostrarItinerario());
 	}
 
 	@Test
