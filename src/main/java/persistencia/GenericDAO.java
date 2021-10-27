@@ -1,10 +1,10 @@
 package persistencia;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface GenericDAO<T> {
 
-	public ArrayList<T> findAll();
+	public List<T> findAll();
 
 	public int countAll();
 
