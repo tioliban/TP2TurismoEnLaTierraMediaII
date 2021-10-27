@@ -160,6 +160,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 				statement.setInt(2, Integer.parseInt(usuario.getItinerario().get(indice).getId().substring(2)));
 				statement.executeUpdate();
 			}
+			usuario.setProductos(usuario.getItinerario().size());
 		}
 		return this.insertarItinerario(usuario);
 	}
