@@ -78,13 +78,12 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 	public int update(Usuario usuarioAActualizar) {
 		try {
 			this.prepararConsulta("UPDATE usuarios SET nombreUsuario = ?, tiempo = ?,", sqlPro);
-			sqlPro.append(" presupuesto = ?, idTipoAtraccion = ? WHERE idUsuario = ?");
+			sqlPro.append(" presupuesto = ? WHERE idUsuario = ?");
 			statement = coneccion.prepareStatement(sqlPro.toString());
 			statement.setString(1, usuarioAActualizar.getNombre());
 			statement.setDouble(2, usuarioAActualizar.getTiempo());
 			statement.setDouble(3, usuarioAActualizar.getPresupuesto());
-			statement.setInt(3, usuarioAActualizar.getPreferencia().ordinal() + 1);
-			statement.setInt(4, usuarioAActualizar.getId());
+			statement.setInt(3, usuarioAActualizar.getId());
 			statement.executeUpdate();
 			return this.actualizarItinerario(usuarioAActualizar);
 		} catch (Exception e) {

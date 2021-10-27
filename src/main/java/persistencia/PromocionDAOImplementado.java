@@ -79,14 +79,11 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	@Override
 	public int update(Promocion promocionAActualizar) {
 		try {
-			this.actualizarIntegridadReferencial(promocionAActualizar);
-			this.prepararConsulta("UPDATE promociones SET nombrePromocion = ?, idTipoAtraccion = ?,", consultaSQL);
-			consultaSQL.append(" nombreTipoAtraccion = ? WHERE idPromocion = ?");
+			this.prepararConsulta("UPDATE promociones SET nombrePromocion = ?,", consultaSQL);
+			consultaSQL.append(" WHERE idPromocion = ?");
 			statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setString(1, promocionAActualizar.getId());
-			statement.setInt(2, promocionAActualizar.getTipoAtraccion().ordinal() + 1);
-			statement.setString(3, promocionAActualizar.getPromo());
-			statement.setInt(4, Integer.parseInt(promocionAActualizar.getId().substring(2)));
+			statement.setInt(2, Integer.parseInt(promocionAActualizar.getId().substring(2)));
 			return statement.executeUpdate();
 		} catch (Exception e) {
 			throw new UpdateDataBaseExcepcion(MENSAJE);
@@ -161,13 +158,6 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		return statement.executeUpdate();
 	}
 
-	private int actualizarIntegridadReferencial(Promocion actualizar) throws SQLException {
-		this.prepararConsulta("DELETE FROM promocionesAtracciones WHERE idPromocion = ?", consultaSQL);
-		statement = coneccion.prepareStatement(consultaSQL.toString());
-		statement.setInt(1, Integer.parseInt(actualizar.getId().substring(2)));
-		statement.executeUpdate();
-		return this.integridadReferencial(actualizar);
-	}
 
 	private Promocion levantarPromocion(ResultSet filaPromociones) throws SQLException {
 		atracciones = new ArrayList<String>();

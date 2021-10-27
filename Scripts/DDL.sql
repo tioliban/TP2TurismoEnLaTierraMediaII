@@ -53,11 +53,6 @@ BEFORE DELETE ON promociones
 	BEGIN 
 		DELETE FROM promocionesAxB WHERE idPromocion = OLD.idPromocion;
 	END;
-CREATE TRIGGER borrar_promocionAxB
-BEFORE UPDATE ON promociones
-	BEGIN 
-		DELETE FROM promocionesAxB WHERE idPromocion = OLD.idPromocion;
-	END;
 DROP TABLE IF EXISTS "promocionesAbsolutas";
 CREATE TABLE "promocionesAbsolutas" (
 	"idPromocionAbsolutas"	INTEGER NOT NULL,
@@ -71,11 +66,6 @@ BEFORE DELETE ON promociones
 	BEGIN 
 		DELETE FROM promocionesAbsolutas WHERE idPromocion = OLD.idPromocion;
 	END;
-CREATE TRIGGER borrar_promocionAbsoluta
-BEFORE UPDATE ON promociones
-	BEGIN 
-		DELETE FROM promocionesAbsolutas WHERE idPromocion = OLD.idPromocion;
-	END;
 DROP TABLE IF EXISTS "promocionesPorcentuales";
 CREATE TABLE "promocionesPorcentuales" (
 	"idPromocionPorcentuales"	INTEGER NOT NULL,
@@ -86,11 +76,6 @@ CREATE TABLE "promocionesPorcentuales" (
 );
 CREATE TRIGGER borrar_promocionesPorcentuales
 BEFORE DELETE ON promociones
-	BEGIN 
-		DELETE FROM promocionesPorcentuales WHERE idPromocion = OLD.idPromocion;
-	END;
-CREATE TRIGGER borrar_promocionPorcentual
-BEFORE UPDATE ON promociones
 	BEGIN 
 		DELETE FROM promocionesPorcentuales WHERE idPromocion = OLD.idPromocion;
 	END;
