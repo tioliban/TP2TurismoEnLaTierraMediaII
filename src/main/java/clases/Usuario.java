@@ -7,6 +7,7 @@ import java.util.Objects;
 public class Usuario {
 
 	private int id;
+	private int productos;
 	private String nombre;
 	private double tiempo;
 	private double presupuesto;
@@ -38,6 +39,24 @@ public class Usuario {
 	 */
 	private void setId(int id) {
 		this.id = id;
+	}
+
+	/**
+	 * @pre No tiene.
+	 * @post Retorno la cantidad de productos del Usuario.
+	 * @return Productos del Usuario.
+	 */
+	public int getProductos() {
+		return productos;
+	}
+
+	/**
+	 * @pre No Tiene.
+	 * @post Se actualizo la cantidad de productos del usuario.
+	 * @param productos Nuevo id a actualizar.
+	 */
+	public void setProductos(int productos) {
+		this.productos = productos;
 	}
 
 	/**

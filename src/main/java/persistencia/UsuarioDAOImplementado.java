@@ -140,7 +140,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 				statement = coneccion.prepareStatement(sqlPro.toString());
 				statement.setInt(1, usuario.getId());
 				statement.setInt(2, Integer.parseInt(indice.getId().substring(2)));
-				cantidad =+ statement.executeUpdate();
+				cantidad = +statement.executeUpdate();
 			}
 		}
 		return cantidad;
@@ -148,20 +148,25 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 
 	private int actualizarItinerario(Usuario usuario) throws SQLException {
 		if (!usuario.getItinerario().isEmpty()) {
-			this.prepararConsulta("DELETE FROM itinerarioPromociones WHERE idUsuario = ?", sqlPro);
-			statement = coneccion.prepareStatement(sqlPro.toString());
-			statement.setInt(1, usuario.getId());
-			statement.executeUpdate();
-			this.prepararConsulta("DELETE FROM itinerarioAtracciones WHERE idUsuario = ?", sqlPro);
-			statement = coneccion.prepareStatement(sqlPro.toString());
-			statement.setInt(1, usuario.getId());
-			statement.executeUpdate();
+			for (int indice = usuario.getProductos() - 1; indice <= usuario.getItinerario().size(); indice++) {
+				this.prepararConsulta("INSERT INTO itinerario", sqlPro);
+				if (usuario.getItinerario().get(indice).getId().startsWith("1.")) {
+					sqlPro.append("Promociones (idUsuario, idPromocion) VALUES (?, ?)");
+				} else {
+					sqlPro.append("Atracciones (idUsuario, idAtraccion) VALUES (?, ?)");
+				}
+				statement = coneccion.prepareStatement(sqlPro.toString());
+				statement.setInt(1, usuario.getId());
+				statement.setInt(2, Integer.parseInt(usuario.getItinerario().get(indice).getId().substring(2)));
+				statement.executeUpdate();
+			}
 		}
 		return this.insertarItinerario(usuario);
 	}
 
 	private ArrayList<String> seleccionarItinerario(Usuario usuario) throws SQLException {
 		ids = new ArrayList<String>();
+		int productos = 0;
 		this.prepararConsulta("SELECT idItinerario FROM itinerarioPromociones", sqlPro);
 		sqlPro.append(" NATURAL JOIN usuarios WHERE usuarios.idUsuario = ?");
 		statement = coneccion.prepareStatement(sqlPro.toString());
@@ -169,6 +174,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 		filaUsuario = statement.executeQuery();
 		while (filaUsuario.next()) {
 			ids.add("1." + filaUsuario.getInt("pro"));
+			productos++;
 		}
 		this.prepararConsulta("SELECT idItinerario FROM itinerarioAtracciones", sqlPro);
 		sqlPro.append(" NATURAL JOIN usuarios WHERE usuarios.idUsuario = ?");
@@ -177,7 +183,9 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 		filaUsuario = statement.executeQuery();
 		while (filaUsuario.next()) {
 			ids.add("2." + filaUsuario.getInt("atr"));
+			productos++;
 		}
+		usuario.setProductos(productos);
 		return ids;
 	}
 
