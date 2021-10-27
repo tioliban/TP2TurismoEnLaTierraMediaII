@@ -7,6 +7,10 @@ import java.sql.DriverManager;
 
 import clases.SugerirProducto;
 import clases.Usuario;
+import excepciones.DeleteDataBaseExcepcion;
+import excepciones.InsertDataBaseExcepcion;
+import excepciones.SelectDataBaseExcepcion;
+import excepciones.UpdateDataBaseExcepcion;
 import persistencia.DAOFactory;
 
 public class Controlador {
@@ -25,16 +29,26 @@ public class Controlador {
 	 * la interacción con el usuario lo tengo que poner en otro lado
 	 */
 	public static void iniciarSistema() {
-		// Aca deben ir las salidas por pantalla que son la interaccion con el usuario
-		SugerirProducto ofertas = new SugerirProducto(DAOFactory.getUsuarioDAO().findAll(),
-				DAOFactory.getPromocionDAO().findAll(), DAOFactory.getAtraccionDAO().findAll());
-		for (Usuario usuario : ofertas.getUsuarios()) {
-			ofertas.sugerirPromocionConPreferencia(usuario);
-		}
-		Controlador.guardarSistema();
+		try {
+			// Aca deben ir las salidas por pantalla que son la interaccion con el usuario
+			SugerirProducto ofertas = new SugerirProducto(DAOFactory.getUsuarioDAO().findAll(),
+					DAOFactory.getPromocionDAO().findAll(), DAOFactory.getAtraccionDAO().findAll());
+			for (Usuario usuario : ofertas.getUsuarios()) {
+				ofertas.sugerirPromocionConPreferencia(usuario);
+			}
+			Controlador.guardarSistema();
 
-		while (true) {
-			Controlador.reanudarSistema();
+			while (true) {
+				Controlador.reanudarSistema();
+			}
+		} catch (SelectDataBaseExcepcion e) {
+			System.out.println(e.getCause());
+		} catch (InsertDataBaseExcepcion e) {
+			System.out.println(e.getMessage());
+		} catch (UpdateDataBaseExcepcion e) {
+			System.out.println(e.getMessage());
+		} catch (DeleteDataBaseExcepcion e) {
+			System.out.println(e.getMessage());
 		}
 	}
 

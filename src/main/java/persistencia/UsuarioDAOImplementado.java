@@ -27,6 +27,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 	private ArrayList<String> ids;
 	private StringBuilder sqlPro = new StringBuilder();
 	private Usuario usuario;
+	private TipoAtraccion tipo;
 
 	@Override
 	public ArrayList<Usuario> findAll() {
@@ -40,7 +41,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 			}
 			return usuarios;
 		} catch (Exception e) {
-			throw new SelectDataBaseExcepcion(MENSAJE);
+			throw new SelectDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -53,7 +54,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 			filaUsuario.next();
 			return filaUsuario.getInt("TOTAL");
 		} catch (Exception e) {
-			throw new SelectDataBaseExcepcion(MENSAJE);
+			throw new SelectDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -70,7 +71,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 			statement.executeUpdate();
 			return this.insertarItinerario(usuarioAInsertar);
 		} catch (Exception e) {
-			throw new InsertDataBaseExcepcion(MENSAJE);
+			throw new InsertDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -87,7 +88,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 			statement.executeUpdate();
 			return this.actualizarItinerario(usuarioAActualizar);
 		} catch (Exception e) {
-			throw new UpdateDataBaseExcepcion(MENSAJE);
+			throw new UpdateDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -99,7 +100,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 			statement.setInt(1, usuarioAEliminar.getId());
 			return statement.executeUpdate();
 		} catch (Exception e) {
-			throw new DeleteDataBaseExcepcion(MENSAJE);
+			throw new DeleteDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -116,7 +117,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 			}
 			return usuario;
 		} catch (Exception e) {
-			throw new SelectDataBaseExcepcion(MENSAJE);
+			throw new SelectDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -190,8 +191,9 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 	}
 
 	private Usuario levantarUsuario(ResultSet filaUsuario) throws SQLException {
+		tipo = TipoAtraccion.valueOf(filaUsuario.getString(5).toUpperCase());
 		usuario = new Usuario(filaUsuario.getInt(1), filaUsuario.getString(2), filaUsuario.getDouble(3),
-				filaUsuario.getDouble(4), TipoAtraccion.valueOf(filaUsuario.getString(5)));
+				filaUsuario.getDouble(4), tipo);
 		this.seleccionarItinerario(usuario);
 		for (String id : ids) {
 			if (id.startsWith("1.")) {

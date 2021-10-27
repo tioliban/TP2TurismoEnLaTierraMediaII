@@ -29,6 +29,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	private ArrayList<String> atracciones;
 	private StringBuilder consultaSQL = new StringBuilder();
 	private Promocion promocion;
+	private TipoAtraccion tipo;
 
 	@Override
 	public ArrayList<Promocion> findAll() {
@@ -42,7 +43,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 			}
 			return promociones;
 		} catch (Exception e) {
-			throw new SelectDataBaseExcepcion(MENSAJE);
+			throw new SelectDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -55,7 +56,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 			fila.next();
 			return fila.getInt("TOTAL");
 		} catch (Exception e) {
-			throw new SelectDataBaseExcepcion(MENSAJE);
+			throw new SelectDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -72,7 +73,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 			statement.executeUpdate();
 			return this.integridadReferencial(promocionAInsertar);
 		} catch (Exception e) {
-			throw new InsertDataBaseExcepcion(MENSAJE);
+			throw new InsertDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -86,7 +87,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 			statement.setInt(2, Integer.parseInt(promocionAActualizar.getId().substring(2)));
 			return statement.executeUpdate();
 		} catch (Exception e) {
-			throw new UpdateDataBaseExcepcion(MENSAJE);
+			throw new UpdateDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -98,7 +99,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 			statement.setInt(1, Integer.parseInt(promocionAEliminar.getId().substring(2)));
 			return statement.executeUpdate();
 		} catch (Exception e) {
-			throw new DeleteDataBaseExcepcion(MENSAJE);
+			throw new DeleteDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -113,7 +114,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 			fila.next();
 			return this.levantarPromocion(fila);
 		} catch (Exception e) {
-			throw new SelectDataBaseExcepcion(MENSAJE);
+			throw new SelectDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -158,7 +159,6 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		return statement.executeUpdate();
 	}
 
-
 	private Promocion levantarPromocion(ResultSet filaPromociones) throws SQLException {
 		atracciones = new ArrayList<String>();
 		this.prepararConsulta("SELECT idAtraccion FROM promocionesAtracciones WHERE idPromocion = ?", consultaSQL);
@@ -184,10 +184,10 @@ public class PromocionDAOImplementado implements PromocionDAO {
 				statement.setInt(1, filaPromociones.getInt(1));
 				costo = statement.executeQuery();
 				if (costo.next())
-					promocion = new AxB(filaPromociones.getInt(1), filaPromociones.getString(2),
-							filaAtracciones.getDouble("TIEMPO"),
-							filaAtracciones.getDouble("COSTO") - costo.getDouble(2),
-							TipoAtraccion.valueOf(filaPromociones.getString(3)), atracciones, "2." + costo.getInt(1));
+					tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
+				promocion = new AxB(filaPromociones.getInt(1), filaPromociones.getString(2),
+						filaAtracciones.getDouble("TIEMPO"), filaAtracciones.getDouble("COSTO") - costo.getDouble(2),
+						tipo, atracciones, "2." + costo.getInt(1));
 			} else if (filaPromociones.getString(4).equals("Absoluta")) {
 				this.prepararConsulta("SELECT precioFinal FROM promocionesAbsolutas", consultaSQL);
 				consultaSQL.append(" WHERE idPromocion = ?");
@@ -195,19 +195,20 @@ public class PromocionDAOImplementado implements PromocionDAO {
 				statement.setInt(1, filaPromociones.getInt(1));
 				costo = statement.executeQuery();
 				if (costo.next())
-					promocion = new Absoluta(filaPromociones.getInt(1), filaPromociones.getString(2),
-							filaAtracciones.getDouble("TIEMPO"), costo.getDouble(1),
-							TipoAtraccion.valueOf(filaPromociones.getString(3)), atracciones);
+					tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
+				promocion = new Absoluta(filaPromociones.getInt(1), filaPromociones.getString(2),
+						filaAtracciones.getDouble("TIEMPO"), costo.getDouble(1), tipo, atracciones);
 			} else {
 				this.prepararConsulta("SELECT porcentaje FROM promocionesPorcentuales", consultaSQL);
 				consultaSQL.append(" WHERE idPromocion = ?");
 				statement = coneccion.prepareStatement(consultaSQL.toString());
 				statement.setInt(1, filaPromociones.getInt(1));
 				costo = statement.executeQuery();
+				tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
 				promocion = new Porcentual(filaPromociones.getInt(1), filaPromociones.getString(2),
 						filaAtracciones.getDouble("TIEMPO"),
-						filaAtracciones.getDouble("COSTO") * (1 - (costo.getDouble(1) / 100)),
-						TipoAtraccion.valueOf(filaPromociones.getString(4)), atracciones, costo.getDouble(1));
+						filaAtracciones.getDouble("COSTO") * (1 - (costo.getDouble(1) / 100)), tipo, atracciones,
+						costo.getDouble(1));
 			}
 		}
 		return promocion;

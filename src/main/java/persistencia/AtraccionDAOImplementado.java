@@ -24,6 +24,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 	private ArrayList<Atraccion> atracciones;
 	private StringBuilder consultaSQL = new StringBuilder();
 	private Atraccion atraccion;
+	private TipoAtraccion tipo;
 
 	@Override
 	public ArrayList<Atraccion> findAll() {
@@ -37,7 +38,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			}
 			return atracciones;
 		} catch (Exception e) {
-			throw new SelectDataBaseExcepcion(MENSAJE);
+			throw new SelectDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -50,7 +51,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			fila.next();
 			return fila.getInt("TOTAL");
 		} catch (Exception e) {
-			throw new SelectDataBaseExcepcion(MENSAJE);
+			throw new SelectDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -68,7 +69,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			statement.setInt(5, atraccionAInsertar.getTipoAtraccion().ordinal() + 1);
 			return statement.executeUpdate();
 		} catch (Exception e) {
-			throw new InsertDataBaseExcepcion(MENSAJE);
+			throw new InsertDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -81,7 +82,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			statement.setInt(2, Integer.parseInt(atraccionAActualizar.getId().substring(2)));
 			return statement.executeUpdate();
 		} catch (Exception e) {
-			throw new UpdateDataBaseExcepcion(MENSAJE);
+			throw new UpdateDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -93,7 +94,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			statement.setInt(1, Integer.parseInt(atraccionAEliminar.getId().substring(2)));
 			return statement.executeUpdate();
 		} catch (Exception e) {
-			throw new DeleteDataBaseExcepcion(MENSAJE);
+			throw new DeleteDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -110,7 +111,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			}
 			return atraccion;
 		} catch (Exception e) {
-			throw new SelectDataBaseExcepcion(MENSAJE);
+			throw new SelectDataBaseExcepcion(MENSAJE, e);
 		}
 	}
 
@@ -121,7 +122,8 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 	}
 
 	private Atraccion levantarAtraccion(ResultSet fila) throws SQLException {
+		tipo = TipoAtraccion.valueOf(fila.getString(6).toUpperCase());
 		return new Atraccion(fila.getInt(1), fila.getString(2), fila.getDouble(3), fila.getDouble(4), fila.getInt(5),
-				TipoAtraccion.valueOf(fila.getString(6)));
+				tipo);
 	}
 }
