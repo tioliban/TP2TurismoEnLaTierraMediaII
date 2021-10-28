@@ -29,7 +29,7 @@ public class TestUsuario {
 
 	@Before
 	public void setUp() throws ExcepcionDeUsuario, ExcepcionDeBase, ExcepcionDeAtraccion, ExcepcionDePromocion {
-		eowyn = new Usuario(1, "Eowyn", 80, 100, TipoAtraccion.AVENTURA);
+		eowyn = new Usuario(1, "Eowyn", 8, 11, TipoAtraccion.AVENTURA);
 		gandalf = new Usuario(2, "Gandalf", 5, 100, TipoAtraccion.PAISAJE);
 		sam = new Usuario(3, "Sam", 8, 36, TipoAtraccion.DEGUSTACION);
 		galadriel = new Usuario(4, "Galadriel", 6, 120, TipoAtraccion.PAISAJE);
@@ -86,18 +86,18 @@ public class TestUsuario {
 
 	@Test
 	public void testGetTiempo() {
-		assertEquals(8, eowyn.getTiempo(), 0);
-		assertEquals(5, gandalf.getTiempo(), 0);
-		assertEquals(8, sam.getTiempo(), 0);
-		assertEquals(6, galadriel.getTiempo(), 0);
+		assertSame(8, eowyn.getTiempo());
+		assertSame(5, gandalf.getTiempo());
+		assertSame(8, sam.getTiempo());
+		assertSame(6, galadriel.getTiempo());
 	}
 
 	@Test
 	public void testGetPresupuesto() {
-		assertEquals(10, eowyn.getPresupuesto(), 0);
-		assertEquals(100, gandalf.getPresupuesto(), 0);
-		assertEquals(36, sam.getPresupuesto(), 0);
-		assertEquals(120, galadriel.getPresupuesto(), 0);
+		assertSame(11, eowyn.getPresupuesto());
+		assertSame(100, gandalf.getPresupuesto());
+		assertSame(36, sam.getPresupuesto());
+		assertSame(120, galadriel.getPresupuesto());
 	}
 
 	@Test
@@ -111,10 +111,10 @@ public class TestUsuario {
 	@Test
 	public void testDeSugerenciaAceptada() {
 		assertTrue(eowyn.aceptarSugerencia(moria, true));
-		assertEquals(6, eowyn.getTiempo(), 0);
-		assertEquals(0, eowyn.getPresupuesto(), 0);
+		assertEquals(6.0, eowyn.getTiempo(), 0);
+		assertEquals(1.0, eowyn.getPresupuesto(), 0);
 		assertFalse(eowyn.getItinerario().isEmpty());
-		assertTrue((eowyn.getItinerario().get(0)).equals(moria));
+		assertTrue((eowyn.getItinerario().contains(moria)));
 	}
 
 	@Test
