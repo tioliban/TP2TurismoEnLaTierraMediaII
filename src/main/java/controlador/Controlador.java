@@ -42,9 +42,9 @@ public class Controlador {
 				Controlador.reanudarSistema();
 			}
 		} catch (SelectDataBaseExcepcion e) {
-			System.out.println(e.getCause());
+			System.out.println(e);
 		} catch (InsertDataBaseExcepcion e) {
-			System.out.println(e.getMessage());
+			System.out.println(e);
 		} catch (UpdateDataBaseExcepcion e) {
 			System.out.println(e.getMessage());
 		} catch (DeleteDataBaseExcepcion e) {
