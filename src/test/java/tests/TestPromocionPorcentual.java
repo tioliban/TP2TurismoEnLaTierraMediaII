@@ -18,8 +18,8 @@ import excepciones.ExcepcionDePromocion;
 public class TestPromocionPorcentual {
 
 	Porcentual promo;
-	ArrayList<String> nombres = new ArrayList<>();
-	List<Atraccion> atracciones = new ArrayList<>();
+	ArrayList<String> nombres = new ArrayList<String>();
+	List<Atraccion> atracciones = new ArrayList<Atraccion>();
 	Atraccion moria, minasTirith, laComarca, mordor, abismoDeHelm, lothlorein, erebor, bosqueNegro, esgaroth;
 
 	@Before

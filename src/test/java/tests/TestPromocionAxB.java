@@ -19,7 +19,7 @@ import excepciones.ExcepcionDePromocion;
 public class TestPromocionAxB {
 
 	AxB promo;
-	ArrayList<String> nombres = new ArrayList<>();
+	ArrayList<String> nombres = new ArrayList<String>();
 	List<Atraccion> atracciones;
 	Atraccion moria, minasTirith, laComarca, mordor, abismoDeHelm, lothlorein, erebor, bosqueNegro, esgaroth;
 

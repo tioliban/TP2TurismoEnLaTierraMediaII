@@ -31,7 +31,6 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	private Promocion promocion;
 	private TipoAtraccion tipo;
 
-	@Override
 	public ArrayList<Promocion> findAll() {
 		try {
 			this.prepararConsulta(CONSULTA, consultaSQL);
@@ -47,7 +46,6 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		}
 	}
 
-	@Override
 	public int countAll() {
 		try {
 			this.prepararConsulta("SELECT count(1) as TOTAL FROM promociones", consultaSQL);
@@ -60,7 +58,6 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		}
 	}
 
-	@Override
 	public int insert(Promocion promocionAInsertar) {
 		try {
 			this.prepararConsulta("INSERT INTO promociones (nombrePromocion, idTipoAtraccion, nombreTipoPromocion)",
@@ -77,7 +74,6 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		}
 	}
 
-	@Override
 	public int update(Promocion promocionAActualizar) {
 		try {
 			this.prepararConsulta("UPDATE promociones SET nombrePromocion = ?,", consultaSQL);
@@ -91,7 +87,6 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		}
 	}
 
-	@Override
 	public int delete(Promocion promocionAEliminar) {
 		try {
 			this.prepararConsulta("DELETE FROM promociones WHERE idPromocion = ?", consultaSQL);
@@ -103,7 +98,6 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		}
 	}
 
-	@Override
 	public Promocion findById(int id) {
 		try {
 			this.prepararConsulta(CONSULTA, consultaSQL);
