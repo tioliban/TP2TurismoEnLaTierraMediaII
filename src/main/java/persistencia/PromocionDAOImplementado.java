@@ -21,6 +21,7 @@ import excepciones.UpdateDataBaseExcepcion;
 public class PromocionDAOImplementado implements PromocionDAO {
 
 	private final String CONSULTA = "SELECT promociones.idPromocion, promociones.nombrePromocion, tipoAtraccion.nombreTipoAtraccion, promociones.nombreTipoPromocion FROM promociones NATURAL JOIN tipoAtraccion";
+	private final String PRIMARY_KEY = " WHERE idPromocion = ?", VALUES = " VALUES (?, ?)";
 	private final String MENSAJE = "a promocion";
 	private Connection coneccion;
 	private PreparedStatement statement;
@@ -77,7 +78,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	public int update(Promocion promocionAActualizar) {
 		try {
 			this.prepararConsulta("UPDATE promociones SET nombrePromocion = ?,", consultaSQL);
-			consultaSQL.append(" WHERE idPromocion = ?");
+			consultaSQL.append(PRIMARY_KEY);
 			statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setString(1, promocionAActualizar.getId());
 			statement.setInt(2, Integer.parseInt(promocionAActualizar.getId().substring(2)));
@@ -101,7 +102,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	public Promocion findById(int id) {
 		try {
 			this.prepararConsulta(CONSULTA, consultaSQL);
-			consultaSQL.append(" WHERE idPromocion = ?");
+			consultaSQL.append(PRIMARY_KEY);
 			statement = coneccion.prepareStatement(consultaSQL.toString());
 			statement.setInt(1, id);
 			fila = statement.executeQuery();
@@ -118,9 +119,9 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		return consulta.append(inicio);
 	}
 
-	private int integridadReferencial(Promocion insercion) throws RuntimeException, SQLException {
+	private int integridadReferencial(Promocion insercion) throws SQLException {
 		this.prepararConsulta("INSERT INTO promocionesAtracciones (idPromocion, idAtraccion)", consultaSQL);
-		consultaSQL.append(" VALUES (?, ?)");
+		consultaSQL.append(VALUES);
 		statement = coneccion.prepareStatement(consultaSQL.toString());
 		for (String id : insercion.getAtracciones()) {
 			statement.setInt(1, Integer.parseInt(insercion.getId().substring(2)));
@@ -135,17 +136,17 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		consultaSQL.append(insercion.getPromo());
 		if (insercion.getPromo().equals("AxB")) {
 			consultaSQL.append("(idPromocion, idAtraccion)");
-			consultaSQL.append(" VALUES (?, ?)");
+			consultaSQL.append(VALUES);
 			statement = coneccion.prepareStatement(consultaSQL.toString()); // Testear si puedo poner
 			statement.setInt(2, Integer.parseInt(insercion.getAtracciones().get(0).substring(2))); // despues de los if
 		} else if (insercion.getPromo().equals("Absoluta")) {
 			consultaSQL.append("s (idPromocion, precioFinal)");
-			consultaSQL.append(" VALUES (?, ?)");
+			consultaSQL.append(VALUES);
 			statement = coneccion.prepareStatement(consultaSQL.toString()); // Esto
 			statement.setDouble(2, insercion.getCosto());
 		} else {
 			consultaSQL.append("es (idPromocion, porcentaje)");
-			consultaSQL.append(" VALUES (?, ?)");
+			consultaSQL.append(VALUES);
 			statement = coneccion.prepareStatement(consultaSQL.toString()); // Esto
 			statement.setDouble(2, insercion.getDescuento());
 		}
@@ -155,14 +156,15 @@ public class PromocionDAOImplementado implements PromocionDAO {
 
 	private Promocion levantarPromocion(ResultSet filaPromociones) throws SQLException {
 		atracciones = new ArrayList<String>();
-		this.prepararConsulta("SELECT idAtraccion FROM promocionesAtracciones WHERE idPromocion = ?", consultaSQL);
+		this.prepararConsulta("SELECT idAtraccion FROM promocionesAtracciones", consultaSQL);
+		consultaSQL.append(PRIMARY_KEY);
 		statement = coneccion.prepareStatement(consultaSQL.toString());
 		statement.setInt(1, filaPromociones.getInt(1));
 		ResultSet filaAtracciones = statement.executeQuery();
 		while (filaAtracciones.next()) {
 			atracciones.add("2." + filaAtracciones.getInt(1));
 		}
-		this.prepararConsulta("SELECT sum(atracciones.tiempo) as TIEMPO, sum(atracciones.costo) as COSTO", consultaSQL);
+		this.prepararConsulta("SELECT sum(atracciones.tiempo), sum(atracciones.costo)", consultaSQL);
 		consultaSQL.append(" FROM atracciones NATURAL JOIN promocionesAtracciones NATURAL JOIN promociones");
 		consultaSQL.append(" WHERE promociones.nombrePromocion = ?");
 		statement = coneccion.prepareStatement(consultaSQL.toString());
@@ -180,11 +182,11 @@ public class PromocionDAOImplementado implements PromocionDAO {
 				if (costo.next())
 					tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
 				promocion = new AxB(filaPromociones.getInt(1), filaPromociones.getString(2),
-						filaAtracciones.getDouble("TIEMPO"), filaAtracciones.getDouble("COSTO") - costo.getDouble(2),
+						filaAtracciones.getDouble(1), filaAtracciones.getDouble(2) - costo.getDouble(2),
 						tipo, atracciones, "2." + costo.getInt(1));
 			} else if (filaPromociones.getString(4).equals("Absoluta")) {
 				this.prepararConsulta("SELECT precioFinal FROM promocionesAbsolutas", consultaSQL);
-				consultaSQL.append(" WHERE idPromocion = ?");
+				consultaSQL.append(PRIMARY_KEY);
 				statement = coneccion.prepareStatement(consultaSQL.toString());
 				statement.setInt(1, filaPromociones.getInt(1));
 				costo = statement.executeQuery();
@@ -194,7 +196,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 						filaAtracciones.getDouble("TIEMPO"), costo.getDouble(1), tipo, atracciones);
 			} else {
 				this.prepararConsulta("SELECT porcentaje FROM promocionesPorcentuales", consultaSQL);
-				consultaSQL.append(" WHERE idPromocion = ?");
+				consultaSQL.append(PRIMARY_KEY);
 				statement = coneccion.prepareStatement(consultaSQL.toString());
 				statement.setInt(1, filaPromociones.getInt(1));
 				costo = statement.executeQuery();
