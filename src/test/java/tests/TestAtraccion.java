@@ -55,15 +55,15 @@ public class TestAtraccion {
 
 	@Test
 	public void testGetNombre() {
-		assertEquals("Moria", moria.getId());
-		assertEquals("Minas Tirith", minasTirith.getId());
-		assertEquals("La Comarca", laComarca.getId());
-		assertEquals("Mordor", mordor.getId());
-		assertEquals("Abismo de Heml", abismoDeHelm.getId());
-		assertEquals("Lothlórein", lothlorein.getId());
-		assertEquals("Erebor", erebor.getId());
-		assertEquals("Bosque Negro", bosqueNegro.getId());
-		assertEquals("Esgaroth", esgaroth.getId());
+		assertEquals("Moria", moria.getNombre());
+		assertEquals("Minas Tirith", minasTirith.getNombre());
+		assertEquals("La Comarca", laComarca.getNombre());
+		assertEquals("Mordor", mordor.getNombre());
+		assertEquals("Abismo de Heml", abismoDeHelm.getNombre());
+		assertEquals("Lothlórein", lothlorein.getNombre());
+		assertEquals("Erebor", erebor.getNombre());
+		assertEquals("Bosque Negro", bosqueNegro.getNombre());
+		assertEquals("Esgaroth", esgaroth.getNombre());
 	}
 
 	@Test
@@ -152,13 +152,5 @@ public class TestAtraccion {
 		assertEquals(erebor,Atraccion.buscarAtraccionPorNombre(erebor.getId(), atracciones));
 		assertEquals(bosqueNegro,Atraccion.buscarAtraccionPorNombre(bosqueNegro.getId(), atracciones));
 		assertEquals(esgaroth,Atraccion.buscarAtraccionPorNombre(esgaroth.getId(), atracciones));
-	}
-
-	@Test
-	public void testDeToString() {
-		String textoEsperado = "Moria, con un costo de 10.0 monedas de oro,"
-				+ " un tiempo necesario para recorrerlo de 2.0 horas, un cupo de 6 usuarios "
-				+ "y su tipo de atraccion es AVENTURA";
-		assertEquals(textoEsperado, moria.toString());
 	}
 }
