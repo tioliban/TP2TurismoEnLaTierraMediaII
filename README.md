@@ -4,6 +4,7 @@ ___
 ## [Primera Iteración](https://github.com/Grupo-Tp/TP1TurismoEnLaTierraMediaI)
 ___
 ## Participantes:
--   
+
 -   Ibarra, César
+-   Rodriguez, Darío
 -   Schmitt, Gabriel Enrique
