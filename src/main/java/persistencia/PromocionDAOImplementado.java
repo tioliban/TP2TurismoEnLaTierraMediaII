@@ -21,13 +21,12 @@ import excepciones.UpdateDataBaseExcepcion;
 public class PromocionDAOImplementado implements PromocionDAO {
 
 	private final String CONSULTA = "SELECT promociones.idPromocion, promociones.nombrePromocion, tipoAtraccion.nombreTipoAtraccion, promociones.nombreTipoPromocion FROM promociones NATURAL JOIN tipoAtraccion";
-	private final String PRIMARY_KEY = " WHERE idPromocion = ?", VALUES = " VALUES (?, ?)";
+	private final String PRIMARY_KEY = " WHERE idPromocion = ?";
+	private final String VALUES = " VALUES (?, ?)";
 	private final String MENSAJE = "a promocion";
 	private Connection coneccion;
 	private PreparedStatement statement;
 	private ResultSet fila;
-	private ArrayList<Promocion> promociones;
-	private ArrayList<String> atracciones;
 	private StringBuilder consultaSQL = new StringBuilder();
 	private Promocion promocion;
 	private TipoAtraccion tipo;
@@ -37,7 +36,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 			this.prepararConsulta(CONSULTA, consultaSQL);
 			statement = coneccion.prepareStatement(consultaSQL.toString());
 			fila = statement.executeQuery();
-			promociones = new ArrayList<Promocion>();
+			ArrayList<Promocion> promociones = new ArrayList<Promocion>();
 			while (fila.next()) {
 				promociones.add(this.levantarPromocion(fila));
 			}
@@ -155,7 +154,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	}
 
 	private Promocion levantarPromocion(ResultSet filaPromociones) throws SQLException {
-		atracciones = new ArrayList<String>();
+		ArrayList<String> atracciones = new ArrayList<String>();
 		this.prepararConsulta("SELECT idAtraccion FROM promocionesAtracciones", consultaSQL);
 		consultaSQL.append(PRIMARY_KEY);
 		statement = coneccion.prepareStatement(consultaSQL.toString());
@@ -193,7 +192,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 				if (costo.next())
 					tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
 				promocion = new Absoluta(filaPromociones.getInt(1), filaPromociones.getString(2),
-						filaAtracciones.getDouble("TIEMPO"), costo.getDouble(1), tipo, atracciones);
+						filaAtracciones.getDouble(1), costo.getDouble(1), tipo, atracciones);
 			} else {
 				this.prepararConsulta("SELECT porcentaje FROM promocionesPorcentuales", consultaSQL);
 				consultaSQL.append(PRIMARY_KEY);
@@ -202,8 +201,8 @@ public class PromocionDAOImplementado implements PromocionDAO {
 				costo = statement.executeQuery();
 				tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
 				promocion = new Porcentual(filaPromociones.getInt(1), filaPromociones.getString(2),
-						filaAtracciones.getDouble("TIEMPO"),
-						filaAtracciones.getDouble("COSTO") * (1 - (costo.getDouble(1) / 100)), tipo, atracciones,
+						filaAtracciones.getDouble(1),
+						filaAtracciones.getDouble(2) * (1 - (costo.getDouble(1) / 100)), tipo, atracciones,
 						costo.getDouble(1));
 			}
 		}
