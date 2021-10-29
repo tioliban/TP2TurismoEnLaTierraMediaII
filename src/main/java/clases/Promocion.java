@@ -61,4 +61,18 @@ public abstract class Promocion extends Base {
 		return atracciones;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder salida = new StringBuilder("promocion:\n ");
+		salida.append(super.getNombre());
+		salida.append(", que contiene atracciones de tipo ");
+		salida.append(super.getTipoAtraccion());
+		salida.append(", con un costo total de ");
+		salida.append(super.getCosto());
+		salida.append(" monedas de oro y con una duracion total de ");
+		salida.append(super.getTiempo());
+		salida.append(" horas.\n");
+		return salida.toString();
+		}
+
 }
