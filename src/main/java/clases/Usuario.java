@@ -2,7 +2,6 @@ package clases;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Usuario {
 
@@ -177,7 +176,10 @@ public class Usuario {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, nombre, preferencia);
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
 	}
 
 	@Override
@@ -186,10 +188,17 @@ public class Usuario {
 			return true;
 		}
 		if (!(obj instanceof Usuario)) {
-			return false;
+			if (obj instanceof Integer) {
+				Integer other = (Integer) obj;
+				return this.id == other;
+			} else
+				return false;
 		}
 		Usuario other = (Usuario) obj;
-		return id == other.id && Objects.equals(nombre, other.nombre) && preferencia == other.preferencia;
+		if (id != other.id) {
+			return false;
+		}
+		return true;
 	}
 
 }

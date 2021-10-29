@@ -21,17 +21,14 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 	private Connection coneccion;
 	private PreparedStatement statement;
 	private ResultSet fila;
-	private ArrayList<Atraccion> atracciones;
 	private StringBuilder consultaSQL = new StringBuilder();
-	private Atraccion atraccion;
-	private TipoAtraccion tipo;
 
 	public ArrayList<Atraccion> findAll() {
 		try {
 			this.prepararConsulta(CONSULTA_SELECT, consultaSQL);
 			statement = coneccion.prepareStatement(consultaSQL.toString());
 			fila = statement.executeQuery();
-			atracciones = new ArrayList<Atraccion>();
+			ArrayList<Atraccion> atracciones = new ArrayList<Atraccion>();
 			while (fila.next()) {
 				atracciones.add(this.levantarAtraccion(fila));
 			}
@@ -101,9 +98,10 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			statement.setInt(1, id);
 			fila = statement.executeQuery();
 			if (fila.next()) {
-				atraccion = this.levantarAtraccion(fila);
+				return this.levantarAtraccion(fila);
+			} else {
+				return null;
 			}
-			return atraccion;
 		} catch (Exception e) {
 			throw new SelectDataBaseExcepcion(MENSAJE, e);
 		}
@@ -116,7 +114,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 	}
 
 	private Atraccion levantarAtraccion(ResultSet fila) throws SQLException {
-		tipo = TipoAtraccion.valueOf(fila.getString(6).toUpperCase());
+		TipoAtraccion tipo = TipoAtraccion.valueOf(fila.getString(6).toUpperCase());
 		return new Atraccion(fila.getInt(1), fila.getString(2), fila.getDouble(3), fila.getDouble(4), fila.getInt(5),
 				tipo);
 	}

@@ -23,18 +23,14 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 	private Connection coneccion;
 	private PreparedStatement statement;
 	private ResultSet filaUsuario;
-	private ArrayList<Usuario> usuarios;
-	private ArrayList<String> ids;
 	private StringBuilder sqlPro = new StringBuilder();
-	private Usuario usuario;
-	private TipoAtraccion tipo;
 
 	public ArrayList<Usuario> findAll() {
 		try {
 			this.prepararConsulta(SELECT_TODOS, sqlPro);
 			statement = coneccion.prepareStatement(sqlPro.toString());
 			filaUsuario = statement.executeQuery();
-			usuarios = new ArrayList<Usuario>();
+			ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
 			while (filaUsuario.next()) {
 				usuarios.add(this.levantarUsuario(filaUsuario));
 			}
@@ -107,9 +103,9 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 			statement.setInt(1, id);
 			filaUsuario = statement.executeQuery();
 			if (filaUsuario.next()) {
-				usuario = this.levantarUsuario(filaUsuario);
-			}
-			return usuario;
+				return this.levantarUsuario(filaUsuario);
+			} else
+				return null;
 		} catch (Exception e) {
 			throw new SelectDataBaseExcepcion(MENSAJE, e);
 		}
@@ -160,7 +156,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 	}
 
 	private ArrayList<String> seleccionarItinerario(Usuario usuario) throws SQLException {
-		ids = new ArrayList<String>();
+		ArrayList<String> ids = new ArrayList<String>();
 		int productos = 0;
 		this.prepararConsulta("SELECT idItinerario FROM itinerarioPromociones", sqlPro);
 		sqlPro.append(" NATURAL JOIN usuarios WHERE usuarios.idUsuario = ?");
@@ -185,8 +181,9 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 	}
 
 	private Usuario levantarUsuario(ResultSet filaUsuario) throws SQLException {
-		tipo = TipoAtraccion.valueOf(filaUsuario.getString(5).toUpperCase());
-		usuario = new Usuario(filaUsuario.getInt(1), filaUsuario.getString(2), filaUsuario.getDouble(3),
+		TipoAtraccion tipo = TipoAtraccion.valueOf(filaUsuario.getString(5).toUpperCase());
+		ArrayList<String> ids = new ArrayList<String>();
+		Usuario usuario = new Usuario(filaUsuario.getInt(1), filaUsuario.getString(2), filaUsuario.getDouble(3),
 				filaUsuario.getDouble(4), tipo);
 		this.seleccionarItinerario(usuario);
 		for (String id : ids) {
