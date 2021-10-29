@@ -28,8 +28,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	private PreparedStatement statement;
 	private ResultSet fila;
 	private StringBuilder consultaSQL = new StringBuilder();
-	private Promocion promocion;
-	private TipoAtraccion tipo;
+
 
 	public ArrayList<Promocion> findAll() {
 		try {
@@ -155,6 +154,8 @@ public class PromocionDAOImplementado implements PromocionDAO {
 
 	private Promocion levantarPromocion(ResultSet filaPromociones) throws SQLException {
 		ArrayList<String> atracciones = new ArrayList<String>();
+		Promocion promocion = null;
+		TipoAtraccion tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
 		this.prepararConsulta("SELECT idAtraccion FROM promocionesAtracciones", consultaSQL);
 		consultaSQL.append(PRIMARY_KEY);
 		statement = coneccion.prepareStatement(consultaSQL.toString());
@@ -179,7 +180,6 @@ public class PromocionDAOImplementado implements PromocionDAO {
 				statement.setInt(1, filaPromociones.getInt(1));
 				costo = statement.executeQuery();
 				if (costo.next())
-					tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
 				promocion = new AxB(filaPromociones.getInt(1), filaPromociones.getString(2),
 						filaAtracciones.getDouble(1), filaAtracciones.getDouble(2) - costo.getDouble(2),
 						tipo, atracciones, "2." + costo.getInt(1));

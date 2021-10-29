@@ -26,7 +26,6 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 	private Atraccion atraccion;
 	private TipoAtraccion tipo;
 
-	@Override
 	public ArrayList<Atraccion> findAll() {
 		try {
 			this.prepararConsulta(CONSULTA_SELECT, consultaSQL);
@@ -42,7 +41,6 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 		}
 	}
 
-	@Override
 	public int countAll() {
 		try {
 			this.prepararConsulta("SELECT count(1) as TOTAL FROM atracciones", consultaSQL);
@@ -55,7 +53,6 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 		}
 	}
 
-	@Override
 	public int insert(Atraccion atraccionAInsertar) {
 		try {
 			this.prepararConsulta("INSERT INTO atracciones", consultaSQL);
@@ -73,7 +70,6 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 		}
 	}
 
-	@Override
 	public int update(Atraccion atraccionAActualizar) {
 		try {
 			this.prepararConsulta("UPDATE atraccion SET cupo = ? WHERE idAtraccion = ?", consultaSQL);
@@ -86,7 +82,6 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 		}
 	}
 
-	@Override
 	public int delete(Atraccion atraccionAEliminar) {
 		try {
 			this.prepararConsulta("DELETE FROM atracciones WHERE idAtraccion = ?", consultaSQL);
@@ -98,7 +93,6 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 		}
 	}
 
-	@Override
 	public Atraccion findById(int id) {
 		try {
 			this.prepararConsulta(CONSULTA_SELECT, consultaSQL);

@@ -29,7 +29,6 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 	private Usuario usuario;
 	private TipoAtraccion tipo;
 
-	@Override
 	public ArrayList<Usuario> findAll() {
 		try {
 			this.prepararConsulta(SELECT_TODOS, sqlPro);
@@ -45,7 +44,6 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 		}
 	}
 
-	@Override
 	public int countAll() {
 		try {
 			this.prepararConsulta("SELECT count(1) as TOTAL FROM usuarios", sqlPro);
@@ -58,7 +56,6 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 		}
 	}
 
-	@Override
 	public int insert(Usuario usuarioAInsertar) {
 		try {
 			this.prepararConsulta("INSERT INTO usuarios (nombreUsuario, tiempo,", sqlPro);
@@ -75,7 +72,6 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 		}
 	}
 
-	@Override
 	public int update(Usuario usuarioAActualizar) {
 		try {
 			this.prepararConsulta("UPDATE usuarios SET nombreUsuario = ?, tiempo = ?,", sqlPro);
@@ -92,7 +88,6 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 		}
 	}
 
-	@Override
 	public int delete(Usuario usuarioAEliminar) {
 		try {
 			this.prepararConsulta("DELETE FROM usuarios WHERE idUsuario = ?", sqlPro);
@@ -104,7 +99,6 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 		}
 	}
 
-	@Override
 	public Usuario findById(int id) {
 		try {
 			this.prepararConsulta(SELECT_TODOS, sqlPro);
