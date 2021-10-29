@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DriverManager;
 
+import clases.Promocion;
 import clases.SugerirProducto;
 import clases.Usuario;
 import excepciones.DeleteDataBaseExcepcion;
@@ -33,6 +34,9 @@ public class Controlador {
 			// Aca deben ir las salidas por pantalla que son la interaccion con el usuario
 			SugerirProducto ofertas = new SugerirProducto(DAOFactory.getUsuarioDAO().findAll(),
 					DAOFactory.getPromocionDAO().findAll(), DAOFactory.getAtraccionDAO().findAll());
+			for (Promocion promo : ofertas.getPromociones()) {
+				System.out.println(promo);
+			}
 			for (Usuario usuario : ofertas.getUsuarios()) {
 				ofertas.sugerirPromocionConPreferencia(usuario);
 			}
