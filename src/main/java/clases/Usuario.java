@@ -13,6 +13,7 @@ public class Usuario {
 	private double presupuesto;
 	private TipoAtraccion preferencia;
 	private List<Base> itinerario;
+	private int esUnaPrueba;
 
 	public Usuario(int id, String nombre, double tiempo, double presupuesto, TipoAtraccion preferencia) {
 		this.setId(id);
