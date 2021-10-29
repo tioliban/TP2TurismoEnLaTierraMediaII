@@ -135,8 +135,8 @@ public class SugerirProducto {
 	 * @return La desicion traducida a un valor lógico.
 	 */
 	private boolean respuesta(Promocion laPromo) {
-		System.out.println("Si esea aceptar la promocion " + laPromo.toString());
-		System.out.println("Presione \"1\", de lo contario presione cualquier otro numero");
+		System.out.println("Si desea aceptar la promocion: " + laPromo.toString());
+		System.out.println("Presione \"1\", de lo contario presione cualquier otro numero...");
 		int respuesta = 0;
 		respuesta = teclado.nextInt();
 		return respuesta == 1;
