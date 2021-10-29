@@ -31,19 +31,18 @@ public class Controlador {
 	 */
 	public static void iniciarSistema() {
 		try {
-			// Aca deben ir las salidas por pantalla que son la interaccion con el usuario
 			SugerirProducto ofertas = new SugerirProducto(DAOFactory.getUsuarioDAO().findAll(),
 					DAOFactory.getPromocionDAO().findAll(), DAOFactory.getAtraccionDAO().findAll());
-			for (Promocion promo : ofertas.getPromociones()) {
-				System.out.println(promo);
-			}
+			// Aca deben ir las salidas por pantalla que son la interaccion con el usuario
 			for (Usuario usuario : ofertas.getUsuarios()) {
+				
 				ofertas.sugerirPromocionConPreferencia(usuario);
 			}
 			Controlador.guardarSistema();
 
 			while (true) {
 				Controlador.reanudarSistema();
+				break;
 			}
 		} catch (SelectDataBaseExcepcion e) {
 			System.out.println(e);

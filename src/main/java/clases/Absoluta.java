@@ -11,8 +11,14 @@ public class Absoluta extends Promocion {
 
 	@Override
 	public String toString() {
-		return this.getNombre() + ", que incluye a las atracciones de tipo "
-				+ this.getTipoAtraccion().toString() + ", con un costo de " + this.getCosto()
-				+ " monedas de oro, un tiempo necesario para recorrerlas de " + super.getTiempo() + " horas";
+		StringBuilder salida = new StringBuilder(super.getNombre());
+		salida.append(", que incluye a las atracciones de tipo ");
+		salida.append(super.getTipoAtraccion());
+		salida.append(", con un costo de ");
+		salida.append(super.getCosto());
+		salida.append(" monedas de oro, un tiempo necesario para recorrerlas de ");
+		salida.append(super.getTiempo());
+		salida.append(" horas");
+		return salida.toString();
 	}
 }
