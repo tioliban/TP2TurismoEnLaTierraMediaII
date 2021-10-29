@@ -34,7 +34,8 @@ public class SugerirProducto {
 
 	/**
 	 * @pre No tiene.
-	 * @post Se actualiz贸 la lista de usuarios que est谩n registrados en el sistema.
+	 * @post Se actualiz贸 la lista de usuarios que est谩n registrados en el
+	 *       sistema.
 	 * @param usuarios Los usuarios a ser actualizados.
 	 */
 	private void setUsuarios(List<Usuario> usuarios) {
@@ -106,8 +107,8 @@ public class SugerirProducto {
 
 	/**
 	 * @pre No Tiene.
-	 * @post Se sugiri贸 todas las promociones y atracciones posibles para un usuario
-	 *       determinado.
+	 * @post Se sugiri贸 todas las promociones y atracciones posibles para un
+	 *       usuario determinado.
 	 * @param usuario Usuario a ser sugerido los productos.
 	 */
 	public void sugerirPromocionConPreferencia(Usuario usuario) {
@@ -135,12 +136,14 @@ public class SugerirProducto {
 	 * @return La desicion traducida a un valor l贸gico.
 	 */
 	private boolean respuesta(Promocion laPromo) {
-		System.out.println("Si desea aceptar la promocion: " + laPromo.toString());
+		System.out.println("Promo " + laPromo.toString());
 		System.out.println("Presione \"1\", de lo contario presione cualquier otro numero...");
+		teclado.nextInt();
 		int respuesta = 0;
 		respuesta = teclado.nextInt();
 		return respuesta == 1;
-	}
+	}	
+		
 
 	/**
 	 * @pre No tiene.
@@ -200,8 +203,8 @@ public class SugerirProducto {
 	 * @return La desicion traducida a un valor l贸gico.
 	 */
 	private boolean respuesta(Atraccion laAtraccion) {
-		System.out.println("Si esea aceptar la atraccion " + laAtraccion.toString());
-		System.out.println("Presione \"1\", de lo contrario precione cualquier otro numero");
+		System.out.println("Atracci髇: " + laAtraccion.toString());
+		System.out.println("Presione \"1\" para aceptar, de lo contrario presione cualquier otro numero.");
 		int respuesta = 0;
 		respuesta = teclado.nextInt();
 		return respuesta == 1;

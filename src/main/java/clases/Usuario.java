@@ -168,14 +168,9 @@ public class Usuario {
 
 	@Override
 	public String toString() {
-		StringBuilder salida = new StringBuilder(this.getNombre());
-		salida.append(", con un tiempo disponible de ");
-		salida.append(this.getTiempo());
-		salida.append(", un presupuesto de ");
-		salida.append(this.getPresupuesto());
-		salida.append(" monedas de oro y una preferencia para las atracciones de tipo ");
-		salida.append(this.getPreferencia());
-		return salida.toString();
+		return this.getNombre() + ", con un tiempo disponible de " + this.getTiempo() + ", un presupuesto de "
+				+ this.getPresupuesto() + " monedas de oro y una preferencia para las atracciones de tipo "
+				+ this.getPreferencia().toString();
 	}
 
 	@Override

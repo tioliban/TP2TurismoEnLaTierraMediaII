@@ -60,16 +60,14 @@ public class Atraccion extends Base {
 
 	@Override
 	public String toString() {
-		StringBuilder salida = new StringBuilder(super.getNombre());
-		salida.append(", con un costo de ");
-		salida.append(super.getCosto());
-		salida.append(" monedas de oro, un tiempo necesario para recorrerlo de ");
-		salida.append(super.getTiempo());
-		salida.append(" horas, un cupo de ");
-		salida.append(this.getCupo());
-		salida.append(" usuarios y su tipo de atraccion es ");
-		salida.append(super.getTipoAtraccion());
-		return salida.toString();
+		return "Atracción: " + this.getNombre() + " , con un costo de " + this.getCosto()
+		+ " monedas de oro, un tiempo necesario para recorrerlo de " + super.getTiempo() + " horas, un cupo de "
+		+ this.getCupo() + " usuarios y su tipo de atraccion es " + this.getTipoAtraccion().toString();
+		
+		
+//		return this.getNombre() + ", con un costo de " + this.getCosto()
+//				+ " monedas de oro, un tiempo necesario para recorrerlo de " + super.getTiempo() + " horas, un cupo de "
+//				+ this.getCupo() + " usuarios y su tipo de atraccion es " + this.getTipoAtraccion().toString();
 	}
 
 }

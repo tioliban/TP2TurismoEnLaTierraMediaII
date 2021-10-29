@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.DriverManager;
 
-import clases.Promocion;
 import clases.SugerirProducto;
 import clases.Usuario;
 import excepciones.DeleteDataBaseExcepcion;
@@ -31,18 +30,25 @@ public class Controlador {
 	 */
 	public static void iniciarSistema() {
 		try {
+			// Aca deben ir las salidas por pantalla que son la interaccion con el usuario
+			System.out.println("");
+			System.out.println("************************************************");
+			System.out.println("*  Bienvenido al parque de la Tierra Media II  *");
+			System.out.println("************************************************");
+			System.out.println("");
+			System.out.println("");
+			System.out.println("Las promociones son las siguientes... ");
+			System.out.println("");
+			
 			SugerirProducto ofertas = new SugerirProducto(DAOFactory.getUsuarioDAO().findAll(),
 					DAOFactory.getPromocionDAO().findAll(), DAOFactory.getAtraccionDAO().findAll());
-			// Aca deben ir las salidas por pantalla que son la interaccion con el usuario
 			for (Usuario usuario : ofertas.getUsuarios()) {
-				
 				ofertas.sugerirPromocionConPreferencia(usuario);
 			}
 			Controlador.guardarSistema();
 
 			while (true) {
 				Controlador.reanudarSistema();
-				break;
 			}
 		} catch (SelectDataBaseExcepcion e) {
 			System.out.println(e);
