@@ -1,5 +1,6 @@
 package clases;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,6 +57,13 @@ public class Atraccion extends Base {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public ArrayList<String> getAtracciones() {
+		ArrayList<String> salida = new ArrayList<String>();
+		salida.add(this.getId());
+		return salida;
 	}
 
 	@Override

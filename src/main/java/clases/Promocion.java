@@ -56,6 +56,7 @@ public abstract class Promocion extends Base {
 	 *       promocion.
 	 * @return the nombresDeAtracciones
 	 */
+	@Override
 	public ArrayList<String> getAtracciones() {
 		return atracciones;
 	}

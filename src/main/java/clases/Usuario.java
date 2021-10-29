@@ -134,18 +134,11 @@ public class Usuario {
 	 * @pre No tiene.
 	 * @post Se agrego una sugerencia al itinerario si fue aceptada.
 	 * @param sugerencia Una promoción o atracción.
-	 * @param decision   Un verdadero o falso, según haya sido la desicion ingresada
-	 *                   por consola.
-	 * @return Retorna un verdadero o falso, para informarle a la atraccion o
-	 *         promocion que la sugerencia fue aceptada.
 	 */
-	public boolean aceptarSugerencia(Base sugerencia, boolean decision) {
-		if (decision) {
-			this.tiempo -= sugerencia.getTiempo();
-			this.presupuesto -= sugerencia.getCosto();
-			this.itinerario.add(sugerencia);
-		}
-		return decision;
+	public void aceptarSugerencia(Base sugerencia) {
+		this.tiempo -= sugerencia.getTiempo();
+		this.presupuesto -= sugerencia.getCosto();
+		this.itinerario.add(sugerencia);
 	}
 
 	/**
