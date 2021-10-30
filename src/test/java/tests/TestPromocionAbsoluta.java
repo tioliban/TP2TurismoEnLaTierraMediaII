@@ -2,8 +2,7 @@ package tests;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +17,8 @@ import excepciones.ExcepcionDePromocion;
 public class TestPromocionAbsoluta {
 
 	Absoluta absoluta;
-	ArrayList<String> nombres = new ArrayList<String>();
-	List<Atraccion> atracciones = new ArrayList<Atraccion>();
+	HashMap<String, Atraccion> nombres = new HashMap<String, Atraccion>();
+	HashMap<String, Atraccion> atracciones = new HashMap<String, Atraccion>();
 	Atraccion moria, minasTirith, laComarca, mordor, abismoDeHelm, lothlorein, erebor, bosqueNegro, esgaroth;
 
 	@Before
@@ -33,26 +32,69 @@ public class TestPromocionAbsoluta {
 		erebor = new Atraccion(7, "Erebor", 3, 12, 32, TipoAtraccion.PAISAJE);
 		bosqueNegro = new Atraccion(8, "Bosque Negro", 4, 3, 12, TipoAtraccion.AVENTURA);
 		esgaroth = new Atraccion(9, "Esgaroth", 3, 50, 20, TipoAtraccion.DEGUSTACION);
-		atracciones = new ArrayList<Atraccion>();
-		atracciones.add(abismoDeHelm);
-		atracciones.add(bosqueNegro);
-		atracciones.add(erebor);
-		atracciones.add(esgaroth);
-		atracciones.add(lothlorein);
-		atracciones.add(laComarca);
-		atracciones.add(minasTirith);
-		atracciones.add(mordor);
-		atracciones.add(moria);
-		
-		nombres.add(lothlorein.getId());
-		nombres.add(laComarca.getId());
-		absoluta = new Absoluta(1,"Tercera", 7.5, 36, TipoAtraccion.DEGUSTACION, nombres);
+		atracciones = new HashMap<String, Atraccion>();
+		atracciones.put(abismoDeHelm.getId(), abismoDeHelm);
+		atracciones.put(bosqueNegro.getId(), bosqueNegro);
+		atracciones.put(erebor.getId(), erebor);
+		atracciones.put(esgaroth.getId(), esgaroth);
+		atracciones.put(lothlorein.getId(), lothlorein);
+		atracciones.put(laComarca.getId(), laComarca);
+		atracciones.put(minasTirith.getId(), minasTirith);
+		atracciones.put(mordor.getId(), mordor);
+		atracciones.put(moria.getId(), moria);
+
+		nombres.put(lothlorein.getId(), lothlorein);
+		nombres.put(laComarca.getId(), laComarca);
+		absoluta = new Absoluta(1, "Tercera", 7.5, 36, TipoAtraccion.DEGUSTACION, nombres);
 	}
 
 	@Test
-	public void testDeToString() {
-		String test = "Tercera, que incluye a las atracciones de Lothlórein y La Comarca que son de tipo DEGUSTACION, "
-				+ "con un costo de 36.0 monedas de oro, un tiempo necesario para recorrerlas de 7.5 horas";
-		assertEquals(test, absoluta.toString());
+	public void testGetId() {
+		assertEquals("1.1", absoluta.getId());
+	}
+
+	@Test
+	public void testGetNombre() {
+		assertEquals("Tercera", absoluta.getNombre());
+	}
+
+	@Test
+	public void testGetTiempo() {
+		assertEquals(7.5, absoluta.getTiempo(), 0);
+	}
+
+	@Test
+	public void testGetCosto() {
+		assertEquals(36.0, absoluta.getCosto(), 0);
+	}
+
+	@Test
+	public void testGetPreferencia() {
+		assertEquals(TipoAtraccion.DEGUSTACION, absoluta.getTipoAtraccion());
+	}
+
+	@Test
+	public void testGetCupo() {
+		assertTrue(absoluta.tieneCupo());
+	}
+
+	@Test
+	public void testDeGetAtracciones() {
+		for (String ids : absoluta.getAtracciones().keySet()) {
+			assertTrue(atracciones.containsKey(absoluta.getAtracciones().get(ids).getId()));
+			assertTrue(atracciones.containsValue(absoluta.getAtracciones().get(ids)));
+		}
+	}
+
+	@Test
+	public void testContainsKey() {
+		assertTrue(absoluta.getAtracciones().containsKey(lothlorein.getId()));
+		assertTrue(absoluta.getAtracciones().containsKey(laComarca.getId()));
+	}
+
+	@Test
+	public void testContainsValue() {
+		assertTrue(absoluta.getAtracciones().containsValue(lothlorein));
+		assertTrue(absoluta.getAtracciones().containsValue(laComarca));
 	}
 }

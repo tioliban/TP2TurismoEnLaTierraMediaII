@@ -2,7 +2,7 @@ package tests;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,7 +14,7 @@ import excepciones.ExcepcionDeAtraccion;
 import excepciones.ExcepcionDeBase;
 
 public class TestAtraccion {
-	ArrayList<Atraccion>atracciones;
+	HashMap<String, Atraccion> atracciones;
 	Atraccion moria, minasTirith, laComarca, mordor, abismoDeHelm, lothlorein, erebor, bosqueNegro, esgaroth;
 
 	@Before
@@ -28,16 +28,16 @@ public class TestAtraccion {
 		erebor = new Atraccion(7, "Erebor", 3, 12, 32, TipoAtraccion.PAISAJE);
 		bosqueNegro = new Atraccion(8, "Bosque Negro", 4, 3, 12, TipoAtraccion.AVENTURA);
 		esgaroth = new Atraccion(9, "Esgaroth", 3, 50, 20, TipoAtraccion.DEGUSTACION);
-		atracciones = new ArrayList<Atraccion>();
-		atracciones.add(abismoDeHelm);
-		atracciones.add(bosqueNegro);
-		atracciones.add(erebor);
-		atracciones.add(esgaroth);
-		atracciones.add(lothlorein);
-		atracciones.add(laComarca);
-		atracciones.add(minasTirith);
-		atracciones.add(mordor);
-		atracciones.add(moria);
+		atracciones = new HashMap<String, Atraccion>();
+		atracciones.put(abismoDeHelm.getId(), abismoDeHelm);
+		atracciones.put(bosqueNegro.getId(), bosqueNegro);
+		atracciones.put(erebor.getId(), erebor);
+		atracciones.put(esgaroth.getId(), esgaroth);
+		atracciones.put(lothlorein.getId(), lothlorein);
+		atracciones.put(laComarca.getId(), laComarca);
+		atracciones.put(minasTirith.getId(), minasTirith);
+		atracciones.put(mordor.getId(), mordor);
+		atracciones.put(moria.getId(), moria);
 	}
 
 	@After
@@ -51,6 +51,19 @@ public class TestAtraccion {
 		erebor = null;
 		bosqueNegro = null;
 		esgaroth = null;
+	}
+
+	@Test
+	public void testGetId() {
+		assertEquals("2.1", moria.getId());
+		assertEquals("2.2", minasTirith.getId());
+		assertEquals("2.3", laComarca.getId());
+		assertEquals("2.4", mordor.getId());
+		assertEquals("2.5", abismoDeHelm.getId());
+		assertEquals("2.6", lothlorein.getId());
+		assertEquals("2.7", erebor.getId());
+		assertEquals("2.8", bosqueNegro.getId());
+		assertEquals("2.9", esgaroth.getId());
 	}
 
 	@Test
@@ -142,15 +155,95 @@ public class TestAtraccion {
 	}
 
 	@Test
-	public void testDeBuscarAtraccionPorNombre() {
-		assertEquals(moria,Atraccion.buscarAtraccionPorNombre(moria.getId(), atracciones));
-		assertEquals(minasTirith,Atraccion.buscarAtraccionPorNombre(minasTirith.getId(), atracciones));
-		assertEquals(laComarca,Atraccion.buscarAtraccionPorNombre(laComarca.getId(), atracciones));
-		assertEquals(mordor,Atraccion.buscarAtraccionPorNombre(mordor.getId(), atracciones));
-		assertEquals(abismoDeHelm,Atraccion.buscarAtraccionPorNombre(abismoDeHelm.getId(), atracciones));
-		assertEquals(lothlorein,Atraccion.buscarAtraccionPorNombre(lothlorein.getId(), atracciones));
-		assertEquals(erebor,Atraccion.buscarAtraccionPorNombre(erebor.getId(), atracciones));
-		assertEquals(bosqueNegro,Atraccion.buscarAtraccionPorNombre(bosqueNegro.getId(), atracciones));
-		assertEquals(esgaroth,Atraccion.buscarAtraccionPorNombre(esgaroth.getId(), atracciones));
+	public void testDeTieneCupo() {
+		moria.subirAtraccion();
+		minasTirith.subirAtraccion();
+		laComarca.subirAtraccion();
+		mordor.subirAtraccion();
+		abismoDeHelm.subirAtraccion();
+		lothlorein.subirAtraccion();
+		erebor.subirAtraccion();
+		bosqueNegro.subirAtraccion();
+		esgaroth.subirAtraccion();
+
+		assertTrue(moria.tieneCupo());
+		assertTrue(minasTirith.tieneCupo());
+		assertTrue(laComarca.tieneCupo());
+		assertTrue(mordor.tieneCupo());
+		assertTrue(abismoDeHelm.tieneCupo());
+		assertTrue(lothlorein.tieneCupo());
+		assertTrue(erebor.tieneCupo());
+		assertTrue(bosqueNegro.tieneCupo());
+		assertTrue(esgaroth.tieneCupo());
+	}
+
+	@Test
+	public void testDeGetAtracciones() {
+		assertTrue(moria.getAtracciones().containsKey(moria.getId()));
+	}
+
+	@Test
+	public void testContainsKey() {
+		assertTrue(atracciones.containsKey(moria.getId()));
+		assertTrue(atracciones.containsKey(minasTirith.getId()));
+		assertTrue(atracciones.containsKey(laComarca.getId()));
+		assertTrue(atracciones.containsKey(mordor.getId()));
+		assertTrue(atracciones.containsKey(abismoDeHelm.getId()));
+		assertTrue(atracciones.containsKey(lothlorein.getId()));
+		assertTrue(atracciones.containsKey(erebor.getId()));
+		assertTrue(atracciones.containsKey(bosqueNegro.getId()));
+		assertTrue(atracciones.containsKey(esgaroth.getId()));
+	}
+
+	@Test
+	public void testContainsValue() {
+		assertTrue(atracciones.containsValue(moria));
+		assertTrue(atracciones.containsValue(minasTirith));
+		assertTrue(atracciones.containsValue(laComarca));
+		assertTrue(atracciones.containsValue(mordor));
+		assertTrue(atracciones.containsValue(abismoDeHelm));
+		assertTrue(atracciones.containsValue(lothlorein));
+		assertTrue(atracciones.containsValue(erebor));
+		assertTrue(atracciones.containsValue(bosqueNegro));
+		assertTrue(atracciones.containsValue(esgaroth));
+	}
+
+	@Test
+	public void testEqualsAtraccion() {
+		assertTrue(moria.equals(moria));
+		assertTrue(minasTirith.equals(minasTirith));
+		assertTrue(laComarca.equals(laComarca));
+		assertTrue(mordor.equals(mordor));
+		assertTrue(abismoDeHelm.equals(abismoDeHelm));
+		assertTrue(lothlorein.equals(lothlorein));
+		assertTrue(erebor.equals(erebor));
+		assertTrue(bosqueNegro.equals(bosqueNegro));
+		assertTrue(esgaroth.equals(esgaroth));
+	}
+
+	@Test
+	public void testEqualsId() {
+		assertTrue(moria.equals(moria.getId()));
+		assertTrue(minasTirith.equals(minasTirith.getId()));
+		assertTrue(laComarca.equals(laComarca.getId()));
+		assertTrue(mordor.equals(mordor.getId()));
+		assertTrue(abismoDeHelm.equals(abismoDeHelm.getId()));
+		assertTrue(lothlorein.equals(lothlorein.getId()));
+		assertTrue(erebor.equals(erebor.getId()));
+		assertTrue(bosqueNegro.equals(bosqueNegro.getId()));
+		assertTrue(esgaroth.equals(esgaroth.getId()));
+	}
+
+	@Test
+	public void testGetConId() {
+		assertEquals(moria, atracciones.get(moria.getId()));
+		assertEquals(minasTirith, atracciones.get(minasTirith.getId()));
+		assertEquals(laComarca, atracciones.get(laComarca.getId()));
+		assertEquals(mordor, atracciones.get(mordor.getId()));
+		assertEquals(abismoDeHelm, atracciones.get(abismoDeHelm.getId()));
+		assertEquals(lothlorein, atracciones.get(lothlorein.getId()));
+		assertEquals(erebor, atracciones.get(erebor.getId()));
+		assertEquals(bosqueNegro, atracciones.get(bosqueNegro.getId()));
+		assertEquals(esgaroth, atracciones.get(esgaroth.getId()));
 	}
 }

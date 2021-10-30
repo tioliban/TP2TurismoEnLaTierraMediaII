@@ -60,7 +60,6 @@ public class SugerirProducto {
 	 * @param producto Producto a buscar determinada a verificar.
 	 * @return Retorna un valor logico si el usuario visito o no la atraccion.
 	 */
-	@SuppressWarnings("unlikely-arg-type")
 	public boolean laVisito(Usuario usuario, String producto) {
 		boolean retorno = true;
 		if (usuario.getItinerario().contains(producto)) {

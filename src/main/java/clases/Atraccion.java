@@ -1,6 +1,6 @@
 package clases;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -60,9 +60,14 @@ public class Atraccion extends Base {
 	}
 
 	@Override
-	public ArrayList<String> getAtracciones() {
-		ArrayList<String> salida = new ArrayList<String>();
-		salida.add(this.getId());
+	public boolean tieneCupo() {
+		return this.getCupo() >= 1;
+	}
+
+	@Override
+	public HashMap<String, Atraccion> getAtracciones() {
+		HashMap<String, Atraccion> salida = new HashMap<String, Atraccion>();
+		salida.put(this.getId(), this);
 		return salida;
 	}
 

@@ -1,14 +1,14 @@
 package clases;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public abstract class Promocion extends Base {
-	private ArrayList<String> atracciones;
+	private HashMap<String, Atraccion> atracciones;
 	private String promo;
 	private double descuento;
 
 	public Promocion(int id, String nombre, String promo, double tiempo, double costo, TipoAtraccion tipoAtraccion,
-			ArrayList<String> atracciones) {
+			HashMap<String, Atraccion> atracciones) {
 		super("1." + id, nombre, tiempo, costo, tipoAtraccion);
 		this.promo = promo;
 		this.atracciones = atracciones;
@@ -50,14 +50,17 @@ public abstract class Promocion extends Base {
 		this.promo = promo;
 	}
 
-	/**
-	 * @pre No tiene
-	 * @post Retorno la lista con los nombres de atracciones que incluye la
-	 *       promocion.
-	 * @return the nombresDeAtracciones
-	 */
 	@Override
-	public ArrayList<String> getAtracciones() {
+	public boolean tieneCupo() {
+		boolean salida = true;
+		for (Atraccion id : this.getAtracciones().values()) {
+			salida &= id.tieneCupo();
+		}
+		return salida;
+	}
+
+	@Override
+	public HashMap<String, Atraccion> getAtracciones() {
 		return atracciones;
 	}
 
@@ -73,6 +76,6 @@ public abstract class Promocion extends Base {
 		salida.append(super.getTiempo());
 		salida.append(" horas.\n");
 		return salida.toString();
-		}
+	}
 
 }

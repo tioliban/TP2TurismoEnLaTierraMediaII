@@ -1,6 +1,6 @@
 package clases;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public abstract class Base {
 
@@ -112,7 +112,9 @@ public abstract class Base {
 		this.tipo = tipo;
 	}
 
-	public abstract ArrayList<String> getAtracciones();
+	public abstract boolean tieneCupo();
+
+	public abstract HashMap<String,Atraccion> getAtracciones();
 
 	@Override
 	public int hashCode() {
