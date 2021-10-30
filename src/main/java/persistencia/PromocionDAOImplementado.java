@@ -6,9 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import clases.Absoluta;
+import clases.Atraccion;
 import clases.AxB;
+import clases.Base;
 import clases.Porcentual;
 import clases.Promocion;
 import clases.TipoAtraccion;
@@ -28,7 +31,6 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	private PreparedStatement statement;
 	private ResultSet fila;
 	private StringBuilder consultaSQL = new StringBuilder();
-
 
 	public ArrayList<Promocion> findAll() {
 		try {
@@ -154,6 +156,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 
 	private Promocion levantarPromocion(ResultSet filaPromociones) throws SQLException {
 		ArrayList<String> atracciones = new ArrayList<String>();
+		double tiempo = 0, costo = 0;
 		Promocion promocion = null;
 		TipoAtraccion tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
 		this.prepararConsulta("SELECT idAtraccion FROM promocionesAtracciones", consultaSQL);
@@ -164,46 +167,44 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		while (filaAtracciones.next()) {
 			atracciones.add("2." + filaAtracciones.getInt(1));
 		}
-		this.prepararConsulta("SELECT sum(atracciones.tiempo), sum(atracciones.costo)", consultaSQL);
-		consultaSQL.append(" FROM atracciones NATURAL JOIN promocionesAtracciones NATURAL JOIN promociones");
-		consultaSQL.append(" WHERE promociones.nombrePromocion = ?");
-		statement = coneccion.prepareStatement(consultaSQL.toString());
-		statement.setString(1, filaPromociones.getString(1));
-		filaAtracciones = statement.executeQuery();
+		ArrayList<Atraccion> datos = (ArrayList<Atraccion>) DAOFactory.getAtraccionDAO().findAll();
+		for (String id : atracciones) {
+			tiempo += datos.get(datos.indexOf(id)).getTiempo();
+			costo += datos.get(datos.indexOf(id)).getCosto();
+		}
 		if (filaAtracciones.next()) {
-			ResultSet costo;
+			ResultSet consulta;
 			if (filaPromociones.getString(4).equals("AxB")) {
 				this.prepararConsulta("SELECT atracciones.idAtraccion, atracciones.costo", consultaSQL);
 				consultaSQL.append(" FROM promocionesAxB NATURAL JOIN atracciones");
 				consultaSQL.append(" WHERE promocionesAxB.idPromocion = ?");
 				statement = coneccion.prepareStatement(consultaSQL.toString());
 				statement.setInt(1, filaPromociones.getInt(1));
-				costo = statement.executeQuery();
-				if (costo.next())
-				promocion = new AxB(filaPromociones.getInt(1), filaPromociones.getString(2),
-						filaAtracciones.getDouble(1), filaAtracciones.getDouble(2) - costo.getDouble(2),
-						tipo, atracciones, "2." + costo.getInt(1));
+				consulta = statement.executeQuery();
+				if (consulta.next())
+					promocion = new AxB(filaPromociones.getInt(1), filaPromociones.getString(2),
+							tiempo, costo - consulta.getDouble(2), tipo,
+							atracciones, "2." + consulta.getInt(1));
 			} else if (filaPromociones.getString(4).equals("Absoluta")) {
 				this.prepararConsulta("SELECT precioFinal FROM promocionesAbsolutas", consultaSQL);
 				consultaSQL.append(PRIMARY_KEY);
 				statement = coneccion.prepareStatement(consultaSQL.toString());
 				statement.setInt(1, filaPromociones.getInt(1));
-				costo = statement.executeQuery();
-				if (costo.next())
+				consulta = statement.executeQuery();
+				if (consulta.next())
 					tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
 				promocion = new Absoluta(filaPromociones.getInt(1), filaPromociones.getString(2),
-						filaAtracciones.getDouble(1), costo.getDouble(1), tipo, atracciones);
+						tiempo, consulta.getDouble(1), tipo, atracciones);
 			} else {
 				this.prepararConsulta("SELECT porcentaje FROM promocionesPorcentuales", consultaSQL);
 				consultaSQL.append(PRIMARY_KEY);
 				statement = coneccion.prepareStatement(consultaSQL.toString());
 				statement.setInt(1, filaPromociones.getInt(1));
-				costo = statement.executeQuery();
+				consulta = statement.executeQuery();
 				tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
 				promocion = new Porcentual(filaPromociones.getInt(1), filaPromociones.getString(2),
-						filaAtracciones.getDouble(1),
-						filaAtracciones.getDouble(2) * (1 - (costo.getDouble(1) / 100)), tipo, atracciones,
-						costo.getDouble(1));
+						tiempo, costo * (1 - (consulta.getDouble(1) / 100)),
+						tipo, atracciones, consulta.getDouble(1));
 			}
 		}
 		return promocion;

@@ -153,8 +153,8 @@ public class TestSugerirProducto {
 
 	@Test
 	public void testDeGetAtraccionesDeSuItinerario() {
-		eowyn.aceptarSugerencia(bosqueNegro, true);
-		eowyn.aceptarSugerencia(mordor, true);
+		eowyn.aceptarSugerencia(bosqueNegro);
+		eowyn.aceptarSugerencia(mordor);
 		assertTrue(sistema.laVisito(eowyn, atraccionesPrimera.get(0)));
 	}
 

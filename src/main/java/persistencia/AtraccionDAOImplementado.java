@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import clases.Atraccion;
+import clases.Base;
 import clases.TipoAtraccion;
 import controlador.Controlador;
 import excepciones.DeleteDataBaseExcepcion;
@@ -22,6 +24,22 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 	private PreparedStatement statement;
 	private ResultSet fila;
 	private StringBuilder consultaSQL = new StringBuilder();
+
+	public HashMap<String, Base> encontrarTodos() {
+		try {
+			this.prepararConsulta(CONSULTA_SELECT, consultaSQL);
+			statement = coneccion.prepareStatement(consultaSQL.toString());
+			fila = statement.executeQuery();
+			HashMap<String, Base> atracciones = new HashMap<String, Base>();
+			while (fila.next()) {
+				Base atraccion = this.levantarAtraccion(fila);
+				atracciones.put(atraccion.getId(), atraccion);
+			}
+			return atracciones;
+		} catch (Exception e) {
+			throw new SelectDataBaseExcepcion(MENSAJE, e);
+		}
+	}
 
 	public ArrayList<Atraccion> findAll() {
 		try {

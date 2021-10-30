@@ -136,7 +136,6 @@ public class SugerirProducto {
 	private boolean respuesta(Base producto) {
 		StringBuilder salida = new StringBuilder("Si desea aceptar la ");
 		salida.append(producto);
-		salida.append("\n");
 		salida.append("Presione \"1\", de lo contario presione cualquier tecla");
 		System.out.println(salida);
 		return 1 == teclado.nextInt();
