@@ -1,7 +1,6 @@
 package persistencia;
 
 import java.sql.Connection;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +10,6 @@ import java.util.HashMap;
 import clases.Absoluta;
 import clases.Atraccion;
 import clases.AxB;
-import clases.Base;
 import clases.Porcentual;
 import clases.Promocion;
 import clases.TipoAtraccion;
@@ -32,14 +30,14 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	private ResultSet fila;
 	private StringBuilder consultaSQL = new StringBuilder();
 
-	public ArrayList<Promocion> findAll() {
+	public HashMap<String, Promocion> findAll() {
 		try {
 			this.prepararConsulta(CONSULTA, consultaSQL);
 			statement = coneccion.prepareStatement(consultaSQL.toString());
 			fila = statement.executeQuery();
-			ArrayList<Promocion> promociones = new ArrayList<Promocion>();
+			HashMap<String, Promocion> promociones = new HashMap<String, Promocion>();
 			while (fila.next()) {
-				promociones.add(this.levantarPromocion(fila));
+				promociones.put("1." + fila.getString(1), this.levantarPromocion(fila));
 			}
 			return promociones;
 		} catch (Exception e) {
@@ -155,7 +153,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	}
 
 	private Promocion levantarPromocion(ResultSet filaPromociones) throws SQLException {
-		ArrayList<String> atracciones = new ArrayList<String>();
+		ArrayList<String> idAtracciones = new ArrayList<String>();
 		double tiempo = 0, costo = 0;
 		Promocion promocion = null;
 		TipoAtraccion tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
@@ -164,13 +162,11 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		statement = coneccion.prepareStatement(consultaSQL.toString());
 		statement.setInt(1, filaPromociones.getInt(1));
 		ResultSet filaAtracciones = statement.executeQuery();
+		HashMap<String, Atraccion> atracciones = DAOFactory.getAtraccionDAO().findAll();
 		while (filaAtracciones.next()) {
-			atracciones.add("2." + filaAtracciones.getInt(1));
-		}
-		ArrayList<Atraccion> datos = (ArrayList<Atraccion>) DAOFactory.getAtraccionDAO().findAll();
-		for (String id : atracciones) {
-			tiempo += datos.get(datos.indexOf(id)).getTiempo();
-			costo += datos.get(datos.indexOf(id)).getCosto();
+			idAtracciones.add("2." + filaAtracciones.getInt(1));
+			tiempo += atracciones.get("2." + filaAtracciones.getInt(1)).getTiempo();
+			costo += atracciones.get("2." + filaAtracciones.getInt(1)).getCosto();
 		}
 		if (filaAtracciones.next()) {
 			ResultSet consulta;
@@ -182,9 +178,8 @@ public class PromocionDAOImplementado implements PromocionDAO {
 				statement.setInt(1, filaPromociones.getInt(1));
 				consulta = statement.executeQuery();
 				if (consulta.next())
-					promocion = new AxB(filaPromociones.getInt(1), filaPromociones.getString(2),
-							tiempo, costo - consulta.getDouble(2), tipo,
-							atracciones, "2." + consulta.getInt(1));
+					promocion = new AxB(filaPromociones.getInt(1), filaPromociones.getString(2), tiempo,
+							costo - consulta.getDouble(2), tipo, idAtracciones, "2." + consulta.getInt(1));
 			} else if (filaPromociones.getString(4).equals("Absoluta")) {
 				this.prepararConsulta("SELECT precioFinal FROM promocionesAbsolutas", consultaSQL);
 				consultaSQL.append(PRIMARY_KEY);
@@ -193,8 +188,8 @@ public class PromocionDAOImplementado implements PromocionDAO {
 				consulta = statement.executeQuery();
 				if (consulta.next())
 					tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
-				promocion = new Absoluta(filaPromociones.getInt(1), filaPromociones.getString(2),
-						tiempo, consulta.getDouble(1), tipo, atracciones);
+				promocion = new Absoluta(filaPromociones.getInt(1), filaPromociones.getString(2), tiempo,
+						consulta.getDouble(1), tipo, idAtracciones);
 			} else {
 				this.prepararConsulta("SELECT porcentaje FROM promocionesPorcentuales", consultaSQL);
 				consultaSQL.append(PRIMARY_KEY);
@@ -202,9 +197,8 @@ public class PromocionDAOImplementado implements PromocionDAO {
 				statement.setInt(1, filaPromociones.getInt(1));
 				consulta = statement.executeQuery();
 				tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
-				promocion = new Porcentual(filaPromociones.getInt(1), filaPromociones.getString(2),
-						tiempo, costo * (1 - (consulta.getDouble(1) / 100)),
-						tipo, atracciones, consulta.getDouble(1));
+				promocion = new Porcentual(filaPromociones.getInt(1), filaPromociones.getString(2), tiempo,
+						costo * (1 - (consulta.getDouble(1) / 100)), tipo, idAtracciones, consulta.getDouble(1));
 			}
 		}
 		return promocion;

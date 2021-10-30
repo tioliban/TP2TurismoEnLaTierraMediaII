@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.lang.StringBuilder;
 
 import clases.Base;
@@ -25,14 +26,14 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 	private ResultSet filaUsuario;
 	private StringBuilder sqlPro = new StringBuilder();
 
-	public ArrayList<Usuario> findAll() {
+	public HashMap<String, Usuario> findAll() {
 		try {
 			this.prepararConsulta(SELECT_TODOS, sqlPro);
 			statement = coneccion.prepareStatement(sqlPro.toString());
 			filaUsuario = statement.executeQuery();
-			ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+			HashMap<String, Usuario> usuarios = new HashMap<String, Usuario>();
 			while (filaUsuario.next()) {
-				usuarios.add(this.levantarUsuario(filaUsuario));
+				usuarios.put("0." + filaUsuario.getInt(1), this.levantarUsuario(filaUsuario));
 			}
 			return usuarios;
 		} catch (Exception e) {
@@ -164,7 +165,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 		statement.setInt(1, usuario.getId());
 		filaUsuario = statement.executeQuery();
 		while (filaUsuario.next()) {
-			ids.add("1." + filaUsuario.getInt("pro"));
+			ids.add("1." + filaUsuario.getInt("1"));
 			productos++;
 		}
 		this.prepararConsulta("SELECT idItinerario FROM itinerarioAtracciones", sqlPro);
@@ -173,7 +174,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 		statement.setInt(1, usuario.getId());
 		filaUsuario = statement.executeQuery();
 		while (filaUsuario.next()) {
-			ids.add("2." + filaUsuario.getInt("atr"));
+			ids.add("2." + filaUsuario.getInt("1"));
 			productos++;
 		}
 		usuario.setProductos(productos);
