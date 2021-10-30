@@ -1,5 +1,7 @@
 package clases;
 
+import java.util.ArrayList;
+
 public abstract class Base {
 
 	private String id;
@@ -109,6 +111,8 @@ public abstract class Base {
 	private void setTipoAtraccion(TipoAtraccion tipo) {
 		this.tipo = tipo;
 	}
+
+	public abstract ArrayList<String> getAtracciones();
 
 	@Override
 	public int hashCode() {

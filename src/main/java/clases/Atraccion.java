@@ -1,5 +1,6 @@
 package clases;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -59,15 +60,24 @@ public class Atraccion extends Base {
 	}
 
 	@Override
+	public ArrayList<String> getAtracciones() {
+		ArrayList<String> salida = new ArrayList<String>();
+		salida.add(this.getId());
+		return salida;
+	}
+
+	@Override
 	public String toString() {
-		return "Atracción: " + this.getNombre() + " , con un costo de " + this.getCosto()
-		+ " monedas de oro, un tiempo necesario para recorrerlo de " + super.getTiempo() + " horas, un cupo de "
-		+ this.getCupo() + " usuarios y su tipo de atraccion es " + this.getTipoAtraccion().toString();
-		
-		
-//		return this.getNombre() + ", con un costo de " + this.getCosto()
-//				+ " monedas de oro, un tiempo necesario para recorrerlo de " + super.getTiempo() + " horas, un cupo de "
-//				+ this.getCupo() + " usuarios y su tipo de atraccion es " + this.getTipoAtraccion().toString();
+		StringBuilder salida = new StringBuilder("atraccion:\n ");
+		salida.append(super.getNombre());
+		salida.append(", que es de tipo ");
+		salida.append(super.getTipoAtraccion());
+		salida.append(", con un costo de ");
+		salida.append(super.getCosto());
+		salida.append(" monedas de oro y con una duracion de ");
+		salida.append(super.getTiempo());
+		salida.append(" horas.\n");
+		return salida.toString();
 	}
 
 }

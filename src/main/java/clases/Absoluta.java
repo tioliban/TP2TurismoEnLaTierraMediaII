@@ -8,7 +8,7 @@ public class Absoluta extends Promocion {
 			ArrayList<String> atracciones) {
 		super(id, nombre, "Absoluta", tiempo, costo, tipoAtraccion, atracciones);
 	}
-
+ 
 	@Override
 	public String toString() {
 		return this.getNombre() + "\nque incluye a las atracciones de " + " que son de tipo "

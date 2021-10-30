@@ -34,8 +34,7 @@ public class SugerirProducto {
 
 	/**
 	 * @pre No tiene.
-	 * @post Se actualiz贸 la lista de usuarios que est谩n registrados en el
-	 *       sistema.
+	 * @post Se actualiz贸 la lista de usuarios que est谩n registrados en el sistema.
 	 * @param usuarios Los usuarios a ser actualizados.
 	 */
 	private void setUsuarios(List<Usuario> usuarios) {
@@ -93,13 +92,9 @@ public class SugerirProducto {
 		boolean retorno = true;
 		if (usuario.getItinerario().contains(producto)) {
 			return false;
-		} else if (producto.startsWith("2.")) {
+		} else {
 			for (Base itinerario : usuario.getItinerario()) {
-				if (itinerario.getId().startsWith("1.")) {
-					Promocion promo = (Promocion) itinerario;
-					return retorno &= !promo.getAtracciones().contains(producto);
-				}
-
+				return retorno &= !itinerario.getAtracciones().contains(producto);
 			}
 		}
 		return retorno;
@@ -107,23 +102,25 @@ public class SugerirProducto {
 
 	/**
 	 * @pre No Tiene.
-	 * @post Se sugiri贸 todas las promociones y atracciones posibles para un
-	 *       usuario determinado.
+	 * @post Se sugiri贸 todas las promociones y atracciones posibles para un usuario
+	 *       determinado.
 	 * @param usuario Usuario a ser sugerido los productos.
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public void sugerirPromocionConPreferencia(Usuario usuario) {
 		for (Promocion laPromocion : this.getPromociones()) {
 			boolean tieneCupo = true, noLaVisito = true;
 			for (String atraccionDeLaPromocion : laPromocion.getAtracciones()) {
-				tieneCupo = tieneCupo
-						&& (Atraccion.buscarAtraccionPorNombre(atraccionDeLaPromocion, atracciones).getCupo() >= 1);
+				tieneCupo = tieneCupo && (atracciones.get(atracciones.indexOf(atraccionDeLaPromocion)).getCupo() >= 1);
 				noLaVisito &= this.laVisito(usuario, atraccionDeLaPromocion);
 			}
 			if ((usuario.getPreferencia() == laPromocion.getTipoAtraccion()) && tieneCupo
 					&& (laPromocion.getTiempo() <= usuario.getTiempo())
 					&& (laPromocion.getCosto() <= usuario.getPresupuesto()) && noLaVisito)
-				if (usuario.aceptarSugerencia(laPromocion, this.respuesta(laPromocion)))
+				if (this.respuesta(laPromocion)) {
+					usuario.aceptarSugerencia(laPromocion);
 					this.subirPromocion(laPromocion);
+				}
 		}
 		this.sugerirPromocionSinPreferencia(usuario);
 	}
@@ -135,15 +132,14 @@ public class SugerirProducto {
 	 * @param laPromo Promocion que se muestra para tomar una decision.
 	 * @return La desicion traducida a un valor l贸gico.
 	 */
-	private boolean respuesta(Promocion laPromo) {
-		System.out.println("Promo " + laPromo.toString());
-		System.out.println("Presione \"1\", de lo contario presione cualquier otro numero...");
-		teclado.nextInt();
-		int respuesta = 0;
-		respuesta = teclado.nextInt();
-		return respuesta == 1;
-	}	
-		
+	private boolean respuesta(Base producto) {
+		StringBuilder salida = new StringBuilder("Si desea aceptar la ");
+		salida.append(producto);
+		salida.append("\n");
+		salida.append("Presione \"1\", de lo contario presione cualquier tecla");
+		System.out.println(salida);
+		return 1 == teclado.nextInt();
+	}
 
 	/**
 	 * @pre No tiene.
@@ -152,9 +148,10 @@ public class SugerirProducto {
 	 * @param laPromocion Promocion que contiene las atracciones a disminuir su
 	 *                    cupo.
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	private void subirPromocion(Promocion laPromocion) {
 		for (String atraccion : laPromocion.getAtracciones()) {
-			Atraccion.buscarAtraccionPorNombre(atraccion, this.getAtracciones()).subirAtraccion();
+			this.getAtracciones().get(this.getAtracciones().indexOf(atraccion)).subirAtraccion();
 		}
 	}
 
@@ -163,18 +160,20 @@ public class SugerirProducto {
 	 * @post Se sugirio todas las promociones restantes a un usuario determinado.
 	 * @param usuario Usuario a sugerir las promociones restantes.
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	public void sugerirPromocionSinPreferencia(Usuario usuario) {
 		for (Promocion laPromocion : this.getPromociones()) {
 			boolean tieneCupo = true, noLaVisito = true;
 			for (String atraccionDeLaPromocion : laPromocion.getAtracciones()) {
-				tieneCupo = tieneCupo
-						&& (Atraccion.buscarAtraccionPorNombre(atraccionDeLaPromocion, atracciones).getCupo() >= 1);
+				tieneCupo = tieneCupo && (atracciones.get(atracciones.indexOf(atraccionDeLaPromocion)).getCupo() >= 1);
 				noLaVisito = noLaVisito && this.laVisito(usuario, atraccionDeLaPromocion);
 			}
 			if (tieneCupo && (laPromocion.getTiempo() <= usuario.getTiempo())
 					&& (laPromocion.getCosto() <= usuario.getPresupuesto()) && noLaVisito)
-				if (usuario.aceptarSugerencia(laPromocion, this.respuesta(laPromocion)))
+				if (this.respuesta(laPromocion)) {
+					usuario.aceptarSugerencia(laPromocion);
 					this.subirPromocion(laPromocion);
+				}
 		}
 		this.sugerirAtraccion(usuario);
 	}
@@ -190,24 +189,11 @@ public class SugerirProducto {
 			if (laAtraccion.getCupo() >= 1 && laAtraccion.getTiempo() <= usuario.getTiempo()
 					&& laAtraccion.getCosto() <= usuario.getPresupuesto()
 					&& this.laVisito(usuario, laAtraccion.getId()))
-				if (usuario.aceptarSugerencia(laAtraccion, this.respuesta(laAtraccion)))
+				if (this.respuesta(laAtraccion)) {
+					usuario.aceptarSugerencia(laAtraccion);
 					laAtraccion.subirAtraccion();
+				}
 		}
-	}
-
-	/**
-	 * @pre No tiene.
-	 * @post Se evaluo la respuesta ingresada por el usuario por la consola y
-	 *       retorno un valor l贸gico representando la misma.
-	 * @param laAtraccion Atraccion que se muestra para tomar una decision.
-	 * @return La desicion traducida a un valor l贸gico.
-	 */
-	private boolean respuesta(Atraccion laAtraccion) {
-		System.out.println("Atracci髇: " + laAtraccion.toString());
-		System.out.println("Presione \"1\" para aceptar, de lo contrario presione cualquier otro numero.");
-		int respuesta = 0;
-		respuesta = teclado.nextInt();
-		return respuesta == 1;
 	}
 
 	/**

@@ -19,11 +19,4 @@ public class AxB extends Promocion {
 	public String getAtraccionGratis() {
 		return atraccionGratis;
 	}
-
-	@Override
-	public String toString() {
-		return this.getNombre() + ",hh que incluye a las atracciones de " + " que son de tipo "
-				+ this.getTipoAtraccion().toString() + ", con un costo de " + this.getCosto()
-				+ " monedas de oro, un tiempo necesario para recorrerlas de " + super.getTiempo() + " horas";
-	}
 }
