@@ -168,9 +168,10 @@ public class Usuario {
 
 	@Override
 	public String toString() {
-		return this.getNombre() + ", con un tiempo disponible de " + this.getTiempo() + ", un presupuesto de "
-				+ this.getPresupuesto() + " monedas de oro y una preferencia para las atracciones de tipo "
-				+ this.getPreferencia().toString();
+		return "Disponibilidad del usuario " + this.getNombre() +
+				"\n * Tiempo: " + this.getTiempo() +
+				"\n * Monedas de Oro: " + this.getPresupuesto() +
+				"\n * Preferencia: " + this.getPreferencia().toString();
 	}
 
 	@Override

@@ -23,8 +23,8 @@ public class Porcentual extends Promocion {
 
 	@Override
 	public String toString() {
-		return this.getNombre() + "\nIncluye atracciones de " + this.getTipoAtraccion().toString()
-				+ "\nCosto: " + this.getCosto() + " monedas de oro"
-				+ "\nTiempo necesario para recorrerlas: " + super.getTiempo() + " horas";
+		return this.getNombre() + "\nIncluye atracciones de " + this.getTipoAtraccion().toString()+
+				"\nCosto: " + this.getCosto() + " monedas de oro" +
+				"\nDuración: " + super.getTiempo() + " horas";
 	}
 }
