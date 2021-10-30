@@ -1,6 +1,7 @@
 package clases;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -11,15 +12,16 @@ import comparadores.TipoDeAtraccionComparador;
 import comparadores.TipoDeAtraccionDeLaPromocionComparador;
 
 public class SugerirProducto {
-	private List<Usuario> usuarios = null;
-	private List<Promocion> promociones = null;
-	private List<Atraccion> atracciones = null;
+	private HashMap<String, Usuario> usuarios = null;
+	private HashMap<String, Promocion> promociones = null;
+	private HashMap<String, Atraccion> atracciones = null;
 	private Scanner teclado;
 
-	public SugerirProducto(List<Usuario> losUsuarios, List<Promocion> lasPromociones, List<Atraccion> lasAtracciones) {
-		this.setUsuarios(losUsuarios);
-		this.setPromociones(lasPromociones);
-		this.setAtracciones(lasAtracciones);
+	public SugerirProducto(HashMap<String, Usuario> losUsuarios, HashMap<String, Promocion> lasPromociones,
+			HashMap<String, Atraccion> lasAtracciones) {
+		this.usuarios = losUsuarios;
+		this.promociones = lasPromociones;
+		this.atracciones = lasAtracciones;
 		teclado = new Scanner(System.in);
 	}
 
@@ -28,17 +30,8 @@ public class SugerirProducto {
 	 * @post Retorno una lista con los usuarios registrados en el sistema.
 	 * @return Lista con los usuarios.
 	 */
-	public List<Usuario> getUsuarios() {
+	public HashMap<String, Usuario> getUsuarios() {
 		return usuarios;
-	}
-
-	/**
-	 * @pre No tiene.
-	 * @post Se actualizó la lista de usuarios que están registrados en el sistema.
-	 * @param usuarios Los usuarios a ser actualizados.
-	 */
-	private void setUsuarios(List<Usuario> usuarios) {
-		this.usuarios = usuarios;
 	}
 
 	/**
@@ -46,18 +39,8 @@ public class SugerirProducto {
 	 * @post Retorno una lista con las promociones registradas en el sistema.
 	 * @return Lista con las promociones.
 	 */
-	public List<Promocion> getPromociones() {
+	public HashMap<String, Promocion> getPromociones() {
 		return promociones;
-	}
-
-	/**
-	 * @pre No tiene.
-	 * @post Se actualizó la lista de los usuarios que están registrados en el
-	 *       sistema.
-	 * @param promociones Las promociones a ser actualizadas.
-	 */
-	private void setPromociones(List<Promocion> promociones) {
-		this.promociones = promociones;
 	}
 
 	/**
@@ -65,18 +48,8 @@ public class SugerirProducto {
 	 * @post Retorno una lista con las atracciones registradas en el sistema.
 	 * @return Lista con las atracciones.
 	 */
-	public List<Atraccion> getAtracciones() {
+	public HashMap<String, Atraccion> getAtracciones() {
 		return atracciones;
-	}
-
-	/**
-	 * @pre No tiene.
-	 * @post Se actualizó la lista de las atracciones que estan registradas en el
-	 *       sistema.
-	 * @param atracciones Las atracciones a ser actualizadas.
-	 */
-	private void setAtracciones(List<Atraccion> atracciones) {
-		this.atracciones = atracciones;
 	}
 
 	/**
@@ -111,7 +84,7 @@ public class SugerirProducto {
 		for (Promocion laPromocion : this.getPromociones()) {
 			boolean tieneCupo = true, noLaVisito = true;
 			for (String atraccionDeLaPromocion : laPromocion.getAtracciones()) {
-				if(atracciones.contains(atraccionDeLaPromocion))
+				if (atracciones.contains(atraccionDeLaPromocion))
 					tieneCupo &= atracciones.get(atracciones.indexOf(atraccionDeLaPromocion)).getCupo() >= 1;
 				noLaVisito &= this.laVisito(usuario, atraccionDeLaPromocion);
 			}

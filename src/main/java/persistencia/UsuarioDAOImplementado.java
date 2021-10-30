@@ -33,7 +33,7 @@ public class UsuarioDAOImplementado implements UsuarioDAO {
 			filaUsuario = statement.executeQuery();
 			HashMap<String, Usuario> usuarios = new HashMap<String, Usuario>();
 			while (filaUsuario.next()) {
-				usuarios.put("0." + filaUsuario.getInt(1), this.levantarUsuario(filaUsuario));
+				usuarios.put(filaUsuario.getString(1), this.levantarUsuario(filaUsuario));
 			}
 			return usuarios;
 		} catch (Exception e) {
