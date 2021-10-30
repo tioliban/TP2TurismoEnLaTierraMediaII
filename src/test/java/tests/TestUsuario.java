@@ -110,25 +110,33 @@ public class TestUsuario {
 
 	@Test
 	public void testDeSugerenciaAceptada() {
-		assertTrue(eowyn.aceptarSugerencia(moria, true));
+		eowyn.aceptarSugerencia(moria);
 		assertEquals(6.0, eowyn.getTiempo(), 0);
 		assertEquals(1.0, eowyn.getPresupuesto(), 0);
 		assertFalse(eowyn.getItinerario().isEmpty());
 		assertTrue((eowyn.getItinerario().contains(moria)));
 	}
 
-	@Test
-	public void testDeSugerenciaRechazada() {
-		assertFalse(eowyn.aceptarSugerencia(moria, false));
-		assertEquals(8, eowyn.getTiempo(), 0);
-		assertEquals(10, eowyn.getPresupuesto(), 0);
-		assertTrue(eowyn.getItinerario().isEmpty());
-	}
 
 	@Test
-	public void testDeToString() {
+	public void testDeToStringSinItinerario() {
+		StringBuilder textoEsperado = new StringBuilder("Eowyn, con una preferencia de tipo AVENTURA,");
+		textoEsperado.append(" con un presupuesto de 11.0 monedas de oro y un tiempo disponible de 8.0 horas");
+		assertEquals(textoEsperado.toString(), eowyn.toString());
+	}
+	
+	@Test
+	public void testDeToStringConItinerario() {
 		String textoEsperado = "Eowyn, con un tiempo disponible de 8.0, un presupuesto de 10.0 monedas de oro"
 				+ " y una preferencia para las atracciones de tipo AVENTURA";
+		eowyn.aceptarSugerencia(moria);	
 		assertEquals(textoEsperado, eowyn.toString());
+	}
+	
+	@Test
+	public void testDeItinerarioConFormato() {
+		String algo = "";
+		eowyn.aceptarSugerencia(moria);
+		assertEquals(algo, eowyn.itinerarioConFormato());
 	}
 }

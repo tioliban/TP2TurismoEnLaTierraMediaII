@@ -111,7 +111,8 @@ public class SugerirProducto {
 		for (Promocion laPromocion : this.getPromociones()) {
 			boolean tieneCupo = true, noLaVisito = true;
 			for (String atraccionDeLaPromocion : laPromocion.getAtracciones()) {
-				tieneCupo = tieneCupo && (atracciones.get(atracciones.indexOf(atraccionDeLaPromocion)).getCupo() >= 1);
+				if(atracciones.contains(atraccionDeLaPromocion))
+					tieneCupo &= atracciones.get(atracciones.indexOf(atraccionDeLaPromocion)).getCupo() >= 1;
 				noLaVisito &= this.laVisito(usuario, atraccionDeLaPromocion);
 			}
 			if ((usuario.getPreferencia() == laPromocion.getTipoAtraccion()) && tieneCupo

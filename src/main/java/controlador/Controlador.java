@@ -43,7 +43,11 @@ public class Controlador {
 			SugerirProducto ofertas = new SugerirProducto(DAOFactory.getUsuarioDAO().findAll(),
 					DAOFactory.getPromocionDAO().findAll(), DAOFactory.getAtraccionDAO().findAll());
 			for (Usuario usuario : ofertas.getUsuarios()) {
+				System.out.println("Antes de sugerir");
+				System.out.println(usuario);
 				ofertas.sugerirPromocionConPreferencia(usuario);
+				System.out.println("Despues de sugerir");
+				System.out.println(usuario);
 			}
 			Controlador.guardarSistema();
 

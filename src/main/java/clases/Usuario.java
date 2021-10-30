@@ -187,7 +187,7 @@ public class Usuario {
 					digitos.format(formato.getCosto()), "|", digitos.format(formato.getTiempo()) };
 			indice++;
 			for (Object[] fila : tabla) {
-				salida.append(String.format("%45s%35s%10s%10s\n", fila));
+				salida.append(String.format("%20s%20s%10s%10s\n", fila));
 			}
 		}
 		return salida.toString();
