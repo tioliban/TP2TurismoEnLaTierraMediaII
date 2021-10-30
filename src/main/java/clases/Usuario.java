@@ -1,5 +1,6 @@
 package clases;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -161,9 +162,35 @@ public class Usuario {
 
 	@Override
 	public String toString() {
-		return this.getNombre() + ", con un tiempo disponible de " + this.getTiempo() + ", un presupuesto de "
-				+ this.getPresupuesto() + " monedas de oro y una preferencia para las atracciones de tipo "
-				+ this.getPreferencia().toString();
+		StringBuilder salida = new StringBuilder("usuario:\n ");
+		salida.append(this.getNombre());
+		salida.append(", con una preferencia de tipo ");
+		salida.append(this.getPreferencia());
+		salida.append(", con un presupuesto de ");
+		salida.append(this.getPresupuesto());
+		salida.append(" monedas de oro y un tiempo disponible de ");
+		salida.append(this.getTiempo());
+		salida.append(" horas.\n");
+		if (!this.getItinerario().isEmpty())
+			salida.append(this.itinerarioConFormato());
+		return salida.toString();
+	}
+
+	public String itinerarioConFormato() {
+		Object[][] tabla = new String[this.getItinerario().size() + 1][];
+		int indice = 1;
+		StringBuilder salida = new StringBuilder();
+		DecimalFormat digitos = new DecimalFormat("#.00");
+		tabla[0] = new String[] { "Nombre", "|", "Tipo", "|", "Costo", "|", "Duracion" };
+		for (Base formato : this.getItinerario()) {
+			tabla[indice] = new String[] { formato.getNombre(), "|", formato.getTipoAtraccion().toString(), "|",
+					digitos.format(formato.getCosto()), "|", digitos.format(formato.getTiempo()) };
+			indice++;
+			for (Object[] fila : tabla) {
+				salida.append(String.format("%45s%35s%10s%10s\n", fila));
+			}
+		}
+		return salida.toString();
 	}
 
 	@Override
