@@ -2,8 +2,7 @@ package tests;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,8 +19,7 @@ import excepciones.ExcepcionDePromocion;
 import excepciones.ExcepcionDeUsuario;
 
 public class TestUsuario {
-	List<Atraccion> atracciones;
-	ArrayList<String> nombres;
+	HashMap<String,Atraccion> atracciones, nombres;
 	Atraccion moria, mordor, bosqueNegro, minasTirith, laComarca, abismoDeHelm, lothlorein, erebor, esgaroth;
 	AxB promo;
 	Usuario eowyn, gandalf, sam, galadriel;
@@ -33,7 +31,6 @@ public class TestUsuario {
 		gandalf = new Usuario(2, "Gandalf", 5, 100, TipoAtraccion.PAISAJE);
 		sam = new Usuario(3, "Sam", 8, 36, TipoAtraccion.DEGUSTACION);
 		galadriel = new Usuario(4, "Galadriel", 6, 120, TipoAtraccion.PAISAJE);
-		atracciones = new ArrayList<Atraccion>();
 		moria = new Atraccion(1, "Moria", 2, 10, 6, TipoAtraccion.AVENTURA);
 		minasTirith = new Atraccion(2, "Minas Tirith", 2.5, 5, 25, TipoAtraccion.PAISAJE);
 		laComarca = new Atraccion(3, "La Comarca", 6.5, 3, 150, TipoAtraccion.DEGUSTACION);
@@ -43,22 +40,19 @@ public class TestUsuario {
 		erebor = new Atraccion(7, "Erebor", 3, 12, 32, TipoAtraccion.PAISAJE);
 		bosqueNegro = new Atraccion(8, "Bosque Negro", 4, 3, 12, TipoAtraccion.AVENTURA);
 		esgaroth = new Atraccion(9, "Esgaroth", 3, 50, 20, TipoAtraccion.DEGUSTACION);
-		atracciones.add(abismoDeHelm);
-		atracciones.add(bosqueNegro);
-		atracciones.add(erebor);
-		atracciones.add(esgaroth);
-		atracciones.add(lothlorein);
-		atracciones.add(laComarca);
-		atracciones.add(minasTirith);
-		atracciones.add(mordor);
-		atracciones.add(moria);
-		atracciones.add(moria);
-		atracciones.add(mordor);
-		atracciones.add(bosqueNegro);
-		nombres = new ArrayList<String>();
-		nombres.add(moria.getId());
-		nombres.add(mordor.getId());
-		nombres.add(bosqueNegro.getId());
+		atracciones = new HashMap<String, Atraccion>();
+		atracciones.put(abismoDeHelm.getId(), abismoDeHelm);
+		atracciones.put(bosqueNegro.getId(), bosqueNegro);
+		atracciones.put(erebor.getId(), erebor);
+		atracciones.put(esgaroth.getId(), esgaroth);
+		atracciones.put(lothlorein.getId(), lothlorein);
+		atracciones.put(laComarca.getId(), laComarca);
+		atracciones.put(minasTirith.getId(), minasTirith);
+		atracciones.put(mordor.getId(), mordor);
+		atracciones.put(moria.getId(), moria);
+		nombres.put(moria.getId(), moria);
+		nombres.put(mordor.getId(), mordor);
+		nombres.put(bosqueNegro.getId(), bosqueNegro);
 		promo = new AxB(1, "Segunda", 9, 28, TipoAtraccion.AVENTURA, nombres, bosqueNegro.getId());
 	}
 

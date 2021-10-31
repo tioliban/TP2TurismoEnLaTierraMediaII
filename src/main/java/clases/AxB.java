@@ -6,7 +6,7 @@ public class AxB extends Promocion {
 	private String atraccionGratis;
 
 	public AxB(int id, String nombre, double tiempo, double costo, TipoAtraccion tipoAtraccion,
-			HashMap<String,Atraccion> atracciones, String atraccionGratis) {
+			HashMap<String, Atraccion> atracciones, String atraccionGratis) {
 		super(id, nombre, "AxB", tiempo, costo, tipoAtraccion, atracciones);
 		this.atraccionGratis = atraccionGratis;
 	}

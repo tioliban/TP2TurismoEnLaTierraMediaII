@@ -1,10 +1,10 @@
 package persistencia;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import clases.Absoluta;
@@ -121,9 +121,9 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		this.prepararConsulta("INSERT INTO promocionesAtracciones (idPromocion, idAtraccion)", consultaSQL);
 		consultaSQL.append(VALUES);
 		statement = coneccion.prepareStatement(consultaSQL.toString());
-		for (String id : insercion.getAtracciones()) {
+		for (String id : insercion.getAtracciones().keySet()) {
 			statement.setInt(1, Integer.parseInt(insercion.getId().substring(2)));
-			statement.setInt(2, Integer.parseInt(id.substring(2)));
+			statement.setInt(2, Integer.parseInt(insercion.getAtracciones().get(id).getId().substring(2)));
 			statement.executeUpdate();
 		}
 		return this.insertarTipoPromocion(insercion);
@@ -135,8 +135,9 @@ public class PromocionDAOImplementado implements PromocionDAO {
 		if (insercion.getPromo().equals("AxB")) {
 			consultaSQL.append("(idPromocion, idAtraccion)");
 			consultaSQL.append(VALUES);
+			AxB promo = (AxB) insercion;
 			statement = coneccion.prepareStatement(consultaSQL.toString()); // Testear si puedo poner
-			statement.setInt(2, Integer.parseInt(insercion.getAtracciones().get(0).substring(2))); // despues de los if
+			statement.setInt(2, Integer.parseInt(promo.getAtraccionGratis().substring(2))); // despues de los if
 		} else if (insercion.getPromo().equals("Absoluta")) {
 			consultaSQL.append("s (idPromocion, precioFinal)");
 			consultaSQL.append(VALUES);
@@ -153,20 +154,21 @@ public class PromocionDAOImplementado implements PromocionDAO {
 	}
 
 	private Promocion levantarPromocion(ResultSet filaPromociones) throws SQLException {
-		ArrayList<String> idAtracciones = new ArrayList<String>();
+		HashMap<String, Atraccion> idAtracciones = new HashMap<String, Atraccion>();
 		double tiempo = 0, costo = 0;
 		Promocion promocion = null;
 		TipoAtraccion tipo = TipoAtraccion.valueOf(filaPromociones.getString(3).toUpperCase());
-		this.prepararConsulta("SELECT idAtraccion FROM promocionesAtracciones", consultaSQL);
+		this.prepararConsulta("SELECT promocionesAtracciones.idAtraccion, atracciones.tiempo, atracciones.costo",
+				consultaSQL);
+		consultaSQL.append(" FROM promocionesAtracciones NATURAL JOIN atracciones");
 		consultaSQL.append(PRIMARY_KEY);
 		statement = coneccion.prepareStatement(consultaSQL.toString());
 		statement.setInt(1, filaPromociones.getInt(1));
 		ResultSet filaAtracciones = statement.executeQuery();
-		HashMap<String, Atraccion> atracciones = DAOFactory.getAtraccionDAO().findAll();
 		while (filaAtracciones.next()) {
-			idAtracciones.add("2." + filaAtracciones.getInt(1));
-			tiempo += atracciones.get("2." + filaAtracciones.getInt(1)).getTiempo();
-			costo += atracciones.get("2." + filaAtracciones.getInt(1)).getCosto();
+			idAtracciones.put("2." + filaAtracciones.getInt(1), null);
+			tiempo += filaAtracciones.getDouble(2);
+			costo += filaAtracciones.getDouble(3);
 		}
 		if (filaAtracciones.next()) {
 			ResultSet consulta;

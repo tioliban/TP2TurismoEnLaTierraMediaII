@@ -16,9 +16,8 @@ import excepciones.ExcepcionDePromocion;
 
 public class TestPromocionAbsoluta {
 
-	Absoluta absoluta;
-	HashMap<String, Atraccion> nombres = new HashMap<String, Atraccion>();
-	HashMap<String, Atraccion> atracciones = new HashMap<String, Atraccion>();
+	Absoluta absoluta, conNulos;
+	HashMap<String, Atraccion> atracciones, nombres, ids ;
 	Atraccion moria, minasTirith, laComarca, mordor, abismoDeHelm, lothlorein, erebor, bosqueNegro, esgaroth;
 
 	@Before
@@ -32,7 +31,9 @@ public class TestPromocionAbsoluta {
 		erebor = new Atraccion(7, "Erebor", 3, 12, 32, TipoAtraccion.PAISAJE);
 		bosqueNegro = new Atraccion(8, "Bosque Negro", 4, 3, 12, TipoAtraccion.AVENTURA);
 		esgaroth = new Atraccion(9, "Esgaroth", 3, 50, 20, TipoAtraccion.DEGUSTACION);
+		nombres = new HashMap<String, Atraccion>();
 		atracciones = new HashMap<String, Atraccion>();
+		ids = new HashMap<String, Atraccion>();
 		atracciones.put(abismoDeHelm.getId(), abismoDeHelm);
 		atracciones.put(bosqueNegro.getId(), bosqueNegro);
 		atracciones.put(erebor.getId(), erebor);
@@ -42,10 +43,12 @@ public class TestPromocionAbsoluta {
 		atracciones.put(minasTirith.getId(), minasTirith);
 		atracciones.put(mordor.getId(), mordor);
 		atracciones.put(moria.getId(), moria);
-
 		nombres.put(lothlorein.getId(), lothlorein);
 		nombres.put(laComarca.getId(), laComarca);
+		ids.put(lothlorein.getId(), null);
+		ids.put(laComarca.getId(), null);
 		absoluta = new Absoluta(1, "Tercera", 7.5, 36, TipoAtraccion.DEGUSTACION, nombres);
+		conNulos = new Absoluta(1, "Tercera", 7.5, 36, TipoAtraccion.DEGUSTACION, ids);
 	}
 
 	@Test
@@ -65,7 +68,7 @@ public class TestPromocionAbsoluta {
 
 	@Test
 	public void testGetCosto() {
-		assertEquals(36.0, absoluta.getCosto(), 0);
+		assertEquals(36, absoluta.getCosto(), 0);
 	}
 
 	@Test
@@ -83,6 +86,15 @@ public class TestPromocionAbsoluta {
 		for (String ids : absoluta.getAtracciones().keySet()) {
 			assertTrue(atracciones.containsKey(absoluta.getAtracciones().get(ids).getId()));
 			assertTrue(atracciones.containsValue(absoluta.getAtracciones().get(ids)));
+		}
+	}
+	
+	@Test
+	public void testDeSetAtracciones() {
+		conNulos.setAtracciones(atracciones);
+		for (String ids : conNulos.getAtracciones().keySet()) {
+			assertTrue(atracciones.containsKey(conNulos.getAtracciones().get(ids).getId()));
+			assertTrue(atracciones.containsValue(conNulos.getAtracciones().get(ids)));
 		}
 	}
 

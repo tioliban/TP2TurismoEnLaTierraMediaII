@@ -3,7 +3,7 @@ package clases;
 import java.util.HashMap;
 
 public abstract class Promocion extends Base {
-	private HashMap<String, Atraccion> atracciones;
+	private HashMap<String, Atraccion> atracciones = new HashMap<String, Atraccion>();
 	private String promo;
 	private double descuento;
 
@@ -62,6 +62,17 @@ public abstract class Promocion extends Base {
 	@Override
 	public HashMap<String, Atraccion> getAtracciones() {
 		return atracciones;
+	}
+
+	/**
+	 * @pre No Tiene.
+	 * @post Se actualizo las atracciones de Promocion.
+	 * @param atracciones the atracciones to set
+	 */
+	public void setAtracciones(HashMap<String, Atraccion> atracciones) {
+		for(String id:this.atracciones.keySet()) {
+			this.atracciones.put(id, atracciones.get(id));
+		}
 	}
 
 	@Override

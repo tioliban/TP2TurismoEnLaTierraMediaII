@@ -2,8 +2,7 @@ package tests;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,8 +18,8 @@ import excepciones.ExcepcionDePromocion;
 public class TestPromocionAxB {
 
 	AxB promo;
-	ArrayList<String> nombres = new ArrayList<String>();
-	List<Atraccion> atracciones;
+	HashMap<String, Atraccion> nombres = new HashMap<String, Atraccion>();
+	HashMap<String, Atraccion> atracciones = new HashMap<String, Atraccion>();
 	Atraccion moria, minasTirith, laComarca, mordor, abismoDeHelm, lothlorein, erebor, bosqueNegro, esgaroth;
 
 	@Before
@@ -34,19 +33,18 @@ public class TestPromocionAxB {
 		erebor = new Atraccion(7, "Erebor", 3, 12, 32, TipoAtraccion.PAISAJE);
 		bosqueNegro = new Atraccion(8, "Bosque Negro", 4, 3, 12, TipoAtraccion.AVENTURA);
 		esgaroth = new Atraccion(9, "Esgaroth", 3, 50, 20, TipoAtraccion.DEGUSTACION);
-		atracciones = new ArrayList<Atraccion>();
-		atracciones.add(abismoDeHelm);
-		atracciones.add(bosqueNegro);
-		atracciones.add(erebor);
-		atracciones.add(esgaroth);
-		atracciones.add(lothlorein);
-		atracciones.add(laComarca);
-		atracciones.add(minasTirith);
-		atracciones.add(mordor);
-		atracciones.add(moria);
-		nombres.add(moria.getId());
-		nombres.add(mordor.getId());
-		nombres.add(bosqueNegro.getId());
+		atracciones.put(abismoDeHelm.getId(), abismoDeHelm);
+		atracciones.put(bosqueNegro.getId(), bosqueNegro);
+		atracciones.put(erebor.getId(), erebor);
+		atracciones.put(esgaroth.getId(), esgaroth);
+		atracciones.put(lothlorein.getId(), lothlorein);
+		atracciones.put(laComarca.getId(), laComarca);
+		atracciones.put(minasTirith.getId(), minasTirith);
+		atracciones.put(mordor.getId(), mordor);
+		atracciones.put(moria.getId(), moria);
+		nombres.put(moria.getId(), moria);
+		nombres.put(mordor.getId(), mordor);
+		nombres.put(bosqueNegro.getId(), bosqueNegro);
 		promo = new AxB(1, "Segunda", 9, 28, TipoAtraccion.AVENTURA, nombres, bosqueNegro.getId());
 	}
 
@@ -66,19 +64,57 @@ public class TestPromocionAxB {
 	}
 
 	@Test
-	public void testDeGetAtraccionGratis() {
+	public void testGetId() {
+		assertEquals("1.1", promo.getId());
+	}
+
+	@Test
+	public void testGetNombre() {
+		assertEquals("Segunda", promo.getNombre());
+	}
+
+	@Test
+	public void testGetTiempo() {
+		assertEquals(9, promo.getTiempo(), 0);
+	}
+
+	@Test
+	public void testGetCosto() {
+		assertEquals(28, promo.getCosto(), 0);
+	}
+
+	@Test
+	public void testGetPreferencia() {
+		assertEquals(TipoAtraccion.DEGUSTACION, promo.getTipoAtraccion());
+	}
+
+	@Test
+	public void testGetAtraccionGratis() {
 		assertEquals(bosqueNegro.getId(), promo.getAtraccionGratis());
 	}
 
 	@Test
-	public void testDeGetAtracciones() {
-		assertEquals(nombres, promo.getAtracciones());
+	public void testGetCupo() {
+		assertTrue(promo.tieneCupo());
 	}
 
 	@Test
-	public void testDeToString() {
-		String test = "Segunda, que incluye a las atracciones de Moria, Mordor y Bosque Negro que son de tipo AVENTURA, "
-				+ "con un costo de 35.0 monedas de oro, un tiempo necesario para recorrerlas de 9.0 horas";
-		assertEquals(test, promo.toString());
+	public void testDeGetAtracciones() {
+		for (String ids : promo.getAtracciones().keySet()) {
+			assertTrue(atracciones.containsKey(promo.getAtracciones().get(ids).getId()));
+			assertTrue(atracciones.containsValue(promo.getAtracciones().get(ids)));
+		}
+	}
+
+	@Test
+	public void testContainsKey() {
+		assertTrue(promo.getAtracciones().containsKey(lothlorein.getId()));
+		assertTrue(promo.getAtracciones().containsKey(laComarca.getId()));
+	}
+
+	@Test
+	public void testContainsValue() {
+		assertTrue(promo.getAtracciones().containsValue(lothlorein));
+		assertTrue(promo.getAtracciones().containsValue(laComarca));
 	}
 }
