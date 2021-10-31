@@ -41,11 +41,9 @@ public class Controlador {
 			// Aca deben ir las salidas por pantalla que son la interaccion con el usuario
 			mostrarBienvenida();
 			levantarInstancias();
-			Controlador.guardarSistema();
-
-			while (true) {
-				Controlador.reanudarSistema();
-			}
+			sugerirProductos();
+			guardarSistema();
+			preguntarInteraccion();
 		} catch (SelectDataBaseExcepcion e) {
 			System.out.println(e);
 		} catch (InsertDataBaseExcepcion e) {
@@ -81,6 +79,31 @@ public class Controlador {
 		productos.putAll(atr);
 	}
 
+	public static void sugerirProductos() {
+		SugerirProducto ofertador = new SugerirProducto(usu, productos);
+		ofertador.sugerirLosProductosATodosLosUsarios();
+	}
+
+	public static void guardarSistema() {
+		for (String id : usu.keySet())
+			DAOFactory.getUsuarioDAO().update(usu.get(id));
+		for (String id : atr.keySet())
+			DAOFactory.getAtraccionDAO().update(atr.get(id));
+		for (String id : pro.keySet())
+			DAOFactory.getPromocionDAO().update(pro.get(id));
+	}
+
+	public static void preguntarInteraccion() {
+		boolean algo = true;
+		if (algo) {
+			// interaccion individual de usuario
+			System.out.println();
+		} else {
+			// volver a ofrecer a todos los usuarios
+			System.out.println();
+		}
+	}
+
 	public static void reanudarSistema() {
 		mostrarReanudacion();
 		if (true)
@@ -95,16 +118,7 @@ public class Controlador {
 		System.out.println("*************************************************");
 		System.out.println("");
 		System.out.println("");
-		
-	}
-
-	public static void guardarSistema() {
-		for (String id : usu.keySet())
-			DAOFactory.getUsuarioDAO().update(usu.get(id));
-		for (String id : atr.keySet())
-			DAOFactory.getAtraccionDAO().update(atr.get(id));
-		for (String id : pro.keySet())
-			DAOFactory.getPromocionDAO().update(pro.get(id));
 
 	}
+
 }

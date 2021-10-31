@@ -17,8 +17,7 @@ public class SugerirProducto {
 	private ArrayList<String> aventura, degustacion, paisaje;
 	private Scanner teclado;
 
-	public SugerirProducto(HashMap<String, Usuario> losUsuarios, HashMap<String, Base> losProductos,
-			HashMap<String, Atraccion> lasAtracciones) {
+	public SugerirProducto(HashMap<String, Usuario> losUsuarios, HashMap<String, Base> losProductos) {
 		this.usuarios = losUsuarios;
 		this.productos = losProductos;
 		this.ordenarListas();
