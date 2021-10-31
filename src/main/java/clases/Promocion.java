@@ -70,9 +70,15 @@ public abstract class Promocion extends Base {
 	 * @param atracciones the atracciones to set
 	 */
 	public void setAtracciones(HashMap<String, Atraccion> atracciones) {
-		for(String id:this.atracciones.keySet()) {
+		for (String id : this.atracciones.keySet()) {
 			this.atracciones.put(id, atracciones.get(id));
 		}
+	}
+
+	@Override
+	public void subirAtraccion() {
+		for (String ids : this.atracciones.keySet())
+			this.atracciones.get(ids).subirAtraccion();
 	}
 
 	@Override

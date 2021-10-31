@@ -112,6 +112,8 @@ public abstract class Base implements Comparable<Base> {
 		this.tipo = tipo;
 	}
 
+	public abstract void subirAtraccion();
+
 	public abstract boolean tieneCupo();
 
 	public abstract HashMap<String, Atraccion> getAtracciones();

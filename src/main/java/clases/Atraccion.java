@@ -36,6 +36,7 @@ public class Atraccion extends Base {
 	 * @pre No tiene.
 	 * @post Se redujo en uno el cupo disponible de la atraccion,
 	 */
+	@Override
 	public void subirAtraccion() {
 		this.cupo--;
 	}
