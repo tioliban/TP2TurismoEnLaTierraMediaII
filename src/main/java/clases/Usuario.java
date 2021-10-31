@@ -159,22 +159,11 @@ public class Usuario {
 		itinerario.add(agregar);
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder salida = new StringBuilder("usuario:\n ");
-		salida.append(this.getNombre());
-		salida.append(", con una preferencia de tipo ");
-		salida.append(this.getPreferencia());
-		salida.append(", con un presupuesto de ");
-		salida.append(this.getPresupuesto());
-		salida.append(" monedas de oro y un tiempo disponible de ");
-		salida.append(this.getTiempo());
-		salida.append(" horas.\n");
-		if (!this.getItinerario().isEmpty())
-			salida.append(this.itinerarioConFormato());
-		return salida.toString();
-	}
-
+	/**
+	 * @pre No tiene.
+	 * @post Se le dio formato de tabla al itinerario del usuario.
+	 * @return Cadena de caracteres con el formato de tablas.
+	 */
 	public String itinerarioConFormato() {
 		Object[][] tabla = new String[this.getItinerario().size() + 1][];
 		int indice = 1;
@@ -189,6 +178,22 @@ public class Usuario {
 				salida.append(String.format("%20s%20s%10s%10s\n", fila));
 			}
 		}
+		return salida.toString();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder salida = new StringBuilder("usuario:\n ");
+		salida.append(this.getNombre());
+		salida.append(", con una preferencia de tipo ");
+		salida.append(this.getPreferencia());
+		salida.append(", con un presupuesto de ");
+		salida.append(this.getPresupuesto());
+		salida.append(" monedas de oro y un tiempo disponible de ");
+		salida.append(this.getTiempo());
+		salida.append(" horas.\n");
+		if (!this.getItinerario().isEmpty())
+			salida.append(this.itinerarioConFormato());
 		return salida.toString();
 	}
 

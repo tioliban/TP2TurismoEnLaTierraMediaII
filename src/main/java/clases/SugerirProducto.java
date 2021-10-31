@@ -25,7 +25,8 @@ public class SugerirProducto {
 	}
 
 	/**
-	 * 
+	 * @pre Las promociones deben estar instanciadas y correctamente seteadas.
+	 * @post Se ofrecieron todos los productos a todos los usuarios registrados.
 	 */
 	public void sugerirLosProductosATodosLosUsarios() {
 		for (String id : this.usuarios.keySet()) {
@@ -97,8 +98,10 @@ public class SugerirProducto {
 			producto = this.productos.get(idProducto);
 			if (this.puedoVisitarla(usuario, producto))
 				if (producto.tieneCupo() && this.puedoSubirme(usuario, producto))
-					if (this.respuesta(producto))
+					if (this.respuesta(producto)) {
 						usuario.aceptarSugerencia(producto);
+						producto.subirAtraccion();
+					}
 		}
 
 	}

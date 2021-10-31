@@ -113,19 +113,23 @@ public abstract class Base implements Comparable<Base> {
 	}
 
 	/**
-	 * 
+	 * @pre No tiene.
+	 * @post Se redujo en uno el cupo de la atraccion
 	 */
 	public abstract void subirAtraccion();
 
 	/**
-	 * 
-	 * @return
+	 * @pre No tiene.
+	 * @post Retorno verdad si tiene cupo para que se pueda ofrecer a un usuario:
+	 * @return Valor logico indicando la posibilidad de ofrecer el produto
 	 */
 	public abstract boolean tieneCupo();
 
 	/**
-	 * 
-	 * @return
+	 * @pre No tiene.
+	 * @post Retorno una coleccion con todas las atracciones que contiene el
+	 *       producto.
+	 * @return Coleccion de atracciones.
 	 */
 	public abstract HashMap<String, Atraccion> getAtracciones();
 
