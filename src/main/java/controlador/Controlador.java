@@ -41,15 +41,6 @@ public class Controlador {
 			// Aca deben ir las salidas por pantalla que son la interaccion con el usuario
 			mostrarBienvenida();
 			levantarInstancias();
-
-			SugerirProducto ofertas = new SugerirProducto();
-			for (Usuario usuario : ofertas.getUsuarios()) {
-				System.out.println("Antes de sugerir");
-				System.out.println(usuario);
-				ofertas.sugerirPromocionConPreferencia(usuario);
-				System.out.println("Despues de sugerir");
-				System.out.println(usuario);
-			}
 			Controlador.guardarSistema();
 
 			while (true) {

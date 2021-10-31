@@ -2,7 +2,7 @@ package clases;
 
 import java.util.HashMap;
 
-public abstract class Base {
+public abstract class Base implements Comparable<Base> {
 
 	private String id;
 	private String nombre;
@@ -114,7 +114,32 @@ public abstract class Base {
 
 	public abstract boolean tieneCupo();
 
-	public abstract HashMap<String,Atraccion> getAtracciones();
+	public abstract HashMap<String, Atraccion> getAtracciones();
+
+	@Override
+	public int compareTo(Base otro) {
+		if (this.equals(otro))
+			return 0;
+		else if (this.id.startsWith("1.") && otro.getId().startsWith("1."))
+			return 0;
+		else if (this.id.startsWith("1.") && otro.getId().startsWith("2."))
+			return -1;
+		else if (this.id.startsWith("2.") && otro.getId().startsWith("1."))
+			return 1;
+		else {
+			if (this.costo == otro.getCosto())
+				if (this.tiempo == otro.getTiempo())
+					return 0;
+				else if (this.tiempo > otro.getTiempo())
+					return -1;
+				else
+					return 1;
+			else if (this.costo > otro.getCosto())
+				return -1;
+			else
+				return 1;
+		}
+	}
 
 	@Override
 	public int hashCode() {
