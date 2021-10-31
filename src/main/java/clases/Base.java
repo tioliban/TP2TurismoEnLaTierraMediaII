@@ -112,10 +112,21 @@ public abstract class Base implements Comparable<Base> {
 		this.tipo = tipo;
 	}
 
+	/**
+	 * 
+	 */
 	public abstract void subirAtraccion();
 
+	/**
+	 * 
+	 * @return
+	 */
 	public abstract boolean tieneCupo();
 
+	/**
+	 * 
+	 * @return
+	 */
 	public abstract HashMap<String, Atraccion> getAtracciones();
 
 	@Override

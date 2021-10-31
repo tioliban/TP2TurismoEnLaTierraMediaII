@@ -28,9 +28,9 @@ public class SugerirProducto {
 	/**
 	 * 
 	 */
-	public void sugerirTodosLosProductos() {
+	public void sugerirLosProductosATodosLosUsarios() {
 		for (String id : this.usuarios.keySet()) {
-			this.filtrarPreferencia(this.usuarios.get(id));
+			this.sugerirProductoAUsuario(this.usuarios.get(id));
 		}
 	}
 
@@ -77,13 +77,13 @@ public class SugerirProducto {
 	 *       en cuenta las restricciones de la consigna.
 	 * @param usuario Usuario a ser sugerido los productos.
 	 */
-	public void filtrarPreferencia(Usuario usuario) {
+	public void sugerirProductoAUsuario(Usuario usuario) {
 		if (usuario.getPreferencia().equals(TipoAtraccion.AVENTURA))
 			this.sugerirProducto(usuario, this.aventura);
 		else if (usuario.getPreferencia().equals(TipoAtraccion.DEGUSTACION))
 			this.sugerirProducto(usuario, this.degustacion);
 		else
-			this.sugerirProducto(usuario, this.degustacion);
+			this.sugerirProducto(usuario, this.paisaje);
 	}
 
 	/**
@@ -127,22 +127,10 @@ public class SugerirProducto {
 	 *       productos.
 	 */
 	public void ordenarListas() {
-		aventura = new ArrayList<String>();
-		degustacion = new ArrayList<String>();
-		paisaje = new ArrayList<String>();
 		procesamiento = new LinkedList<Base>(this.productos.values());
-		this.ordenamiento(procesamiento, TipoAtraccion.AVENTURA);
-		for (Base id : procesamiento) {
-			aventura.add(id.getId());
-		}
-		this.ordenamiento(procesamiento, TipoAtraccion.DEGUSTACION);
-		for (Base id : procesamiento) {
-			degustacion.add(id.getId());
-		}
-		this.ordenamiento(procesamiento, TipoAtraccion.PAISAJE);
-		for (Base id : procesamiento) {
-			paisaje.add(id.getId());
-		}
+		aventura = this.ordenamiento(procesamiento, TipoAtraccion.AVENTURA);
+		degustacion = this.ordenamiento(procesamiento, TipoAtraccion.DEGUSTACION);
+		paisaje = this.ordenamiento(procesamiento, TipoAtraccion.PAISAJE);
 		procesamiento = null;
 	}
 
@@ -153,13 +141,18 @@ public class SugerirProducto {
 	 * @param ordenar   Lista de productos a ordenar.
 	 * @param prioridad Criterio de preferencia a utilizar en el ordenamiento.
 	 */
-	public void ordenamiento(LinkedList<Base> ordenar, TipoAtraccion prioridad) {
+	public ArrayList<String> ordenamiento(LinkedList<Base> ordenar, TipoAtraccion prioridad) {
+		ArrayList<String> salida = new ArrayList<String>(this.productos.size());
 		if (prioridad.equals(TipoAtraccion.AVENTURA))
 			Collections.sort(ordenar, new PrimeroAventura());
 		else if (prioridad.equals(TipoAtraccion.DEGUSTACION))
 			Collections.sort(ordenar, new PrimeroDegustacion());
 		else
 			Collections.sort(ordenar, new PrimeroPaisaje());
+		for (Base id : ordenar) {
+			salida.add(id.getId());
+		}
+		return salida;
 	}
 
 }

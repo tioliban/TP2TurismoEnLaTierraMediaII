@@ -2,7 +2,6 @@ package clases;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Usuario {
 
@@ -12,7 +11,7 @@ public class Usuario {
 	private double tiempo;
 	private double presupuesto;
 	private TipoAtraccion preferencia;
-	private List<Base> itinerario;
+	private ArrayList<Base> itinerario;
 
 	public Usuario(int id, String nombre, double tiempo, double presupuesto, TipoAtraccion preferencia) {
 		this.setId(id);
@@ -147,7 +146,7 @@ public class Usuario {
 	 * @post Retorno una lista con los productos que acepto el usuario.
 	 * @return Itinerario del usuario.
 	 */
-	public List<Base> getItinerario() {
+	public ArrayList<Base> getItinerario() {
 		return itinerario;
 	}
 

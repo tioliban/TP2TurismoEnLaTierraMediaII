@@ -3,7 +3,7 @@ package clases;
 import java.util.HashMap;
 
 public abstract class Promocion extends Base {
-	private HashMap<String, Atraccion> atracciones = new HashMap<String, Atraccion>();
+	private HashMap<String, Atraccion> atracciones;
 	private String promo;
 	private double descuento;
 

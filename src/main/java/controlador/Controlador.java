@@ -19,7 +19,7 @@ import persistencia.DAOFactory;
 
 public class Controlador {
 	private static HashMap<String, Base> productos;
-	private static HashMap<String,Promocion> pro;
+	private static HashMap<String, Promocion> pro;
 	private static HashMap<String, Atraccion> atr;
 	private static HashMap<String, Usuario> usu;
 	private static final String DIRECCION_DE_LA_BASE_DE_DATOS = "jdbc:sqlite:bd.db";
@@ -57,37 +57,54 @@ public class Controlador {
 		}
 	}
 
-	private static void mostrarBienvenida() {
+	public static void mostrarBienvenida() {
 		System.out.println("");
-		System.out.println("************************************************");
-		System.out.println("*  Bienvenido al parque de la Tierra Media II  *");
-		System.out.println("************************************************");
+		System.out.println("*************************************************");
+		System.out.println("*   Bienvenido al parque de la Tierra Media II  *");
+		System.out.println("*************************************************");
 		System.out.println("");
 		System.out.println("");
 	}
 
-	private static void levantarInstancias() {
+	public static void levantarInstancias() {
 		usu = new HashMap<String, Usuario>();
 		pro = new HashMap<String, Promocion>();
 		atr = new HashMap<String, Atraccion>();
-		productos = new HashMap<String,Base>();
+		productos = new HashMap<String, Base>();
 		pro.putAll(DAOFactory.getPromocionDAO().findAll());
 		atr.putAll(DAOFactory.getAtraccionDAO().findAll());
 		usu.putAll(DAOFactory.getUsuarioDAO().findAll());
-		for(Promocion ids:pro.values()) {
-			ids.setAtracciones(atr);
+		for (String ids : pro.keySet()) {
+			pro.get(ids).setAtracciones(atr);
 		}
 		productos.putAll(pro);
 		productos.putAll(atr);
 	}
 
 	public static void reanudarSistema() {
-
+		mostrarReanudacion();
 		if (true)
 			Controlador.guardarSistema();
 
 	}
 
-	private static void guardarSistema() {
+	public static void mostrarReanudacion() {
+		System.out.println("");
+		System.out.println("*************************************************");
+		System.out.println("*Hola nuevamente al parque de la Tierra Media II*");
+		System.out.println("*************************************************");
+		System.out.println("");
+		System.out.println("");
+		
+	}
+
+	public static void guardarSistema() {
+		for (String id : usu.keySet())
+			DAOFactory.getUsuarioDAO().update(usu.get(id));
+		for (String id : atr.keySet())
+			DAOFactory.getAtraccionDAO().update(atr.get(id));
+		for (String id : pro.keySet())
+			DAOFactory.getPromocionDAO().update(pro.get(id));
+
 	}
 }
