@@ -2,54 +2,25 @@ package clases;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
-import comparadores.NombreDeAtraccionComparador;
-import comparadores.PrecioYTiempoDeAtraccionComparador;
-import comparadores.TiempoDeAtraccionComparador;
-import comparadores.TipoDeAtraccionComparador;
-import comparadores.TipoDeAtraccionDeLaPromocionComparador;
+import comparadores.PrimeroAventura;
+import comparadores.PrimeroDegustacion;
+import comparadores.PrimeroPaisaje;
 
 public class SugerirProducto {
 	private HashMap<String, Usuario> usuarios = null;
-	private HashMap<String, Promocion> promociones = null;
-	private HashMap<String, Atraccion> atracciones = null;
+	private HashMap<String, Base> productos = null;
+	private LinkedList<Base> aventura, degustacion, paisaje;
 	private Scanner teclado;
 
-	public SugerirProducto(HashMap<String, Usuario> losUsuarios, HashMap<String, Promocion> lasPromociones,
+	public SugerirProducto(HashMap<String, Usuario> losUsuarios, HashMap<String, Base> losProductos,
 			HashMap<String, Atraccion> lasAtracciones) {
 		this.usuarios = losUsuarios;
-		this.promociones = lasPromociones;
-		this.atracciones = lasAtracciones;
+		this.productos = losProductos;
 		teclado = new Scanner(System.in);
-	}
-
-	/**
-	 * @pre No tiene.
-	 * @post Retorno una lista con los usuarios registrados en el sistema.
-	 * @return Lista con los usuarios.
-	 */
-	public HashMap<String, Usuario> getUsuarios() {
-		return usuarios;
-	}
-
-	/**
-	 * @pre No tiene.
-	 * @post Retorno una lista con las promociones registradas en el sistema.
-	 * @return Lista con las promociones.
-	 */
-	public HashMap<String, Promocion> getPromociones() {
-		return promociones;
-	}
-
-	/**
-	 * @pre No tiene.
-	 * @post Retorno una lista con las atracciones registradas en el sistema.
-	 * @return Lista con las atracciones.
-	 */
-	public HashMap<String, Atraccion> getAtracciones() {
-		return atracciones;
 	}
 
 	/**
@@ -60,13 +31,13 @@ public class SugerirProducto {
 	 * @param producto Producto a buscar determinada a verificar.
 	 * @return Retorna un valor logico si el usuario visito o no la atraccion.
 	 */
-	public boolean laVisito(Usuario usuario, String producto) {
+	public boolean laVisito(Usuario usuario, Object producto) {
 		boolean retorno = true;
-		if (usuario.getItinerario().contains(producto)) {
+		if (usuario.getItinerario().contains(producto))
 			return false;
-		} else {
+		else {
 			for (Base itinerario : usuario.getItinerario()) {
-				return retorno &= !itinerario.getAtracciones().contains(producto);
+				return retorno &= !itinerario.getAtracciones().containsKey(producto);
 			}
 		}
 		return retorno;
@@ -170,47 +141,18 @@ public class SugerirProducto {
 
 	/**
 	 * @pre No tiene.
-	 * @post Se ordeno la lista de promociones según su tipo de atraccion.
-	 * @param promociones Lista de promociones a ordenar.
+	 * @post Se ordeno la lista de promociones según el tipo de preferencia de
+	 *       atraccion determinado.
+	 * @param ordenar   Lista de productos a ordenar.
+	 * @param prioridad Criterio de preferencia a utilizar en el ordenamiento.
 	 */
-	public void ordenarPromocionesPorTipo(List<Promocion> promociones) {
-		Collections.sort(promociones, new TipoDeAtraccionDeLaPromocionComparador());
-	}
-
-	/**
-	 * @pre No tiene.
-	 * @post Se ordeno la lista de atracciones según su tipo de atraccion.
-	 * @param atracciones Lista de atracciones a ordenar.
-	 */
-	public void ordenarAtraccionesPorTipo(List<Atraccion> atracciones) {
-		Collections.sort(atracciones, new TipoDeAtraccionComparador());
-	}
-
-	/**
-	 * @pre No tiene.
-	 * @post Se ordeno la lista de atracciones según su precio y duracion.
-	 * @param promociones Lista de atracciones a ordenar.
-	 */
-	public void ordenarAtraccionesPorPrecioYTiempo(List<Atraccion> atracciones) {
-		Collections.sort(atracciones, new PrecioYTiempoDeAtraccionComparador());
-	}
-
-	/**
-	 * @pre No tiene.
-	 * @post Se ordeno la lista de atracciones según su duracion.
-	 * @param promociones Lista de atracciones a ordenar.
-	 */
-	public void ordenarAtraccionesPorTiempo(List<Atraccion> atracciones) {
-		Collections.sort(atracciones, new TiempoDeAtraccionComparador());
-	}
-
-	/**
-	 * @pre No tiene.
-	 * @post Se ordeno la lista de atracciones según nombre.
-	 * @param promociones Lista de atracciones a ordenar.
-	 */
-	public void ordenarAtraccionesPorNombre(List<Atraccion> atracciones) {
-		Collections.sort(atracciones, new NombreDeAtraccionComparador());
+	public void ordenamiento(List<Base> ordenar, TipoAtraccion prioridad) {
+		if (prioridad.equals(TipoAtraccion.AVENTURA))
+			Collections.sort(ordenar, new PrimeroAventura());
+		else if (prioridad.equals(TipoAtraccion.DEGUSTACION))
+			Collections.sort(ordenar, new PrimeroDegustacion());
+		else
+			Collections.sort(ordenar, new PrimeroPaisaje());
 	}
 
 }
