@@ -46,7 +46,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			fila.next();
 			return fila.getInt("TOTAL");
 		} catch (Exception e) {
-			throw new SelectDataBaseExcepcion(MENSAJE, e);
+			throw new SelectDataBaseExcepcion(MENSAJE, e); 
 		}
 	}
 
@@ -56,7 +56,7 @@ public class AtraccionDAOImplementado implements AtraccionDAO {
 			consultaSQL.append(" (nombreAtraccion, tiempo, costo, cupo, idTipoAtraccion)");
 			consultaSQL.append(" VALUES (?, ?, ?, ?, ?)");
 			statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setString(1, atraccionAInsertar.getId());
+			statement.setString(1, atraccionAInsertar.getNombre());
 			statement.setDouble(2, atraccionAInsertar.getTiempo());
 			statement.setDouble(3, atraccionAInsertar.getCosto());
 			statement.setInt(4, atraccionAInsertar.getCupo());

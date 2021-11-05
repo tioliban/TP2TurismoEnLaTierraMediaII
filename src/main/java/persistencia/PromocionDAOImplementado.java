@@ -63,7 +63,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 					consultaSQL);
 			consultaSQL.append(" VALUES (?, ?, ?)");
 			statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setString(1, promocionAInsertar.getId());
+			statement.setString(1, promocionAInsertar.getNombre());
 			statement.setInt(2, promocionAInsertar.getTipoAtraccion().ordinal() + 1);
 			statement.setString(3, promocionAInsertar.getPromo());
 			statement.executeUpdate();
@@ -78,7 +78,7 @@ public class PromocionDAOImplementado implements PromocionDAO {
 			this.prepararConsulta("UPDATE promociones SET nombrePromocion = ?,", consultaSQL);
 			consultaSQL.append(PRIMARY_KEY);
 			statement = coneccion.prepareStatement(consultaSQL.toString());
-			statement.setString(1, promocionAActualizar.getId());
+			statement.setString(1, promocionAActualizar.getNombre());
 			statement.setInt(2, Integer.parseInt(promocionAActualizar.getId().substring(2)));
 			return statement.executeUpdate();
 		} catch (Exception e) {
