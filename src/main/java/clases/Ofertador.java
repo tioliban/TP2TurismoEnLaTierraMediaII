@@ -10,14 +10,14 @@ import comparadores.PrimeroAventura;
 import comparadores.PrimeroDegustacion;
 import comparadores.PrimeroPaisaje;
 
-public class SugerirProducto {
+public class Ofertador {
 	private HashMap<String, Usuario> usuarios = null;
 	private HashMap<String, Base> productos = null;
 	private LinkedList<Base> procesamiento;
 	private ArrayList<String> aventura, degustacion, paisaje;
 	private Scanner teclado;
 
-	public SugerirProducto(HashMap<String, Usuario> losUsuarios, HashMap<String, Base> losProductos) {
+	public Ofertador(HashMap<String, Usuario> losUsuarios, HashMap<String, Base> losProductos) {
 		this.usuarios = losUsuarios;
 		this.productos = losProductos;
 		this.ordenarListas();

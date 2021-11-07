@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.sql.DriverManager;
 
-import clases.SugerirProducto;
+import clases.Ofertador;
 import clases.Usuario;
 import clases.Atraccion;
 import clases.Base;
@@ -80,7 +80,7 @@ public class Controlador {
 	}
 
 	public static void sugerirProductos() {
-		SugerirProducto ofertador = new SugerirProducto(usu, productos);
+		Ofertador ofertador = new Ofertador(usu, productos);
 		ofertador.sugerirLosProductosATodosLosUsarios();
 	}
 
