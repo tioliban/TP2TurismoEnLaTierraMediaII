@@ -18,7 +18,7 @@ import clases.Porcentual;
 import clases.TipoAtraccion;
 import clases.Usuario;
 
-public class TestSugerirProducto {
+public class TestOfertador {
 
 	Usuario eowyn, gandalf, sam, galadriel;
 	HashMap<String, Usuario> usuarios;
