@@ -7,7 +7,6 @@ import clases.TipoAtraccion;
 
 public class PrimeroAventura implements Comparator<Base> {
 
-	@Override
 	public int compare(Base primero, Base segundo) {
 		if (!primero.getTipoAtraccion().equals(segundo.getTipoAtraccion()))
 			if (primero.getTipoAtraccion().equals(TipoAtraccion.AVENTURA))

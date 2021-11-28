@@ -133,7 +133,6 @@ public abstract class Base implements Comparable<Base> {
 	 */
 	public abstract HashMap<String, Atraccion> getAtracciones();
 
-	@Override
 	public int compareTo(Base otro) {
 		if (this.equals(otro))
 			return 0;

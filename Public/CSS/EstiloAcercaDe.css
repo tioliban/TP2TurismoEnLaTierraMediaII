@@ -1,0 +1,66 @@
+@charset "UTF-8";
+
+/* .tituloAdmin {	
+	width: 100%;
+	color: green; 
+	letter-spacing: 5px;
+	padding: 15px;
+}  */
+
+/* .tituloAdmin:hover {
+	color: red !important;	
+} */
+
+
+body {
+	margin: 0;
+	margin-top: 10px;
+	background-color: black;
+	/* margin: 0; */
+	/* margin-top: 100px; */
+}
+
+/* header {	
+	margin-top: -100px;
+	position: fixed;
+	height: 100px;
+	width: 100%;	
+} */
+
+
+/* main {		
+	max-width: 1000px;
+	margin: 0 auto;	
+	width: 75%;	
+	display: inline-block;	
+	float: left;
+}  */
+
+
+section {	
+	width: 75%;
+	float: left;
+	/* display: inline-block; */
+	
+}
+
+aside {
+	width: 25%;
+	float: left;	
+    /*	display: inline-block; */
+	
+}
+
+aside li {
+	padding: 15px;
+	font-size: 20px;
+}
+
+footer {
+	width: 100%;
+	color: blue;
+	background-color: black;
+	float: left;
+	margin: 10px;
+	padding: 20px;
+}

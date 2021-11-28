@@ -1,0 +1,30 @@
+{
+	"folders": {},
+	"connections": {
+		"sqlite_jdbc-17cf2f12d80-72d5a3a82729c207": {
+			"provider": "sqlite",
+			"driver": "sqlite_jdbc",
+			"name": "bd.db",
+			"save-password": true,
+			"read-only": false,
+			"configuration": {
+				"database": "D:\\Programacion\\git\\TPGrupal\\bd.db",
+				"url": "jdbc:sqlite:D:\\Programacion\\git\\TPGrupal\\bd.db",
+				"type": "dev",
+				"auth-model": "native",
+				"handlers": {}
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"auto-close-transactions": false
+		}
+	}
+}
